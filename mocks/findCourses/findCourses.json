@@ -1,0 +1,25 @@
+{
+  "expression": "^/DesktopModules/AOCRaad.Erkenningen.WebAPI/API/Course/FindCourses$",
+  "method": "GET",
+  "name": "getFindCourses",
+  "responses": {
+    "getFindAllCourses": {
+      "status": 200,
+      "delay": 200,
+      "file": "mocks/findCourses/data/findAllCourses.json"
+    },
+    "500-error": {
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "status": 500,
+      "file": "mocks/findCourses/data/500-error.json",
+      "delay": 200
+    },
+    "emptyList": {
+      "status": 200,
+      "delay": 200,
+      "file": "mocks/generic-responses/emptyList.json"
+    }
+  }
+}

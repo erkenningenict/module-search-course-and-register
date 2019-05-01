@@ -1,0 +1,25 @@
+{
+  "expression": "^/DesktopModules/AOCRaad.Erkenningen.WebAPI/API/Course/FilterLists$",
+  "method": "GET",
+  "name": "getFilterLists",
+  "responses": {
+    "getFilterLists": {
+      "status": 200,
+      "delay": 200,
+      "file": "mocks/filterLists/data/filterLists.json"
+    },
+    "500-error": {
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "status": 500,
+      "file": "mocks/filterLists/data/500-error.json",
+      "delay": 200
+    },
+    "emptyList": {
+      "status": 200,
+      "delay": 200,
+      "file": "mocks/generic-responses/emptyList.json"
+    }
+  }
+}

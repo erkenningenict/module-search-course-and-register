@@ -1,0 +1,38 @@
+.ui-steps {
+  margin-bottom: 1rem;
+
+  .ui-step {
+    text-align: center;
+    width: 20%;
+    display: inline-block;
+
+    i {
+      font-size: 22px;
+    }
+
+    .ui-step-circle {
+      width: 20%;
+
+      display: inline-block;
+    }
+
+    &.ui-step-active {
+      i {
+        color: #ff7200;
+      }
+    }
+    &.ui-step-complete {
+      i {
+        color: green;
+      }
+    }
+
+    .ui-step-line {
+      background: #000;
+      display: inline-block;
+      height: 1px;
+      width: 40%;
+      margin-bottom: 6px;
+    }
+  }
+}

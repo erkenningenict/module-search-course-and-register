@@ -1,0 +1,26 @@
+@import '~@fortawesome/fontawesome-free/css/all.css';
+
+.p-button {
+  margin-right: 1em !important;
+}
+
+.p-component,
+.p-inputtext {
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+body .p-component {
+  font: inherit;
+}
+
+body .p-disabled.p-dropdown,
+body .p-disabled .p-inputtext,
+body .p-inputtext:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+  background-color: #eeeeee;
+}
+
+.row-spacer .row {
+  margin-bottom: 1em;
+}
