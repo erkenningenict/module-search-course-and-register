@@ -4,6 +4,7 @@
   "name": "getFilterLists",
   "responses": {
     "getFilterLists": {
+      "default": true,
       "status": 200,
       "delay": 200,
       "file": "mocks/filterLists/data/filterLists.json"

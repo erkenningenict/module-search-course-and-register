@@ -21,6 +21,8 @@ interface IFormTextProps {
   onBlur?: (e: any) => void;
   form?: FormikProps<any>;
   isTextArea?: boolean;
+  labelClassNames?: string;
+  formControlClassName?: string;
 }
 
 class FormText extends React.Component<IFormTextProps, {}> {
@@ -72,6 +74,8 @@ class FormText extends React.Component<IFormTextProps, {}> {
         for={this.props.id}
         form={this.props.form}
         name={this.props.name}
+        labelClassNames={this.props.labelClassNames}
+        formControlClassName={this.props.formControlClassName}
       >
         {this.props.mask ? (
           <InputMask
@@ -122,14 +126,14 @@ class FormText extends React.Component<IFormTextProps, {}> {
     }
 
     // Use name value for value retrieval
-    // if (this.props.form && this.props.name) {
-    //   const parts = this.props.name.split('.');
-    //   let value: any = this.props.form.values;
-    //   for (const part of parts) {
-    //     value = value[part];
-    //   }
-    //   return value;
-    // }
+    if (this.props.form && this.props.name) {
+      const parts = this.props.name.split('.');
+      let value: any = this.props.form.values;
+      for (const part of parts) {
+        value = value[part];
+      }
+      return value;
+    }
 
     return undefined;
   }

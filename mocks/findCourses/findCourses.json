@@ -1,9 +1,10 @@
 {
   "expression": "^/DesktopModules/AOCRaad.Erkenningen.WebAPI/API/Course/FindCourses$",
-  "method": "GET",
-  "name": "getFindCourses",
+  "method": "POST",
+  "name": "postFindCourses",
   "responses": {
-    "getFindAllCourses": {
+    "postFindAllCourses": {
+      "default": true,
       "status": 200,
       "delay": 200,
       "file": "mocks/findCourses/data/findAllCourses.json"

@@ -3,52 +3,67 @@ import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/themes/nova-light/theme.css';
 import { TabPanel, TabView } from 'primereact/tabview';
 import * as React from 'react';
-import { HashRouter, Route, Switch } from 'react-router-dom';
+import { HashRouter, Route } from 'react-router-dom';
 
+import { useState } from 'react';
 import './App.scss';
 import { SearchCourseAndRegister } from './components/containers/SearchCourseAndRegister/SearchCourseAndRegister';
-import Panel from './components/ui/Panel';
-// import { NormalCourses } from './components/NormalCourses/NormalCourses';
-// import Panel from './components/ui/Panel';
-
-interface IAppState {
-  activeIndex: number;
-}
 
 export default function App() {
-  const loggedIn = true;
-  let online = false;
+  // const loggedIn = false;
+  const [themeId, setThemeId] = useState(0);
+  const [competenceId, setCompetenceId] = useState(0);
+  const [routeSet, setRoute] = useState(false);
+
+  const parseLocationSearch = (url: string) => {
+    const paramsSplitted = url
+      .trim()
+      .replace(/^[?]/, '')
+      .split('&');
+    return paramsSplitted.map((param) => {
+      const paramSet = param.split('=');
+      return { key: paramSet[0], value: paramSet[1] };
+    });
+  };
   return (
     <div className="App container-fluid">
       <HashRouter>
         <div>
           <Route
             path={'/'}
-            exact={true}
             render={(props: any) => {
-              console.log('props', props.location.search);
-              online = false;
+              const params = parseLocationSearch(props.location.search);
+              params.forEach((param: { key: string; value: string }) => {
+                switch (param.key) {
+                  case 'themaId':
+                    setThemeId(parseInt(param.value, 10));
+                    break;
+                  case 'competentieId':
+                    setCompetenceId(parseInt(param.value, 10));
+                    break;
+                  default:
+                }
+              });
+              setRoute(true);
+              // console.log('search', props.location.search);
               return null;
             }}
           />
           <Route
             path={'/online'}
             render={(props: any) => {
-              online = true;
-              console.log('props for online', props.location.search);
+              // console.log('search for online', props.location.search);
+              setRoute(true);
               return null;
             }}
           />
-          <TabView>
-            <TabPanel header="Bijeenkomsten zoeken en aanmelden">
-              <SearchCourseAndRegister />
-            </TabPanel>
-            { (
-              <TabPanel header="Header II" disabled={!loggedIn}>
-                Content II
+          {routeSet && (
+            <TabView>
+              <TabPanel header="Bijeenkomsten zoeken en aanmelden">
+                <SearchCourseAndRegister themeId={themeId} competenceId={competenceId} />
               </TabPanel>
-            )}
-          </TabView>
+            </TabView>
+          )}
         </div>
       </HashRouter>
     </div>
