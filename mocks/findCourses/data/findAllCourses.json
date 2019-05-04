@@ -15,7 +15,7 @@
       "ContactDataId": 0,
       "Street": "Expeditiestraat",
       "HouseNr": "9",
-      "HouseNrExtension": "a",
+      "HouseNrExtension": "",
       "Zipcode": "5961 PX",
       "City": "Horst",
       "Phone": null,
@@ -33,7 +33,7 @@
     "OrganizerId": 0,
     "Organizer": "CITAVERDE College",
     "OrganizerPhone": "0475-389190",
-    "OrganizerEmail": "bedrijfsopleidingen@citaverde.nl",
+    "OrganizerEmail": "",
     "OrganizerWebsite": "",
     "OrganizerContactperson": null,
     "OrganizerAddress": null

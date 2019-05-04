@@ -28,3 +28,30 @@ body .p-inputtext:disabled {
 .w-100 {
   width: 100%;
 }
+
+.p-dialog-title {
+  font-size: 28px;
+}
+
+body .p-highlight {
+  background-color: transparent !important;
+}
+
+body a {
+  color: #dd6b02;
+}
+body a:visited {
+  color: #ab5302;
+}
+
+body .p-button {
+  border-radius: 0;
+  color: #fff;
+  background: #dd6b02;
+  border: transparent;
+}
+body .p-button:enabled:hover {
+  color: #fff;
+  background-color: #aa5302;
+  border-color: #874101;
+}

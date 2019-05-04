@@ -62,6 +62,7 @@ export function NormalCoursesForm(normalCoursesProps: INormalCoursesProps) {
     `${process.env.REACT_APP_DNN_WEB_API}/Course/FilterLists`,
     { Distances: [], KnowledgeAreas: [], Themes: [], Competences: [] },
   );
+  // console.log('#DH# details', details);
   return (
     <>
       <div className="panel-body">

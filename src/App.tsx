@@ -28,9 +28,17 @@ export default function App() {
   return (
     <div className="App container-fluid">
       <HashRouter>
-        <div>
+        <>
           <Route
             path={'/'}
+            exact={true}
+            render={(props: any) => {
+              props.history.push('bijeenkomsten-zoeken/op-locatie');
+              return null;
+            }}
+          />
+          <Route
+            path="/bijeenkomsten-zoeken/op-locatie"
             render={(props: any) => {
               const params = parseLocationSearch(props.location.search);
               params.forEach((param: { key: string; value: string }) => {
@@ -45,14 +53,12 @@ export default function App() {
                 }
               });
               setRoute(true);
-              // console.log('search', props.location.search);
               return null;
             }}
           />
           <Route
             path={'/online'}
             render={(props: any) => {
-              // console.log('search for online', props.location.search);
               setRoute(true);
               return null;
             }}
@@ -64,7 +70,7 @@ export default function App() {
               </TabPanel>
             </TabView>
           )}
-        </div>
+        </>
       </HashRouter>
     </div>
   );
