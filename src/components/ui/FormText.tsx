@@ -23,6 +23,7 @@ interface IFormTextProps {
   isTextArea?: boolean;
   labelClassNames?: string;
   formControlClassName?: string;
+  helpText?: string;
 }
 
 class FormText extends React.Component<IFormTextProps, {}> {
@@ -76,6 +77,7 @@ class FormText extends React.Component<IFormTextProps, {}> {
         name={this.props.name}
         labelClassNames={this.props.labelClassNames}
         formControlClassName={this.props.formControlClassName}
+        helpText={this.props.helpText}
       >
         {this.props.mask ? (
           <InputMask
@@ -114,6 +116,7 @@ class FormText extends React.Component<IFormTextProps, {}> {
             onChange={handleChange}
             onBlur={handleBlur}
             className="form-control"
+            autoComplete="off"
           />
         )}
       </FormItem>

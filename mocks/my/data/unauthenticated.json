@@ -1,0 +1,11 @@
+{
+  "errors": [
+    {
+      "message": "MOCK Not authenticated as user",
+      "locations": [{ "line": 2, "column": 3 }],
+      "path": ["my"],
+      "extensions": { "code": "UNAUTHENTICATED" }
+    }
+  ],
+  "data": { "my": null }
+}

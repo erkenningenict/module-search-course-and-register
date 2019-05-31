@@ -34,7 +34,7 @@ body .p-inputtext:disabled {
 }
 
 body .p-highlight {
-  background-color: transparent !important;
+  background-color: #dd6b02 !important;
 }
 
 body a {
@@ -55,3 +55,32 @@ body .p-button:enabled:hover {
   background-color: #aa5302;
   border-color: #874101;
 }
+
+body .p-inputtext {
+  font-size: 16px;
+  color: #333333;
+  background: #d3ebea;
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  border-radius: 0;
+  &:enabled:hover {
+    border-color: #c1d6d5;
+  }
+}
+body .p-dropdown {
+  background: #d3ebea;
+  border: 1px solid #d3ebea;
+  border-radius: 0;
+
+  > .p-dropdown-trigger {
+    background-color: #d3ebea;
+  }
+  &:not(.p-disabled):hover {
+    border-color: #c1d6d5;
+  }
+}
+// body .p-dropdown .p-dropdown-trigger {
+//   background-color: #ffffff;
+// }

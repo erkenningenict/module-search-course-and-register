@@ -9,6 +9,7 @@ interface IFormItemProps {
   form?: FormikProps<any>;
   labelClassNames?: string;
   formControlClassName?: string;
+  helpText?: string;
 }
 
 class FormItem extends React.Component<IFormItemProps, {}> {
@@ -27,6 +28,7 @@ class FormItem extends React.Component<IFormItemProps, {}> {
           {this.getError(this.props.name) && (
             <span className="help-block">{this.getError(this.props.name)}</span>
           )}
+          {this.props.helpText && <span className="help-block">{this.props.helpText}</span>}
         </div>
       </div>
     );

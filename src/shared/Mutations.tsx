@@ -1,51 +1,23 @@
 import gql from 'graphql-tag';
-import { ICertificering } from './Model';
 
-export const DECOUPLE_LICENSE = gql`
-  mutation decoupleLicense($input: decoupleLicenseInput!) {
-    decoupleLicense(input: $input) {
-      updatedLicense {
-        CertificeringID
-        NummerWeergave
-      }
-      kbaLicense {
-        CertificeringID
-        NummerWeergave
-      }
+export const REGISTER = gql`
+  mutation registerForCourse($input: registerForCourseInput!) {
+    registerForCourse(input: $input) {
+      success
+      message
     }
   }
 `;
 
-export interface IDecoupleLicenseVars {
-  input: IDecoupleLicenseInput;
-}
-
-export interface IDecoupleLicenseInput {
+export interface IRegisterForCourseInput {
   licenseId: number;
-  confirmationEmail?: string;
-}
-
-export interface IDecoupleLicenseResult {
-  updatedLicense: ICertificering;
-  kbaLicense: ICertificering;
-}
-
-export const REQUEST_DUPLICATE = gql`
-  mutation requestDuplicate($input: requestDuplicateInput!) {
-    requestDuplicate(input: $input) {
-      invoiceLink
-    }
-  }
-`;
-
-export interface IRequestDuplicateVars {
-  input: IRequestDuplicateInput;
-}
-
-export interface IRequestDuplicateInput {
-  licenseIds: number[];
-}
-
-export interface IRequestDuplicateResult {
-  invoiceLink: string;
+  specialtyId?: number;
+  code: string;
+  courseId: number;
+  isDigitalSpecialty: boolean;
+  title: string;
+  courseDateTime: Date;
+  knowledgeArea: string;
+  birthPlace: string;
+  invoiceAddress: string;
 }

@@ -22,6 +22,7 @@ interface IFormSelectProps {
   width?: string;
   labelClassNames?: string;
   formControlClassName?: string;
+  helpText?: string;
 }
 
 class FormSelect extends React.Component<IFormSelectProps, {}> {
@@ -46,6 +47,7 @@ class FormSelect extends React.Component<IFormSelectProps, {}> {
         name={this.props.name}
         labelClassNames={this.props.labelClassNames}
         formControlClassName={this.props.formControlClassName}
+        helpText={this.props.helpText}
       >
         {this.props.loading ? (
           <span>

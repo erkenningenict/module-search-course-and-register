@@ -1,120 +1,126 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Link, Route } from 'react-router-dom';
-import { toDutchMoney } from '../../helpers/number-utils';
-import { IFindNormalCoursesRow } from '../../types/IFindNormalCoursesRow';
+import React, { useState } from 'react';
+import { Query } from 'react-apollo';
+import { COURSE_SESSIONS_QUERY } from '../../shared/Queries';
+import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
+import Alert from '../ui/Alert';
 import Spinner from '../ui/Spinner';
-import { toDutchDate } from './../../helpers/date-utils';
-import { NormalCourseDetails } from './NormalCourseDetails';
+import { NormalCoursesRow } from './NormalCoursesRow';
 
-const useDataApi = (initialUrl: string, initialData: any, postBody: {}) => {
-  const [data, setData] = useState(initialData);
-  const [url, setUrl] = useState(initialUrl);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-
-      try {
-        const result = await axios.post(url, postBody);
-
-        setData(result.data);
-      } catch (error) {
-        setIsError(true);
-      }
-
-      setIsLoading(false);
-    };
-
-    fetchData();
-  }, [url, postBody]);
-
-  const doFetch = (urlString: string) => {
-    setUrl(urlString);
+interface INormalCoursesTable {
+  searchData: {
+    licenseId: string;
+    knowledgeAreaId: string;
+    themeId: string;
+    competenceId: string;
+    zipcodeNumbers: string;
+    distanceRadius: number;
+    from: any;
+    to: any;
   };
+}
 
-  return { data, isLoading, isError, doFetch };
-};
-export function NormalCoursesTable(props: any) {
-  const {
-    data,
-    isLoading,
-    isError,
-  }: { data: IFindNormalCoursesRow[]; isLoading: boolean; isError: boolean } = useDataApi(
-    `${process.env.REACT_APP_DNN_WEB_API}/Course/FindCourses`,
-    [],
-    props.searchData,
-  );
-  const [details, setDetails] = useState();
-  let rows: any[] = [];
-  if (data && !isLoading) {
-    rows = data.map((row: IFindNormalCoursesRow) => (
-      <tr key={row.CourseId}>
-        <td>
-          <Link
-            to={`/bijeenkomsten-zoeken/op-locatie/informatie-en-aanmelden/${row.CourseId}`}
-            title="Bekijk meer informatie en aanmelden"
-            onClick={() => setDetails(row)}
-          >
-            {row.Title}
-          </Link>
-        </td>
-        <td>{toDutchDate(row.Date)}</td>
-        <td>
-          {row.StartTime} - {row.EndTime}
-        </td>
-        <td>{`${row.Organizer} - ${row.LocationAddress.City}`}</td>
-        <td>{toDutchMoney(row.Price)}</td>
-      </tr>
-    ));
+export function NormalCoursesTable(props: INormalCoursesTable) {
+  if (!props.searchData) {
+    return null;
   }
-  if (isLoading) {
-    rows.push(
-      <tr key="loading">
-        <td colSpan={5}>
-          <Spinner />
-        </td>
-      </tr>,
-    );
-  }
-  const back = (routerProps: any) => {
-    // e.stopPropagation();
-    setDetails(undefined);
-    routerProps.history.goBack();
-    // props.history.goBack();
+  const searchData = props.searchData && {
+    ...props.searchData,
+    licenseId: parseInt(props.searchData.licenseId, 10),
+    knowledgeAreaId: parseInt(props.searchData.knowledgeAreaId, 10),
+    competenceId: parseInt(props.searchData.competenceId, 10),
+    themeId: parseInt(props.searchData.themeId, 10),
+    zipcodeNumbers: parseInt(props.searchData.zipcodeNumbers, 10) || null,
+    to: props.searchData.to
+      ? props.searchData.to === ''
+        ? null
+        : props.searchData.to.getTime()
+      : null,
+    from: props.searchData.from
+      ? props.searchData.from === ''
+        ? null
+        : props.searchData.from.getTime()
+      : null,
+    isOnlineCourse: false,
   };
+  const searchInput = searchData;
+  delete searchInput.licenseId;
 
-  return isError ? (
-    <div>Er is een probleem opgetreden. Probeer het later opnieuw.</div>
-  ) : (
-    <>
-      <table className="table table-striped" key="table">
-        <thead>
-          <tr key="headerRow">
-            <th>Titel</th>
-            <th style={{ width: '88px' }}>Datum</th>
-            <th style={{ width: '97px' }}>Van - tot</th>
-            <th>Locatie</th>
-            <th>Prijs (incl. btw)</th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </table>
-      <Route
-        path="/bijeenkomsten-zoeken/op-locatie/informatie-en-aanmelden/:courseId"
-        render={(routerProps: any) => {
+  return (
+    <Query
+      query={COURSE_SESSIONS_QUERY}
+      variables={{
+        input: searchInput,
+      }}
+    >
+      {({ loading, error, data }) => {
+        if (loading) {
           return (
-            <NormalCourseDetails
-              details={details}
-              visible={details ? true : false}
-              hideDialog={(e: any) => back(routerProps)}
-            />
+            <div>
+              <Spinner />
+            </div>
           );
-        }}
-      />
-    </>
+        }
+
+        if (error) {
+          return (
+            <Alert>
+              Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}
+            </Alert>
+          );
+        }
+
+        return (
+          <>
+            <div className="table table-responsive">
+              <table className="table table-striped" key="table">
+                <thead>
+                  <tr key="headerRow">
+                    <th>Titel (aantal resultaten: {data.CursusSessies.length})</th>
+                    <th style={{ width: '88px' }}>Datum</th>
+                    <th style={{ width: '97px' }}>Van - tot</th>
+                    <th>Locatie</th>
+                    {!searchData.distanceRadius ||
+                      (searchData.distanceRadius !== 0 && <th>Afstand (km)</th>)}
+                    <th>Prijs (incl. btw)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data &&
+                    data.CursusSessies &&
+                    data.CursusSessies.map((item: INormalCourseDetails) => (
+                      <NormalCoursesRow
+                        key={item.CourseCode}
+                        row={item}
+                        showDistance={searchData.distanceRadius !== 0}
+                      />
+                    ))}
+                  {!data || data.CursusSessies.length === 0 ? (
+                    <tr>
+                      <td colSpan={searchData.distanceRadius !== 0 ? 6 : 5}>
+                        <Alert type="info">
+                          Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan.
+                        </Alert>
+                      </td>
+                    </tr>
+                  ) : null}
+                </tbody>
+              </table>
+            </div>
+            {/* <Route
+              path="/bijeenkomsten-zoeken/op-locatie/informatie-en-aanmelden/:courseId"
+              render={(routerProps: any) => (
+                <NormalCourseDetails
+                  routerProps={routerProps}
+                  details={dialogData}
+                  visible={dialogData ? true : false}
+                  onHideDialog={(e: any) => setDialogData(undefined)}
+                  licenseId={parseInt(props.searchData.licenseId, 10)}
+                  useDialog={true}
+                />
+            /> */}
+          </>
+        );
+      }}
+    </Query>
   );
 }

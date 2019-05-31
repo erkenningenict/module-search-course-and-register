@@ -1,18 +1,25 @@
+import moment from 'moment';
 import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
-import React from 'react';
-import { IFindNormalCoursesRow } from '../../types/IFindNormalCoursesRow';
-import Panel from './../../components/ui/Panel';
+import React, { useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { toDutchDate } from '../../helpers/date-utils';
+import { UserContext } from '../../shared/UserContext';
+import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
+import Alert from '../ui/Alert';
+import Col from '../ui/Col';
+import Row from '../ui/Row';
 import { toDutchMoney } from './../../helpers/number-utils';
+import { Register } from './Register';
 
 interface INormalCourseDetailsProps {
-  details: IFindNormalCoursesRow;
-  visible: boolean;
-  hideDialog: any;
+  details: INormalCourseDetails;
+  routerProps?: any;
 }
 
 export function NormalCourseDetails(props: INormalCourseDetailsProps) {
-  const data: IFindNormalCoursesRow = props && props.details && props.details;
+  const [showRegister, setShowRegister] = useState(false);
+  const user = useContext(UserContext);
+  const data: INormalCourseDetails = props && props.details && props.details;
   const address = data && data.LocationAddress;
   const locationAddress = address && (
     <>
@@ -32,20 +39,8 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
     </>
   );
 
-  const footer = (
-    <div>
-      <Button label="Aanmelden" icon="pi pi-check" />
-    </div>
-  );
-  return props.details ? (
-    <Dialog
-      header="Bijeenkomst"
-      visible={props.visible}
-      modal={true}
-      style={{ width: '80vw' }}
-      footer={footer}
-      onHide={() => props.hideDialog(true)}
-    >
+  return props.details && !showRegister ? (
+    <>
       <table className="table table-striped">
         <tbody>
           <tr>
@@ -53,6 +48,14 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
               <strong>Titel</strong>
             </td>
             <td>{data.Title}</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Datum/tijd</strong>
+            </td>
+            <td>
+              {toDutchDate(data.Date)} {data.StartTime} - {data.EndTime}
+            </td>
           </tr>
           <tr>
             <td>
@@ -76,7 +79,7 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
             <td>
               <strong>Promotietekst</strong>
             </td>
-            <td>{data.Promotext}</td>
+            <td>{data.PromoText}</td>
           </tr>
           <tr>
             <td>
@@ -108,6 +111,52 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
           </tr>
         </tbody>
       </table>
-    </Dialog>
-  ) : null;
+      <div className="panel-body">
+        <Row>
+          <Col>
+            {user ? (
+              <>
+                <Button
+                  label="Aanmelden"
+                  type="button"
+                  onClick={() => setShowRegister(true)}
+                  icon="pi pi-check"
+                />
+                <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
+              </>
+            ) : (
+              <>
+                <Alert type="warning">
+                  <div style={{ textAlign: 'left' }}>
+                    U kunt nog niet aanmelden omdat u niet bent ingelogd. Klik op Inloggen om aan te
+                    melden om eerst in te loggen, keer dan hier terug om u aan te melden.
+                  </div>
+                </Alert>
+                <Button
+                  label="Inloggen om aan te melden"
+                  type="button"
+                  onClick={() => props.routerProps.history.push('/Default.aspx?tabid=154')}
+                  icon="pi pi-check"
+                />
+              </>
+            )}
+          </Col>
+        </Row>
+      </div>
+    </>
+  ) : (
+    <Register
+      registerCourseDetails={{
+        code: data.CourseCode,
+        courseId: data.CourseId.toString(),
+        courseDateTime: moment(data.Date)
+          .add(data.StartTime.split(':')[0], 'hours')
+          .add(data.StartTime.split(':')[1], 'minutes')
+          .toDate(),
+        isDigitalSpecialty: false,
+        title: data.Title,
+      }}
+      onCancel={() => setShowRegister(false)}
+    />
+  );
 }

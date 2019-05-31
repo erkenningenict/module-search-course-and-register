@@ -1,11 +1,18 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import Col from '../ui/Col';
-import Row from '../ui/Row';
-
 import { Formik } from 'formik';
+import { Button } from 'primereact/button';
+import React, { useContext, useState } from 'react';
+import { Query } from 'react-apollo';
+import { RouteComponentProps } from 'react-router';
+import { Link } from 'react-router-dom';
+import { ICompetentie, IKennisgebied, IThema } from '../../shared/Model';
+import { LISTS_QUERY } from '../../shared/Queries';
+import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
+import { UserContext } from '../../shared/UserContext';
+import FormCalendar from '../ui/FormCalendar';
 import FormSelect from '../ui/FormSelect';
 import FormText from '../ui/FormText';
+import Spinner from '../ui/Spinner';
+import { parseLocationSearch } from './../../helpers/url-utils';
 import { NormalCoursesTable } from './NormalCoursesTable';
 
 interface IIdLabel {
@@ -13,187 +20,202 @@ interface IIdLabel {
   Label: string;
 }
 
-interface INormalCoursesProps {
-  themeId?: number;
-  competenceId?: number;
-}
+export function NormalCoursesForm(props: RouteComponentProps) {
+  const [searchData, setSearchData] = useState();
+  const lic = useContext(SelectedLicenseContext);
+  console.log('#DH# lic:', lic);
 
-interface IFilterLists {
-  Themes: IIdLabel[];
-  KnowledgeAreas: IIdLabel[];
-  Competences: IIdLabel[];
-  Distances: IIdLabel[];
-}
-const useDataApi = (initialUrl: string, initialData: IFilterLists) => {
-  const [data, setData] = useState(initialData);
-  const [url, setUrl] = useState(initialUrl);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-
-      try {
-        const result = await axios(url);
-
-        setData(result.data);
-      } catch (error) {
-        setIsError(true);
+  const distances: IIdLabel[] = [
+    { Id: 0, Label: 'Alle' },
+    { Id: 5, Label: '5' },
+    { Id: 10, Label: '10' },
+    { Id: 25, Label: '25' },
+    { Id: 50, Label: '50' },
+  ];
+  const handleZipcodesChange = (event: any, form: any) => {
+    if (event.target.value !== '') {
+      if (form.values.distanceRadius === 0) {
+        form.setFieldValue('distanceRadius', 5);
       }
-
-      setIsLoading(false);
-    };
-
-    fetchData();
-  }, [url]);
-
-  const doFetch = (urlString: string) => {
-    setUrl(urlString);
+    } else {
+      form.setFieldValue('distanceRadius', 0);
+    }
   };
-
-  return { data, isLoading, isError, doFetch };
-};
-
-export function NormalCoursesForm(normalCoursesProps: INormalCoursesProps) {
-  const [searchData, setSearchData] = useState({});
-  const { data, isLoading, isError } = useDataApi(
-    `${process.env.REACT_APP_DNN_WEB_API}/Course/FilterLists`,
-    { Distances: [], KnowledgeAreas: [], Themes: [], Competences: [] },
-  );
-  // console.log('#DH# details', details);
+  const value = useContext(UserContext);
   return (
     <>
       <div className="panel-body">
-        {isError && (
-          <div>
-            Er is een probleem opgetreden bij het ophalen van gegevens. Probeer het later opnieuw.
-          </div>
-        )}
-        {!isError && (
-          <Formik
-            initialValues={{
-              KnowledgeArea: 0,
-              Theme: normalCoursesProps.themeId || 0,
-              Competence: normalCoursesProps.competenceId || 0,
-              DistanceRadius: 0,
-              From: '',
-              To: '',
-              SearchTerm: '',
+        <p>
+          <Link
+            to={{
+              pathname: '/bijeenkomsten-zoeken/online',
+              search: props.location.search,
             }}
-            onSubmit={(values, { setSubmitting }) => {
-              // setTimeout(() => {
-              // alert(JSON.stringify(values, null, 2));
-              setSearchData(values);
-              setSubmitting(false);
-              // }, 400);
-            }}
-            render={(props: any) => {
-              return (
-                <form onSubmit={props.handleSubmit} className="form form-horizontal">
+          >
+            Ga naar online bijeenkomsten zoeken
+          </Link>
+        </p>
+      </div>
+      <Query query={LISTS_QUERY}>
+        {({ loading, error, data }) => {
+          if (loading) {
+            return (
+              <div>
+                <Spinner />
+              </div>
+            );
+          }
+
+          if (error) {
+            return (
+              <p>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</p>
+            );
+          }
+
+          const licenseId: string | null =
+            (value &&
+              value.my &&
+              value.my.Certificeringen &&
+              value.my.Certificeringen.length > 0 &&
+              value.my.Certificeringen[0].CertificeringID) ||
+            null;
+
+          if (!searchData) {
+            let theme = 0;
+            let competence = 0;
+            const params = parseLocationSearch(props.location.search);
+            params.forEach((param: { key: string; value: string }) => {
+              switch (param.key) {
+                case 'themaId':
+                  theme = parseInt(param.value, 10);
+
+                  break;
+                case 'competentieId':
+                  competence = parseInt(param.value, 10);
+                  break;
+                default:
+              }
+            });
+            setSearchData({
+              licenseId,
+              themeId: theme,
+              competenceId: competence,
+              distanceRadius: 0,
+            });
+            return null;
+          }
+
+          const knowledgeAreas = [{ KennisgebiedID: 0, Naam: 'Alle' }, ...data.Kennisgebieden];
+          const themes = [{ ThemaID: 0, Naam: 'Alle' }, ...data.Themas];
+          const competences = [{ CompetentieID: 0, Naam: 'Alle' }, ...data.Competenties];
+          return (
+            <Formik
+              initialValues={{
+                licenseId,
+                knowledgeAreaId: 0,
+                themeId: (searchData && searchData.themeId) || 0,
+                competenceId: (searchData && searchData.competenceId) || 0,
+                zipcodeNumbers:
+                  (value &&
+                    value.my &&
+                    value.my.Persoon &&
+                    value.my.Persoon.Contactgegevens.Postcode) ||
+                  '',
+                distanceRadius: 0,
+                from: '',
+                to: '',
+              }}
+              onSubmit={(values, { setSubmitting }) => {
+                setSearchData(values);
+                setSubmitting(false);
+              }}
+              render={(formProps: any) => (
+                <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
                   <FormSelect
                     id="knowledgeArea"
                     label="Sector"
-                    options={data.KnowledgeAreas.map((item: IIdLabel) => ({
-                      value: item.Id,
-                      label: item.Label,
+                    options={knowledgeAreas.map((item: IKennisgebied) => ({
+                      value: parseInt(item.KennisgebiedID, 10),
+                      label: item.Naam,
                     }))}
-                    name="KnowledgeArea"
-                    loading={isLoading}
-                    form={props}
+                    name="knowledgeAreaId"
+                    loading={loading}
+                    form={formProps}
                   />
                   <FormSelect
-                    id="theme"
+                    id="themeId"
                     label="Thema"
-                    options={data.Themes.map((item: IIdLabel) => ({
-                      value: item.Id,
-                      label: item.Label,
+                    options={themes.map((item: IThema) => ({
+                      value: parseInt(item.ThemaID, 10),
+                      label: item.Naam,
                     }))}
-                    loading={isLoading}
-                    name="Theme"
-                    form={props}
+                    loading={loading}
+                    name="themeId"
+                    form={formProps}
                   />
                   <FormSelect
-                    id="competence"
+                    id="competenceId"
                     label="Licentietype"
-                    options={data.Competences.map((item: IIdLabel) => ({
-                      value: item.Id,
-                      label: item.Label,
+                    options={competences.map((item: ICompetentie) => ({
+                      value: parseInt(item.CompetentieID, 10),
+                      label: item.Naam,
                     }))}
-                    loading={isLoading}
-                    name="Competence"
-                    form={props}
+                    loading={loading}
+                    name="competenceId"
+                    form={formProps}
                   />
-                  <Row>
-                    <Col className="col-md-7" styles={{ paddingLeft: '36px' }}>
-                      <FormText
-                        id="dateFrom"
-                        label="Datum vanaf"
-                        placeholder="dd-mm-jjjj"
-                        name="From"
-                        form={props}
-                        labelClassNames="col-md-5"
-                        formControlClassName="col-md-3"
-                      />
-                    </Col>
-                    <Col className="col-md-5">
-                      <FormText
-                        id="dateTo"
-                        label="Datum tot"
-                        placeholder="dd-mm-jjjj"
-                        name="To"
-                        form={props}
-                        labelClassNames="col-md-4"
-                        formControlClassName="col-md-5"
-                      />
-                    </Col>
-                  </Row>
+                  <FormCalendar
+                    id="dateFrom"
+                    label="Datum vanaf"
+                    placeholder="dd-mm-jjjj"
+                    name="from"
+                    form={formProps}
+                  />
+                  <FormCalendar
+                    id="dateTo"
+                    label="Datum tot"
+                    placeholder="dd-mm-jjjj"
+                    name="to"
+                    form={formProps}
+                  />
                   <FormText
                     id="zipcode"
                     label="Postcode"
-                    placeholder="1234 AA"
-                    name="Zipcode"
-                    form={props}
+                    placeholder="1234"
+                    name="zipcodeNumbers"
+                    form={formProps}
+                    onChange={(e) => handleZipcodesChange(e, formProps)}
                     labelClassNames="col-md-3"
                     formControlClassName="col-md-2"
                   />
                   <FormSelect
-                    id="distance"
+                    id="distanceRadius"
                     label="Afstand in km"
-                    options={data.Distances.map((item: IIdLabel) => ({
+                    options={distances.map((item: IIdLabel) => ({
                       value: item.Id,
                       label: item.Label,
                     }))}
-                    name="distance"
-                    loading={isLoading}
-                    form={props}
-                  />
-                  <FormText
-                    id="searchTerm"
-                    label="Zoekterm"
-                    placeholder="zoek in titel en naam"
-                    name="SearchTerm"
-                    form={props}
+                    name="distanceRadius"
+                    loading={loading}
+                    form={formProps}
                   />
                   <div className="form-group row">
                     <div className="col-md-4 col-md-offset-3">
-                      <button
+                      <Button
                         type="submit"
-                        className="btn btn-primary"
-                        disabled={props.isSubmitting}
-                      >
-                        Zoeken
-                      </button>
+                        label="Zoeken"
+                        icon="pi pi-search"
+                        disabled={formProps.isSubmitting}
+                      />
                     </div>
                   </div>
                 </form>
-              );
-            }}
-          />
-        )}
-      </div>
-      <NormalCoursesTable searchData={searchData} />
+              )}
+            />
+          );
+        }}
+      </Query>
+      {searchData && <NormalCoursesTable searchData={searchData} />}
     </>
   );
 }

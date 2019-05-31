@@ -21,7 +21,7 @@ const client = new ApolloClient({
     uri: process.env.REACT_APP_GRAPHQL_URL,
     credentials: 'include',
   }),
-  cache,
+  cache
 });
 
 ReactDOM.render(

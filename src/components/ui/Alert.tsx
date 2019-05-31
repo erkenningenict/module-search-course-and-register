@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 interface IAlertProps {
-  type?: string;
+  type?: 'danger' | 'info' | 'warning' | 'success';
 }
 
 class Alert extends React.Component<IAlertProps, {}> {

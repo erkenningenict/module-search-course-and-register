@@ -1,6 +1,6 @@
 import { ILocationAddress } from './ILocationAddress';
 
-export interface IFindNormalCoursesRow {
+export interface INormalCourseDetails {
   Distance: number;
   RegisteredDate: string | null;
   CanUnRegister: boolean;
@@ -17,7 +17,7 @@ export interface IFindNormalCoursesRow {
   Title: string;
   Theme: string;
   Competence: string;
-  Promotext: string;
+  PromoText: string;
   Price: number;
   OrganizerId: number;
   Organizer: string | null;

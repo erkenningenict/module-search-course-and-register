@@ -1,5 +1,6 @@
 {
-  "expression": "^/DesktopModules/AOCRaad.Erkenningen.WebAPI/API/Course/FindCourses$",
+  "expression": "/graphql",
+  "body": "(.*)getCursusSessies(.*)",
   "method": "POST",
   "name": "postFindCourses",
   "responses": {

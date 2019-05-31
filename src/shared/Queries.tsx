@@ -1,20 +1,17 @@
 import gql from 'graphql-tag';
 
-export const MY_PERSON_QUERY = gql`
-  {
+export const GET_MY_PERSON_QUERY = gql`
+  query my {
     my {
       Persoon {
         PersoonID
+        BSN
         Voorletters
         Tussenvoegsel
         Achternaam
-        Geslacht
-        Nationaliteit
         Geboortedatum
         IsGbaGeregistreerd
-        BSN
         Contactgegevens {
-          ContactgegevensID
           Adresregel1
           Adresregel2
           Huisnummer
@@ -23,94 +20,193 @@ export const MY_PERSON_QUERY = gql`
           Woonplaats
           Land
           Email
+          Telefoon
         }
       }
-      Certificeringen(alleenGeldig: false) {
-        CertificeringID
-        Nummer
-        NummerWeergave
-        BeginDatum
-        EindDatum
-        Status
-        IsVerlengingVan
-        DatumIngetrokkenVan
-        DatumIngetrokkenTot
-        UitstelVerleend
-        UitstelTot
-        Certificaat {
-          Naam
-          Code
-        }
-        CertificeringAantekeningen {
-          AantekeningCode
-        }
-      }
-    }
-  }
-`;
-
-export const MY_STUDYRESULTS_QUERY = gql`
-  query StudyResults($licenseId: Int) {
-    my {
-      Certificeringen(alleenGeldig: false) {
-        CertificeringID
-        Nummer
-        NummerWeergave
-        BeginDatum
-        EindDatum
-        Status
-        IsVerlengingVan
-        DatumIngetrokkenVan
-        DatumIngetrokkenTot
-        UitstelVerleend
-        UitstelTot
-        Certificaat {
-          Naam
-          Code
-        }
-        CertificeringAantekeningen {
-          AantekeningCode
-        }
-      }
-      Studieresultaten(isExamen: false, certificeringId: $licenseId) {
+      Studieresultaten {
         StudieresultaatID
+        Datum
+        Status
         Certificering {
           CertificeringID
           NummerWeergave
         }
         Cursus {
-          Titel
+          CursusID
+          Status
+          CursusCode
+          VakID
         }
-        Vak {
-          Titel
-          Competenties {
-            Naam
-          }
-          Themas {
-            Naam
-          }
-        }
+      }
+      Certificeringen(alleenGeldig: true) {
+        CertificeringID
+        Nummer
+        NummerWeergave
+        EindDatum
         Status
-        Datum
+        DatumVoldaan
+        Certificaat {
+          CertificaatID
+          Code
+          Naam
+        }
       }
     }
   }
 `;
 
-export const CERTIFICATES_QUERY = gql`
-  {
-    Certificaten {
-      CertificaatID
-      Code
+export interface IMy {
+  my: {
+    Persoon: IPersoon;
+    Certificeringen: ICertificering[];
+  };
+}
+
+export interface IPersoon {
+  __typename: 'Persoon';
+  PersoonID: string;
+  BSN: string | null;
+  Voorletters: string;
+  Tussenvoegsel: string;
+  Achternaam: string;
+  Roepnaam: string;
+  Geslacht: string;
+  Geboortedatum: any | null;
+  Nationaliteit: string;
+  Actief: boolean | null;
+  IsGbaGeregistreerd: boolean | null;
+  GbaNummer: string;
+  GbaUpdate: any | null;
+
+  /**
+   * Gets the contact data
+   */
+  Contactgegevens: IContactgegevens;
+
+  /**
+   * Fetches all licenses
+   */
+  Certificeringen: Array<ICertificering | null> | null;
+}
+
+export interface IContactgegevens {
+  __typename: 'Contactgegevens';
+  ContactgegevensID: string;
+  Adresregel1: string;
+  Adresregel2: string | null;
+  Huisnummer: string;
+  HuisnummerToevoeging: string | null;
+  Postcode: string;
+  Woonplaats: string;
+  Telefoon: string;
+  Land: string;
+  Email: string | null;
+}
+
+export interface ICertificaat {
+  __typename: 'Certificaat';
+  CertificaatID: string;
+  Code: string;
+  Naam: string;
+}
+
+export interface ICertificering {
+  __typename: 'Certificering';
+  CertificeringID: string;
+  CertificaatID: number | null;
+  NormVersieID: number | null;
+  PersoonID: number | null;
+  BeginDatum: any | null;
+  EindDatum: any | null;
+  Opmerkingen: string;
+  Nummer: string;
+  NummerWeergave: string;
+  Status: string;
+
+  /**
+   * Datum waarop alle verplichte bijeenkomsten zijn gevolgd
+   */
+  DatumVoldaan: any | null;
+  IsVerlengingVan: number | null;
+  DatumAangemaakt: any | null;
+  DatumIngetrokkenVan: any | null;
+  DatumIngetrokkenTot: any | null;
+  UitstelVerleend: boolean | null;
+  UitstelTot: any | null;
+  Certificaat: ICertificaat | null;
+  CertificeringAantekeningen: Array<ICertificeringAantekening | null> | null;
+}
+
+interface ICertificeringAantekening {
+  __typename: 'CertificeringAantekening';
+  CertificeringID: string;
+
+  /**
+   * Can only contain KBA of KBA-GB
+   */
+  AantekeningCode: string;
+  VanafDatum: any;
+  DatumPasAangemaakt: any | null;
+  Opmerkingen: string | null;
+  DatumAangemaakt: any | null;
+  DatumGewijzigd: any | null;
+  PersoonIDAangemaakt: number | null;
+  PersoonIDGewijzigd: number | null;
+}
+
+export const LISTS_QUERY = gql`
+  query getLists {
+    Themas {
+      ThemaID
       Naam
+    }
+    Competenties {
+      CompetentieID
+      Naam
+    }
+    Kennisgebieden {
+      KennisgebiedID
+      Naam
+    }
+    Landen {
+      Value
+      Text
     }
   }
 `;
 
-export const TARIEF_DUPLICAAT_QUERY = gql`
-  {
-    tariefDuplicaat {
-      TotaalExtBtw
+export const COURSE_SESSIONS_QUERY = gql`
+  query getCursusSessies($input: searchCourseSessionsInput!) {
+    CursusSessies(input: $input) {
+      CanUnRegister
+      CourseId
+      SpecialtyId
+      CourseCode
+      Title
+      Date
+      StartTime
+      EndTime
+      Price
+      LocationName
+      LocationAddress {
+        Street
+        HouseNr
+        HouseNrExtension
+        Zipcode
+        City
+        Email
+        Website
+      }
+      Distance
+      Competence
+      Theme
+      Organizer
+      OrganizerEmail
+      OrganizerPhone
+      OrganizerWebsite
+      PromoText
+      Registered
+      RegisteredDate
     }
   }
 `;

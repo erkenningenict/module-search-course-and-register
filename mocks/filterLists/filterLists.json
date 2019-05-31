@@ -1,7 +1,8 @@
 {
-  "expression": "^/DesktopModules/AOCRaad.Erkenningen.WebAPI/API/Course/FilterLists$",
-  "method": "GET",
-  "name": "getFilterLists",
+  "expression": "/graphql",
+  "body": "(.*)getLists(.*)",
+  "method": "POST",
+  "name": "filterLists",
   "responses": {
     "getFilterLists": {
       "default": true,

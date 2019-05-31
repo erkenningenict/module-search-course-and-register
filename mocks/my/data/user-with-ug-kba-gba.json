@@ -1,0 +1,432 @@
+{
+  "data": {
+    "my": {
+      "Persoon": {
+        "PersoonID": "62926",
+        "BSN": "0",
+        "Voorletters": "A.",
+        "Tussenvoegsel": "van",
+        "Achternaam": "Jansen Non GBA MOCK",
+        "IsGbaGeregistreerd": false,
+        "Geboortedatum": 1028160000000,
+        "Contactgegevens": {
+          "Adresregel1": "Markeweg",
+          "Adresregel2": "",
+          "Huisnummer": "2",
+          "HuisnummerToevoeging": "",
+          "Postcode": "1234 AH",
+          "Woonplaats": "NOORD-SLEEN",
+          "Land": "Nederland",
+          "Email": "",
+          "Telefoon": "",
+          "__typename": "Contactgegevens"
+        },
+        "__typename": "Persoon"
+      },
+      "Studieresultaten": [
+        {
+          "StudieresultaatID": "37262",
+          "Datum": 1028160000000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "23262",
+            "NummerWeergave": "12.96.0003958",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "11135",
+            "Status": "Betaald",
+            "CursusCode": "1008211135",
+            "VakID": 10082,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "35125",
+          "Datum": 1028160000000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "23262",
+            "NummerWeergave": "12.96.0003958",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "11465",
+            "Status": "Betaald",
+            "CursusCode": "1008311465",
+            "VakID": 10083,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "37292",
+          "Datum": 1028160000000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "23262",
+            "NummerWeergave": "12.96.0003958",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "11589",
+            "Status": "Betaald",
+            "CursusCode": "1008311589",
+            "VakID": 10083,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "117383",
+          "Datum": 1144800000000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "60338",
+            "NummerWeergave": "12.2002.0000482",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "15604",
+            "Status": "Betaald",
+            "CursusCode": "1037715604",
+            "VakID": 10377,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "132323",
+          "Datum": 1144800000000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "60338",
+            "NummerWeergave": "12.2002.0000482",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "16173",
+            "Status": "Betaald",
+            "CursusCode": "1065116173",
+            "VakID": 10651,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "168758",
+          "Datum": 1144800000000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "60338",
+            "NummerWeergave": "12.2002.0000482",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "17313",
+            "Status": "Betaald",
+            "CursusCode": "1065117313",
+            "VakID": 10651,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "226169",
+          "Datum": 1144800000000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "60338",
+            "NummerWeergave": "12.2002.0000482",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "19623",
+            "Status": "Betaald",
+            "CursusCode": "1104419623",
+            "VakID": 11044,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "359967",
+          "Datum": 1201737600000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "182926",
+            "NummerWeergave": "31.2008.0023242",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "26352",
+            "Status": "Betaald",
+            "CursusCode": "1143726352",
+            "VakID": 11437,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "395053",
+          "Datum": 1201737600000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "182926",
+            "NummerWeergave": "31.2008.0023242",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "27982",
+            "Status": "Betaald",
+            "CursusCode": "1189827982",
+            "VakID": 11898,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "446973",
+          "Datum": 1297641600000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "182926",
+            "NummerWeergave": "31.2008.0023242",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "30402",
+            "Status": "Betaald",
+            "CursusCode": "1189830402",
+            "VakID": 11898,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "516841",
+          "Datum": 1329350400000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "182926",
+            "NummerWeergave": "31.2008.0023242",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "33504",
+            "Status": "Betaald",
+            "CursusCode": "2143433504",
+            "VakID": 21434,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "575117",
+          "Datum": 1363219200000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "252279",
+            "NummerWeergave": "31.2012.0005523",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "36581",
+            "Status": "Betaald",
+            "CursusCode": "2143436581",
+            "VakID": 21434,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "695616",
+          "Datum": 1432080000000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "252279",
+            "NummerWeergave": "31.2012.0005523",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "43735",
+            "Status": "Betaald",
+            "CursusCode": "2200043735",
+            "VakID": 22000,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "614163",
+          "Datum": 1393200000000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "252279",
+            "NummerWeergave": "31.2012.0005523",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "38881",
+            "Status": "Betaald",
+            "CursusCode": "2205038881",
+            "VakID": 22050,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "671954",
+          "Datum": 1425254400000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "252279",
+            "NummerWeergave": "31.2012.0005523",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "42644",
+            "Status": "Betaald",
+            "CursusCode": "2205042644",
+            "VakID": 22050,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "735452",
+          "Datum": 1456444800000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "252279",
+            "NummerWeergave": "31.2012.0005523",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "46571",
+            "Status": "Betaald",
+            "CursusCode": "2271646571",
+            "VakID": 22716,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "794585",
+          "Datum": 1488844800000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "252279",
+            "NummerWeergave": "31.2012.0005523",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "50885",
+            "Status": "Betaald",
+            "CursusCode": "2271650885",
+            "VakID": 22716,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        },
+        {
+          "StudieresultaatID": "841111",
+          "Datum": 1520294400000,
+          "Status": "Betaald",
+          "Certificering": {
+            "CertificeringID": "308794",
+            "NummerWeergave": "31.2016.0007449",
+            "__typename": "Certificering"
+          },
+          "Cursus": {
+            "CursusID": "54580",
+            "Status": "Betaald",
+            "CursusCode": "2328354580",
+            "VakID": 23283,
+            "__typename": "Cursus"
+          },
+          "__typename": "Studieresultaat"
+        }
+      ],
+      "Certificeringen": [
+        {
+          "CertificeringID": "23262",
+          "Nummer": "12960003958",
+          "NummerWeergave": "12.96.0003958",
+          "EindDatum": 1009843200000,
+          "Status": "Verlopen",
+          "DatumVoldaan": 962668800000,
+          "Certificaat": {
+            "CertificaatID": "1",
+            "Code": "UG",
+            "Naam": "Uitvoeren Gewasbescherming",
+            "__typename": "Certificaat"
+          },
+          "__typename": "Certificering"
+        },
+        {
+          "CertificeringID": "23263",
+          "Nummer": "1220020000482",
+          "NummerWeergave": "12.2002.0000482",
+          "EindDatum": 1173312000000,
+          "Status": "Verlopen",
+          "DatumVoldaan": 1144800000000,
+          "Certificaat": {
+            "CertificaatID": "1",
+            "Code": "UG",
+            "Naam": "Uitvoeren Gewasbescherming",
+            "__typename": "Certificaat"
+          },
+          "__typename": "Certificering"
+        },
+        {
+          "CertificeringID": "23264",
+          "Nummer": "3120080023242",
+          "NummerWeergave": "31.2008.0023242",
+          "EindDatum": 1331164800000,
+          "Status": "Verlopen",
+          "DatumVoldaan": 1332201600000,
+          "Certificaat": {
+            "CertificaatID": "1",
+            "Code": "UG",
+            "Naam": "Uitvoeren Gewasbescherming",
+            "__typename": "Certificaat"
+          },
+          "__typename": "Certificering"
+        },
+        {
+          "CertificeringID": "23265",
+          "Nummer": "3120120005523",
+          "NummerWeergave": "31.2012.0005523",
+          "EindDatum": 1488931200000,
+          "Status": "Verlopen",
+          "DatumVoldaan": 1458604800000,
+          "Certificaat": {
+            "CertificaatID": "1",
+            "Code": "UG",
+            "Naam": "Uitvoeren Gewasbescherming",
+            "__typename": "Certificaat"
+          },
+          "__typename": "Certificering"
+        },
+        {
+          "CertificeringID": "23266",
+          "Nummer": "3120160007449",
+          "NummerWeergave": "31.2016.0007449",
+          "EindDatum": 1646697600000,
+          "Status": "Geldig",
+          "DatumVoldaan": null,
+          "Certificaat": {
+            "CertificaatID": "23",
+            "Code": "UG + KBA",
+            "Naam": "Uitvoeren gewasbesch. + KBA",
+            "__typename": "Certificaat"
+          },
+          "__typename": "Certificering"
+        }
+      ],
+      "__typename": "My"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "expression": "/graphql",
+  "body": "(.*)my(.*)",
+  "method": "POST",
+  "name": "my",
+  "responses": {
+    "getUserNonGba": {
+      "default": true,
+      "status": 200,
+      "delay": 200,
+      "file": "mocks/my/data/user-with-ug-kba-non-gba.json"
+    },
+    "getUserGba": {
+      "status": 200,
+      "delay": 200,
+      "file": "mocks/my/data/user-with-ug-kba-gba.json"
+    },
+    "getUnauthenticated": {
+      "status": 200,
+      "delay": 200,
+      "file": "mocks/my/data/unauthenticated.json"
+    }
+  }
+}

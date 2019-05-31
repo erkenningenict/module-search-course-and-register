@@ -34,6 +34,18 @@ ngApimock.watch('mocks');
       });
       res.end();
     }
+    if (req.url.match('/graphql') !== null) {
+      console.log('#DH# inside graphql');
+      // Real api endpoint
+      const baseUrl = `http://localhost:3010/graphql`;
+      const redirectUrl = `${baseUrl}`;
+      console.log('redirecting to API: ', redirectUrl);
+      // Redirect to the real api endpoint
+      res.writeHead(307, {
+        Location: redirectUrl,
+      });
+      res.end();
+    }
   });
 
   http.createServer(app).listen(4000);
