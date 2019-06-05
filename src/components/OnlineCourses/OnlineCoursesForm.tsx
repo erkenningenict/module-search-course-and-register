@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { parseLocationSearch } from '../../helpers/url-utils';
@@ -55,10 +55,8 @@ export function OnlineCoursesForm(onlineCourseProps: RouteComponentProps) {
             Ga naar bijeenkomsten op locatie zoeken
           </Link>
         </p>
-        )}
       </div>
       Online bijeenkomsten
-      {/* <NormalCoursesTable searchData={searchData} /> */}
     </>
   );
 }

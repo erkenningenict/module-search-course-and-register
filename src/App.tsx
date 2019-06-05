@@ -73,11 +73,12 @@ export default function App() {
                   for (const err of error.graphQLErrors) {
                     if (err.extensions && err.extensions.code === 'UNAUTHENTICATED') {
                       // Redirect to DNN login
+                      console.log('#DH# unauth');
                       return (
-                        // <UserContext.Provider value={{user: {}}>
-                        <SearchCourse />
-                        // </UserContext.Provider>
-                      );
+                        <UserContext.Provider value={undefined}>
+                          <SearchCourse />
+                        </UserContext.Provider>
+                      ) as React.ReactElement;
                       // return <Redirect push={true} to="/Default.aspx?tabid=154" />;
                     } else {
                       return <p>Fout</p>;
@@ -90,7 +91,7 @@ export default function App() {
                     nog een keer of neem contact op met de helpdesk.
                     {/* {{ error && error.length ?  }} */}
                   </Alert>
-                );
+                ) as React.ReactElement;
               }
               return (
                 <UserContext.Provider value={{ my: data.my }}>

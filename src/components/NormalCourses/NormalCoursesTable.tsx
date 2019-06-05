@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Query } from 'react-apollo';
 import { COURSE_SESSIONS_QUERY } from '../../shared/Queries';
 import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
@@ -16,6 +16,7 @@ interface INormalCoursesTable {
     distanceRadius: number;
     from: any;
     to: any;
+    isOnlineCourse: boolean;
   };
 }
 
@@ -40,7 +41,7 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
         ? null
         : props.searchData.from.getTime()
       : null,
-    isOnlineCourse: false,
+    isOnlineCourse: props.searchData.isOnlineCourse,
   };
   const searchInput = searchData;
   delete searchInput.licenseId;
@@ -106,18 +107,6 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
                 </tbody>
               </table>
             </div>
-            {/* <Route
-              path="/bijeenkomsten-zoeken/op-locatie/informatie-en-aanmelden/:courseId"
-              render={(routerProps: any) => (
-                <NormalCourseDetails
-                  routerProps={routerProps}
-                  details={dialogData}
-                  visible={dialogData ? true : false}
-                  onHideDialog={(e: any) => setDialogData(undefined)}
-                  licenseId={parseInt(props.searchData.licenseId, 10)}
-                  useDialog={true}
-                />
-            /> */}
           </>
         );
       }}

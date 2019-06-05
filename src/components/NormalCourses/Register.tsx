@@ -3,6 +3,7 @@ import { Button } from 'primereact/button';
 import * as React from 'react';
 import { useContext } from 'react';
 import { Mutation, Query } from 'react-apollo';
+import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import { toDutchDate } from '../../helpers/date-utils';
 import { IRegisterForCourseInput, REGISTER } from '../../shared/Mutations';
@@ -13,7 +14,6 @@ import Alert from '../ui/Alert';
 import FormSelect from '../ui/FormSelect';
 import FormText from '../ui/FormText';
 import Spinner from '../ui/Spinner';
-import { Link } from 'react-router-dom';
 
 interface IIdLabel {
   Id: number;
@@ -80,11 +80,14 @@ export function Register(properties: IRegister) {
   const returnToListLink = <Link to="/bijeenkomsten-zoeken/op-locatie">Terug</Link>;
 
   return (
-    <div className="panel-body">
-      <p>
-        Deze gegevens worden aan de organisator doorgegeven. De organisator verwerkt deze gegevens
-        volgens haar richtlijnen. De richtlijnen zijn bij de organisator beschikbaar.
-      </p>
+    <>
+      <div className="panel-body">
+        <p>
+          Deze gegevens worden aan de organisator doorgegeven. De organisator verwerkt deze gegevens
+          volgens haar richtlijnen. De richtlijnen zijn bij de organisator beschikbaar. License{' '}
+          {licenseId}
+        </p>
+      </div>
       <Mutation mutation={REGISTER}>
         {(
           registerCourse,
@@ -97,26 +100,30 @@ export function Register(properties: IRegister) {
                   <div>
                     <Spinner />
                   </div>
-                );
+                ) as React.ReactElement;
               }
               if (error) {
-                return <Alert type="danger">Fout bij ophalen lijsten...</Alert>;
+                return (
+                  <Alert type="danger">Fout bij ophalen lijsten...</Alert>
+                ) as React.ReactElement;
               }
               if (mutationError) {
-                return <Alert type="danger">Fout bij opslaan gegevens...</Alert>;
+                return (
+                  <Alert type="danger">Fout bij opslaan gegevens...</Alert>
+                ) as React.ReactElement;
               }
               if (mutationData && mutationData.registerForCourse.success) {
                 return (
-                  <>
+                  <div className="panel-body">
                     <Alert type="success">Uw aanvraag is gedaan.</Alert>
                     {returnToListLink}
-                  </>
-                );
+                  </div>
+                ) as React.ReactElement;
               }
               const userData = user && user.my && user.my.Persoon;
               const contactData = user && user.my && user.my.Persoon.Contactgegevens;
               if (!userData || !contactData) {
-                return <p>Er zijn geen gegevens gevonden.</p>;
+                return <p>Er zijn geen gegevens gevonden.</p> as React.ReactElement;
               }
               return (
                 <Formik
@@ -285,11 +292,11 @@ export function Register(properties: IRegister) {
                     );
                   }}
                 />
-              );
+              ) as React.ReactElement;
             }}
           </Query>
         )}
       </Mutation>
-    </div>
+    </>
   );
 }

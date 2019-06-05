@@ -10,7 +10,7 @@ export function LicenseChooser(props: any) {
   const user = useContext(UserContext);
   const licenseId = useContext(SelectedLicenseContext);
   if (!user) {
-    return null;
+    return props.children;
   }
   const certificeringen: ICertificering[] = (user && user.my && user.my.Certificeringen) || [];
   if (!certs && certificeringen.length > 0) {
@@ -19,6 +19,15 @@ export function LicenseChooser(props: any) {
 
   if (licenseId === 0 && certs && certs.length > 0) {
     props.setLicenseId(parseInt(certs[0].CertificeringID, 10));
+  }
+
+  if (
+    props.location.pathname.match(
+      /\/bijeenkomsten-zoeken\/op-locatie\/informatie-en-aanmelden\/(d*)/,
+    ) &&
+    !!props.seenOverview
+  ) {
+    return props.children;
   }
   return (
     <>
@@ -46,6 +55,7 @@ export function LicenseChooser(props: any) {
           </Alert>
         )}
       </form>
+      <hr />
       {props.children}
     </>
   );

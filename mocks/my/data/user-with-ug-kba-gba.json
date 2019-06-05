@@ -3,11 +3,11 @@
     "my": {
       "Persoon": {
         "PersoonID": "62926",
-        "BSN": "0",
+        "BSN": "123456789",
         "Voorletters": "A.",
         "Tussenvoegsel": "van",
         "Achternaam": "Jansen Non GBA MOCK",
-        "IsGbaGeregistreerd": false,
+        "IsGbaGeregistreerd": true,
         "Geboortedatum": 1028160000000,
         "Contactgegevens": {
           "Adresregel1": "Markeweg",

@@ -20,10 +20,14 @@ interface IIdLabel {
   Label: string;
 }
 
-export function NormalCoursesForm(props: RouteComponentProps) {
+interface INormalCourseFormProps extends RouteComponentProps {
+  isOnline: boolean;
+}
+
+export function NormalCoursesForm(props: INormalCourseFormProps) {
+  console.log('#DH# props', props);
   const [searchData, setSearchData] = useState();
   const lic = useContext(SelectedLicenseContext);
-  console.log('#DH# lic:', lic);
 
   const distances: IIdLabel[] = [
     { Id: 0, Label: 'Alle' },
@@ -48,11 +52,14 @@ export function NormalCoursesForm(props: RouteComponentProps) {
         <p>
           <Link
             to={{
-              pathname: '/bijeenkomsten-zoeken/online',
+              pathname: `/bijeenkomsten-zoeken/${props.isOnline ? 'op-locatie' : 'online'}`,
               search: props.location.search,
             }}
           >
-            Ga naar online bijeenkomsten zoeken
+            Ga naar{' '}
+            {`${
+              props.isOnline ? 'bijeenkomsten op locatie zoeken' : 'online bijeenkomsten zoeken'
+            }`}
           </Link>
         </p>
       </div>
@@ -63,13 +70,13 @@ export function NormalCoursesForm(props: RouteComponentProps) {
               <div>
                 <Spinner />
               </div>
-            );
+            ) as React.ReactElement;
           }
 
           if (error) {
             return (
               <p>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</p>
-            );
+            ) as React.ReactElement;
           }
 
           const licenseId: string | null =
@@ -101,7 +108,9 @@ export function NormalCoursesForm(props: RouteComponentProps) {
               themeId: theme,
               competenceId: competence,
               distanceRadius: 0,
+              isOnlineCourse: props.isOnline,
             });
+
             return null;
           }
 
@@ -124,6 +133,7 @@ export function NormalCoursesForm(props: RouteComponentProps) {
                 distanceRadius: 0,
                 from: '',
                 to: '',
+                isOnlineCourse: props.isOnline,
               }}
               onSubmit={(values, { setSubmitting }) => {
                 setSearchData(values);
@@ -153,52 +163,56 @@ export function NormalCoursesForm(props: RouteComponentProps) {
                     name="themeId"
                     form={formProps}
                   />
-                  <FormSelect
-                    id="competenceId"
-                    label="Licentietype"
-                    options={competences.map((item: ICompetentie) => ({
-                      value: parseInt(item.CompetentieID, 10),
-                      label: item.Naam,
-                    }))}
-                    loading={loading}
-                    name="competenceId"
-                    form={formProps}
-                  />
-                  <FormCalendar
-                    id="dateFrom"
-                    label="Datum vanaf"
-                    placeholder="dd-mm-jjjj"
-                    name="from"
-                    form={formProps}
-                  />
-                  <FormCalendar
-                    id="dateTo"
-                    label="Datum tot"
-                    placeholder="dd-mm-jjjj"
-                    name="to"
-                    form={formProps}
-                  />
-                  <FormText
-                    id="zipcode"
-                    label="Postcode"
-                    placeholder="1234"
-                    name="zipcodeNumbers"
-                    form={formProps}
-                    onChange={(e) => handleZipcodesChange(e, formProps)}
-                    labelClassNames="col-md-3"
-                    formControlClassName="col-md-2"
-                  />
-                  <FormSelect
-                    id="distanceRadius"
-                    label="Afstand in km"
-                    options={distances.map((item: IIdLabel) => ({
-                      value: item.Id,
-                      label: item.Label,
-                    }))}
-                    name="distanceRadius"
-                    loading={loading}
-                    form={formProps}
-                  />
+                  {!props.isOnline ? (
+                    <>
+                      <FormSelect
+                        id="competenceId"
+                        label="Licentietype"
+                        options={competences.map((item: ICompetentie) => ({
+                          value: parseInt(item.CompetentieID, 10),
+                          label: item.Naam,
+                        }))}
+                        loading={loading}
+                        name="competenceId"
+                        form={formProps}
+                      />
+                      <FormCalendar
+                        id="dateFrom"
+                        label="Datum vanaf"
+                        placeholder="dd-mm-jjjj"
+                        name="from"
+                        form={formProps}
+                      />
+                      <FormCalendar
+                        id="dateTo"
+                        label="Datum tot"
+                        placeholder="dd-mm-jjjj"
+                        name="to"
+                        form={formProps}
+                      />
+                      <FormText
+                        id="zipcode"
+                        label="Postcode"
+                        placeholder="1234"
+                        name="zipcodeNumbers"
+                        form={formProps}
+                        onChange={(e) => handleZipcodesChange(e, formProps)}
+                        labelClassNames="col-md-3"
+                        formControlClassName="col-md-2"
+                      />
+                      <FormSelect
+                        id="distanceRadius"
+                        label="Afstand in km"
+                        options={distances.map((item: IIdLabel) => ({
+                          value: item.Id,
+                          label: item.Label,
+                        }))}
+                        name="distanceRadius"
+                        loading={loading}
+                        form={formProps}
+                      />
+                    </>
+                  ) : null}
                   <div className="form-group row">
                     <div className="col-md-4 col-md-offset-3">
                       <Button
@@ -212,7 +226,7 @@ export function NormalCoursesForm(props: RouteComponentProps) {
                 </form>
               )}
             />
-          );
+          ) as React.ReactElement;
         }}
       </Query>
       {searchData && <NormalCoursesTable searchData={searchData} />}

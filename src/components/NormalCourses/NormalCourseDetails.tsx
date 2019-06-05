@@ -127,7 +127,7 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
             ) : (
               <>
                 <Alert type="warning">
-                  <div style={{ textAlign: 'left' }}>
+                  <div style={{ textAlign: 'left', fontWeight: 600 }}>
                     U kunt nog niet aanmelden omdat u niet bent ingelogd. Klik op Inloggen om aan te
                     melden om eerst in te loggen, keer dan hier terug om u aan te melden.
                   </div>
@@ -138,6 +138,7 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
                   onClick={() => props.routerProps.history.push('/Default.aspx?tabid=154')}
                   icon="pi pi-check"
                 />
+                <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
               </>
             )}
           </Col>
