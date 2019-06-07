@@ -1,0 +1,198 @@
+{
+  "data": {
+    "CursusDeelnames": [
+      {
+        "CursusDeelnameID": "583446",
+        "CursusID": 36581,
+        "PersoonID": 62926,
+        "Status": "Betaald",
+        "Opmerkingen": "Teruggemeld op 14-03-2013 13:23",
+        "Certificering": {
+          "CertificeringID": "252279",
+          "NummerWeergave": "31.2012.0005523"
+        },
+        "Cursus": {
+          "CursusID": "36581",
+          "Titel": "Veilig en effectief spuiten in de open teelten",
+          "Sessies": [
+            {
+              "Datum": 1360800000000
+            }
+          ],
+          "Vak": {
+            "Themas": [
+              {
+                "Naam": "Veiligheid en Techniek"
+              }
+            ],
+            "Competenties": [
+              {
+                "Naam": "Bedrijfsvoeren Gewasbescherming"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "CursusDeelnameID": "625112",
+        "CursusID": 38881,
+        "PersoonID": 62926,
+        "Status": "Betaald",
+        "Opmerkingen": "Teruggemeld op 24-02-2014 13:05",
+        "Certificering": {
+          "CertificeringID": "252279",
+          "NummerWeergave": "31.2012.0005523"
+        },
+        "Cursus": {
+          "CursusID": "38881",
+          "Titel": "Gewasbeschermingsmiddelen effectief inzetten voor een optimaal rendement.",
+          "Sessies": [
+            {
+              "Datum": 1391644800000
+            }
+          ],
+          "Vak": {
+            "Themas": [
+              {
+                "Naam": "Teelt"
+              }
+            ],
+            "Competenties": [
+              {
+                "Naam": "Bedrijfsvoeren Gewasbescherming"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "CursusDeelnameID": "685259",
+        "CursusID": 42644,
+        "PersoonID": 62926,
+        "Status": "Betaald",
+        "Opmerkingen": "Teruggemeld op 02-03-2015 15:32",
+        "Certificering": {
+          "CertificeringID": "252279",
+          "NummerWeergave": "31.2012.0005523"
+        },
+        "Cursus": {
+          "CursusID": "42644",
+          "Titel": "Gewasbeschermingsmiddelen effectief inzetten voor een optimaal rendement.",
+          "Sessies": [
+            {
+              "Datum": 1423526400000
+            }
+          ],
+          "Vak": {
+            "Themas": [
+              {
+                "Naam": "Teelt"
+              }
+            ],
+            "Competenties": [
+              {
+                "Naam": "Bedrijfsvoeren Gewasbescherming"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "CursusDeelnameID": "709233",
+        "CursusID": 43735,
+        "PersoonID": 62926,
+        "Status": "Betaald",
+        "Opmerkingen": "Teruggemeld op 20-05-2015 15:21",
+        "Certificering": {
+          "CertificeringID": "252279",
+          "NummerWeergave": "31.2012.0005523"
+        },
+        "Cursus": {
+          "CursusID": "43735",
+          "Titel": "Zelf knaagdieren beheersen",
+          "Sessies": [
+            {
+              "Datum": 1429574400000
+            }
+          ],
+          "Vak": {
+            "Themas": [
+              {
+                "Naam": "KBA"
+              }
+            ],
+            "Competenties": [
+              {
+                "Naam": "KBA"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "CursusDeelnameID": "751806",
+        "CursusID": 46571,
+        "PersoonID": 62926,
+        "Status": "Betaald",
+        "Opmerkingen": "Teruggemeld op 26-02-2016 08:50",
+        "Certificering": {
+          "CertificeringID": "252279",
+          "NummerWeergave": "31.2012.0005523"
+        },
+        "Cursus": {
+          "CursusID": "46571",
+          "Titel": "Weerbaar telen",
+          "Sessies": [
+            {
+              "Datum": 1455148800000
+            }
+          ],
+          "Vak": {
+            "Themas": [
+              {
+                "Naam": "Teelt"
+              }
+            ],
+            "Competenties": [
+              {
+                "Naam": "Bedrijfsvoeren Gewasbescherming"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "CursusDeelnameID": "818413",
+        "CursusID": 50885,
+        "PersoonID": 62926,
+        "Status": "Betaald",
+        "Opmerkingen": "Teruggemeld op 07-03-2017 10:17",
+        "Certificering": {
+          "CertificeringID": "252279",
+          "NummerWeergave": "31.2012.0005523"
+        },
+        "Cursus": {
+          "CursusID": "50885",
+          "Titel": "Weerbaar telen",
+          "Sessies": [
+            {
+              "Datum": 1486339200000
+            }
+          ],
+          "Vak": {
+            "Themas": [
+              {
+                "Naam": "Teelt"
+              }
+            ],
+            "Competenties": [
+              {
+                "Naam": "Bedrijfsvoeren Gewasbescherming"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

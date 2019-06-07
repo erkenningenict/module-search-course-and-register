@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const GET_MY_PERSON_QUERY = gql`
-  query my {
+  query getMy($input: Boolean!) {
     my {
       Persoon {
         PersoonID
@@ -23,22 +23,7 @@ export const GET_MY_PERSON_QUERY = gql`
           Telefoon
         }
       }
-      Studieresultaten {
-        StudieresultaatID
-        Datum
-        Status
-        Certificering {
-          CertificeringID
-          NummerWeergave
-        }
-        Cursus {
-          CursusID
-          Status
-          CursusCode
-          VakID
-        }
-      }
-      Certificeringen(alleenGeldig: true) {
+      Certificeringen(alleenGeldig: $input) {
         CertificeringID
         Nummer
         NummerWeergave
@@ -207,6 +192,52 @@ export const COURSE_SESSIONS_QUERY = gql`
       PromoText
       Registered
       RegisteredDate
+    }
+  }
+`;
+
+export const SEARCH_SPECIALTIES = gql`
+  query getSearchSpecialties($input: searchSpecialtyInput!) {
+    SearchSpecialties(input: $input) {
+      SpecialtyId
+      Code
+      Title
+      Price
+      Competence
+      Theme
+      Organizer
+      OrganizerEmail
+      OrganizerPhone
+      OrganizerWebsite
+      PromoText
+    }
+  }
+`;
+
+export const GET_PARTICIPATIONS = gql`
+  query getCursusDeelnames($licenseId: Int) {
+    CursusDeelnames(certificeringId: $licenseId) {
+      CursusDeelnameID
+      Status
+      Certificering {
+        CertificeringID
+        NummerWeergave
+      }
+      Cursus {
+        CursusID
+        Titel
+        Sessies {
+          Datum
+        }
+        Vak {
+          Themas {
+            Naam
+          }
+          Competenties {
+            Naam
+          }
+        }
+      }
     }
   }
 `;

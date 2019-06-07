@@ -3,14 +3,15 @@ import { Button } from 'primereact/button';
 import React, { useContext, useState } from 'react';
 import { Query } from 'react-apollo';
 import { RouteComponentProps } from 'react-router';
-import { Link } from 'react-router-dom';
 import { ICompetentie, IKennisgebied, IThema } from '../../shared/Model';
 import { LISTS_QUERY } from '../../shared/Queries';
-import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
+// import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
 import { UserContext } from '../../shared/UserContext';
 import FormCalendar from '../ui/FormCalendar';
 import FormSelect from '../ui/FormSelect';
 import FormText from '../ui/FormText';
+import LinkButton from '../ui/LinkButton';
+import LinkButtonContainer from '../ui/LinkButtonContainer';
 import Spinner from '../ui/Spinner';
 import { parseLocationSearch } from './../../helpers/url-utils';
 import { NormalCoursesTable } from './NormalCoursesTable';
@@ -25,9 +26,8 @@ interface INormalCourseFormProps extends RouteComponentProps {
 }
 
 export function NormalCoursesForm(props: INormalCourseFormProps) {
-  console.log('#DH# props', props);
   const [searchData, setSearchData] = useState();
-  const lic = useContext(SelectedLicenseContext);
+  // const lic = useContext(SelectedLicenseContext);
 
   const distances: IIdLabel[] = [
     { Id: 0, Label: 'Alle' },
@@ -49,25 +49,31 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
   return (
     <>
       <div className="panel-body">
-        <p>
-          <Link
+        <LinkButtonContainer>
+          <LinkButton
             to={{
-              pathname: `/bijeenkomsten-zoeken/${props.isOnline ? 'op-locatie' : 'online'}`,
+              pathname: `/bijeenkomsten-zoeken/online`,
               search: props.location.search,
             }}
-          >
-            Ga naar{' '}
-            {`${
-              props.isOnline ? 'bijeenkomsten op locatie zoeken' : 'online bijeenkomsten zoeken'
-            }`}
-          </Link>
-        </p>
+            name="Online bijeenkomsten"
+          />
+          {value && (
+            <LinkButton
+              to={{
+                pathname: `/wat-heb-ik-al-gevolgd/`,
+                search: props.location.search,
+              }}
+              name="Wat heb ik al gevolgd?"
+            />
+          )}
+        </LinkButtonContainer>
+        <h3>Zoek een bijeenkomst op locatie</h3>
       </div>
       <Query query={LISTS_QUERY}>
         {({ loading, error, data }) => {
           if (loading) {
             return (
-              <div>
+              <div className="panel-body">
                 <Spinner />
               </div>
             ) as React.ReactElement;
@@ -163,58 +169,52 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
                     name="themeId"
                     form={formProps}
                   />
-                  {!props.isOnline ? (
-                    <>
-                      <FormSelect
-                        id="competenceId"
-                        label="Licentietype"
-                        options={competences.map((item: ICompetentie) => ({
-                          value: parseInt(item.CompetentieID, 10),
-                          label: item.Naam,
-                        }))}
-                        loading={loading}
-                        name="competenceId"
-                        form={formProps}
-                      />
-                      <FormCalendar
-                        id="dateFrom"
-                        label="Datum vanaf"
-                        placeholder="dd-mm-jjjj"
-                        name="from"
-                        form={formProps}
-                      />
-                      <FormCalendar
-                        id="dateTo"
-                        label="Datum tot"
-                        placeholder="dd-mm-jjjj"
-                        name="to"
-                        form={formProps}
-                      />
-                      <FormText
-                        id="zipcode"
-                        label="Postcode"
-                        placeholder="1234"
-                        name="zipcodeNumbers"
-                        form={formProps}
-                        onChange={(e) => handleZipcodesChange(e, formProps)}
-                        labelClassNames="col-md-3"
-                        formControlClassName="col-md-2"
-                      />
-                      <FormSelect
-                        id="distanceRadius"
-                        label="Afstand in km"
-                        options={distances.map((item: IIdLabel) => ({
-                          value: item.Id,
-                          label: item.Label,
-                        }))}
-                        name="distanceRadius"
-                        loading={loading}
-                        form={formProps}
-                      />
-                    </>
-                  ) : null}
+                  <FormSelect
+                    id="competenceId"
+                    label="Licentietype"
+                    options={competences.map((item: ICompetentie) => ({
+                      value: parseInt(item.CompetentieID, 10),
+                      label: item.Naam,
+                    }))}
+                    loading={loading}
+                    name="competenceId"
+                    form={formProps}
+                  />
+                  <FormCalendar
+                    id="dateFrom"
+                    label="Datum vanaf"
+                    placeholder="dd-mm-jjjj"
+                    name="from"
+                    form={formProps}
+                  />
+                  <FormCalendar
+                    id="dateTo"
+                    label="Datum tot"
+                    placeholder="dd-mm-jjjj"
+                    name="to"
+                    form={formProps}
+                  />
+                  <FormText
+                    id="zipcode"
+                    label="Postcode"
+                    placeholder="1234"
+                    name="zipcodeNumbers"
+                    form={formProps}
+                    onChange={(e) => handleZipcodesChange(e, formProps)}
+                  />
+                  <FormSelect
+                    id="distanceRadius"
+                    label="Afstand in km"
+                    options={distances.map((item: IIdLabel) => ({
+                      value: item.Id,
+                      label: item.Label,
+                    }))}
+                    name="distanceRadius"
+                    loading={loading}
+                    form={formProps}
+                  />
                   <div className="form-group row">
-                    <div className="col-md-4 col-md-offset-3">
+                    <div className="col-sm-4 col-md-3 col-sm-offset-4 col-md-offset-3">
                       <Button
                         type="submit"
                         label="Zoeken"

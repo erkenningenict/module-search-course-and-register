@@ -5,20 +5,15 @@ import { useContext } from 'react';
 import { Mutation, Query } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
-import { toDutchDate } from '../../helpers/date-utils';
-import { IRegisterForCourseInput, REGISTER } from '../../shared/Mutations';
-import { LISTS_QUERY } from '../../shared/Queries';
-import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
-import { UserContext } from '../../shared/UserContext';
-import Alert from '../ui/Alert';
-import FormSelect from '../ui/FormSelect';
-import FormText from '../ui/FormText';
-import Spinner from '../ui/Spinner';
-
-interface IIdLabel {
-  Id: number;
-  Label: string;
-}
+import { toDutchDate } from '../helpers/date-utils';
+import { IRegisterForCourseInput, REGISTER } from '../shared/Mutations';
+import { LISTS_QUERY } from '../shared/Queries';
+import { SelectedLicenseContext } from '../shared/SelectedLicenseContext';
+import { UserContext } from '../shared/UserContext';
+import Alert from './ui/Alert';
+import FormSelect from './ui/FormSelect';
+import FormText from './ui/FormText';
+import Spinner from './ui/Spinner';
 
 export interface IRegisterCourseDetails {
   specialtyId?: number;
@@ -292,7 +287,7 @@ export function Register(properties: IRegister) {
                     );
                   }}
                 />
-              ) as React.ReactElement;
+              ) as React.ReactComponentElement<any>;
             }}
           </Query>
         )}

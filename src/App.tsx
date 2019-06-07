@@ -11,6 +11,7 @@ import { SearchCourse } from './components/containers/SearchCourseAndRegister/Se
 import Alert from './components/ui/Alert';
 import { GET_MY_PERSON_QUERY } from './shared/Queries';
 import { UserContext } from './shared/UserContext';
+import DoneParticipations from './components/containers/Participations/DoneParticipations';
 
 // const registerCourseDetails: IRegisterCourseDetails = {
 //   licenseId: 1,
@@ -35,33 +36,13 @@ export default function App() {
               return null;
             }}
           />
-          <Route
-            path="/bijeenkomsten-zoeken/op-locatie"
-            render={(props: any) => {
-              // const params = parseLocationSearch(props.location.search);
-              // params.forEach((param: { key: string; value: string }) => {
-              //   switch (param.key) {
-              //     case 'themaId':
-              //       setThemeId(parseInt(param.value, 10));
-              //       break;
-              //     case 'competentieId':
-              //       setCompetenceId(parseInt(param.value, 10));
-              //       break;
-              //     default:
-              //   }
-              // });
-              // setRoute(true);
-              return null;
+          <Query
+            query={GET_MY_PERSON_QUERY}
+            fetchPolicy="no-cache"
+            variables={{
+              input: true,
             }}
-          />
-          {/* <Route
-            path={'/online'}
-            render={(props: any) => {
-              // setRoute(true);
-              return null;
-            }}
-          /> */}
-          <Query query={GET_MY_PERSON_QUERY} fetchPolicy="no-cache">
+          >
             {({ loading, error, data }) => {
               if (loading) {
                 return <p>Gegevens worden geladen...</p>;
@@ -95,12 +76,23 @@ export default function App() {
               }
               return (
                 <UserContext.Provider value={{ my: data.my }}>
-                  <SearchCourse />
+                  <Route
+                    path="/bijeenkomsten-zoeken"
+                    render={(routerProps: any) => {
+                      return <SearchCourse {...routerProps} />;
+                    }}
+                  />
+                  <Route
+                    exact={true}
+                    path="/wat-heb-ik-al-gevolgd"
+                    render={(routerProps: any) => {
+                      return <DoneParticipations {...routerProps} />;
+                    }}
+                  />
                 </UserContext.Provider>
               );
             }}
           </Query>
-          {/* <Register registerCourseDetails={registerCourseDetails} /> */}
         </>
       </HashRouter>
     </div>

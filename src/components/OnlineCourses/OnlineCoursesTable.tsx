@@ -1,12 +1,12 @@
 import React from 'react';
 import { Query } from 'react-apollo';
-import { COURSE_SESSIONS_QUERY } from '../../shared/Queries';
-import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
+import { SEARCH_SPECIALTIES } from '../../shared/Queries';
+import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
 import Alert from '../ui/Alert';
 import Spinner from '../ui/Spinner';
-import { NormalCoursesRow } from './NormalCoursesRow';
+import { OnlineCoursesRow } from './OnlineCoursesRow';
 
-interface INormalCoursesTable {
+interface IOnlineCoursesTable {
   searchData: {
     licenseId: string;
     knowledgeAreaId: string;
@@ -20,7 +20,7 @@ interface INormalCoursesTable {
   };
 }
 
-export function NormalCoursesTable(props: INormalCoursesTable) {
+export function OnlineCoursesTable(props: IOnlineCoursesTable) {
   if (!props.searchData) {
     return null;
   }
@@ -28,19 +28,7 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
     ...props.searchData,
     licenseId: parseInt(props.searchData.licenseId, 10),
     knowledgeAreaId: parseInt(props.searchData.knowledgeAreaId, 10),
-    competenceId: parseInt(props.searchData.competenceId, 10),
     themeId: parseInt(props.searchData.themeId, 10),
-    zipcodeNumbers: parseInt(props.searchData.zipcodeNumbers, 10) || null,
-    to: props.searchData.to
-      ? props.searchData.to === ''
-        ? null
-        : props.searchData.to.getTime()
-      : null,
-    from: props.searchData.from
-      ? props.searchData.from === ''
-        ? null
-        : props.searchData.from.getTime()
-      : null,
     isOnlineCourse: props.searchData.isOnlineCourse,
   };
   const searchInput = searchData;
@@ -48,7 +36,7 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
 
   return (
     <Query
-      query={COURSE_SESSIONS_QUERY}
+      query={SEARCH_SPECIALTIES}
       variables={{
         input: searchInput,
       }}
@@ -76,28 +64,20 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
               <table className="table table-striped" key="table">
                 <thead>
                   <tr key="headerRow">
-                    <th>Titel (aantal resultaten: {data.CursusSessies.length})</th>
-                    <th style={{ width: '88px' }}>Datum</th>
-                    <th style={{ width: '97px' }}>Van - tot</th>
-                    <th>Locatie</th>
-                    {!searchData.distanceRadius ||
-                      (searchData.distanceRadius !== 0 && <th>Afstand (km)</th>)}
+                    <th>Titel (aantal resultaten: {data.SearchSpecialties.length})</th>
+                    <th>Organisator</th>
                     <th>Prijs (incl. btw)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {data &&
-                    data.CursusSessies &&
-                    data.CursusSessies.map((item: INormalCourseDetails) => (
-                      <NormalCoursesRow
-                        key={item.CourseCode}
-                        row={item}
-                        showDistance={searchData.distanceRadius !== 0}
-                      />
-                    ))}
-                  {!data || data.CursusSessies.length === 0 ? (
+                    data.SearchSpecialties &&
+                    data.SearchSpecialties.map((item: IOnlineCourseDetails) => {
+                      return <OnlineCoursesRow key={item.Code} row={item} />;
+                    })}
+                  {!data || data.SearchSpecialties.length === 0 ? (
                     <tr>
-                      <td colSpan={searchData.distanceRadius !== 0 ? 6 : 5}>
+                      <td>
                         <Alert type="info">
                           Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan.
                         </Alert>

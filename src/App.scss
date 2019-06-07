@@ -1,4 +1,5 @@
 @import '~@fortawesome/fontawesome-free/css/all.css';
+@import './colors.scss';
 
 .p-button {
   margin-right: 1em !important;
@@ -34,32 +35,32 @@ body .p-inputtext:disabled {
 }
 
 body .p-highlight {
-  background-color: #dd6b02 !important;
+  background-color: $be-orange !important;
 }
 
 body a {
-  color: #dd6b02;
+  color: $be-orange;
 }
 body a:visited {
-  color: #ab5302;
+  color: $be-orange-dark;
 }
 
 body .p-button {
   border-radius: 0;
-  color: #fff;
-  background: #dd6b02;
+  color: $be-white;
+  background: $be-orange;
   border: transparent;
 }
 body .p-button:enabled:hover {
-  color: #fff;
-  background-color: #aa5302;
+  color: $be-white;
+  background-color: $be-orange-dark;
   border-color: #874101;
 }
 
 body .p-inputtext {
   font-size: 16px;
   color: #333333;
-  background: #d3ebea;
+  background: $be-inputs-background;
   padding: 6px 12px;
   border: 1px solid transparent;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -70,17 +71,14 @@ body .p-inputtext {
   }
 }
 body .p-dropdown {
-  background: #d3ebea;
-  border: 1px solid #d3ebea;
+  background: $be-inputs-background;
+  border: 1px solid $be-inputs-background;
   border-radius: 0;
 
   > .p-dropdown-trigger {
-    background-color: #d3ebea;
+    background-color: $be-inputs-background;
   }
   &:not(.p-disabled):hover {
     border-color: #c1d6d5;
   }
 }
-// body .p-dropdown .p-dropdown-trigger {
-//   background-color: #ffffff;
-// }

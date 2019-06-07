@@ -1,32 +1,23 @@
-import moment from 'moment';
 import { Button } from 'primereact/button';
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { toDutchDate } from '../../helpers/date-utils';
 import { UserContext } from '../../shared/UserContext';
-import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
+import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
 import { Register } from '../Register';
 import Alert from '../ui/Alert';
 import Col from '../ui/Col';
 import Row from '../ui/Row';
 import { toDutchMoney } from './../../helpers/number-utils';
 
-interface INormalCourseDetailsProps {
-  details: INormalCourseDetails;
+interface IOnlineCourseDetailsProps {
+  details: IOnlineCourseDetails;
   routerProps?: any;
 }
 
-export function NormalCourseDetails(props: INormalCourseDetailsProps) {
+export function OnlineCourseDetails(props: IOnlineCourseDetailsProps) {
   const [showRegister, setShowRegister] = useState(false);
   const user = useContext(UserContext);
-  const data: INormalCourseDetails = props && props.details && props.details;
-  const address = data && data.LocationAddress;
-  const locationAddress = address && (
-    <>
-      {address.Street} {address.HouseNr}
-      {address.HouseNrExtension || ''}, {address.Zipcode} {address.City}
-    </>
-  );
+  const data: IOnlineCourseDetails = props && props.details && props.details;
   const organizerDetails = data && (
     <>
       {data.Organizer}
@@ -51,17 +42,9 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
           </tr>
           <tr>
             <td>
-              <strong>Datum/tijd</strong>
-            </td>
-            <td>
-              {toDutchDate(data.Date)} {data.StartTime} - {data.EndTime}
-            </td>
-          </tr>
-          <tr>
-            <td>
               <strong>Erkenningsnummer</strong>
             </td>
-            <td>{data.CourseCode}</td>
+            <td>{data.Code}</td>
           </tr>
           <tr>
             <td>
@@ -83,25 +66,9 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
           </tr>
           <tr>
             <td>
-              <strong>Opmerkingen</strong>
-            </td>
-            <td>{data.Remarks || 'geen'}</td>
-          </tr>
-          <tr>
-            <td>
               <strong>Prijs</strong>
             </td>
             <td>{toDutchMoney(data.Price)} (incl. btw)</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Locatie</strong>
-            </td>
-            <td>
-              {data.LocationName}
-              <br />
-              {locationAddress}
-            </td>
           </tr>
           <tr>
             <td>
@@ -122,7 +89,7 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
                   onClick={() => setShowRegister(true)}
                   icon="pi pi-check"
                 />
-                <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
+                <Link to="/bijeenkomsten-zoeken/online">Terug naar de lijst</Link>
               </>
             ) : (
               <>
@@ -138,7 +105,7 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
                   onClick={() => props.routerProps.history.push('/Default.aspx?tabid=154')}
                   icon="pi pi-check"
                 />
-                <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
+                <Link to="/bijeenkomsten-zoeken/online">Terug naar de lijst</Link>
               </>
             )}
           </Col>
@@ -148,14 +115,11 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
   ) : (
     <Register
       registerCourseDetails={{
-        code: data.CourseCode,
-        courseId: data.CourseId.toString(),
-        courseDateTime: moment(data.Date)
-          .add(data.StartTime.split(':')[0], 'hours')
-          .add(data.StartTime.split(':')[1], 'minutes')
-          .toDate(),
-        isDigitalSpecialty: false,
+        code: data.Code,
+        courseId: data.SpecialtyId.toString(),
+        isDigitalSpecialty: true,
         title: data.Title,
+        courseDateTime: new Date(),
       }}
       onCancel={() => setShowRegister(false)}
     />
