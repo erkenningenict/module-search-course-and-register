@@ -16,7 +16,7 @@ import FormText from './ui/FormText';
 import Spinner from './ui/Spinner';
 
 export interface IRegisterCourseDetails {
-  specialtyId?: number;
+  specialtyId: number;
   code: string;
   courseId: string;
   isDigitalSpecialty: boolean;
@@ -81,6 +81,7 @@ export function Register(properties: IRegister) {
           Deze gegevens worden aan de organisator doorgegeven. De organisator verwerkt deze gegevens
           volgens haar richtlijnen. De richtlijnen zijn bij de organisator beschikbaar. License{' '}
           {licenseId}
+          TODO CourseDateTime {properties.registerCourseDetails.courseDateTime.toISOString()}
         </p>
       </div>
       <Mutation mutation={REGISTER}>
@@ -95,17 +96,19 @@ export function Register(properties: IRegister) {
                   <div>
                     <Spinner />
                   </div>
-                ) as React.ReactElement;
+                ) as React.ReactNode;
               }
               if (error) {
                 return (
                   <Alert type="danger">Fout bij ophalen lijsten...</Alert>
-                ) as React.ReactElement;
+                ) as React.ReactNode;
               }
               if (mutationError) {
                 return (
-                  <Alert type="danger">Fout bij opslaan gegevens...</Alert>
-                ) as React.ReactElement;
+                  <div className="panel-body">
+                    <Alert type="danger">Fout bij opslaan gegevens...</Alert>
+                  </div>
+                ) as React.ReactNode;
               }
               if (mutationData && mutationData.registerForCourse.success) {
                 return (
@@ -113,12 +116,21 @@ export function Register(properties: IRegister) {
                     <Alert type="success">Uw aanvraag is gedaan.</Alert>
                     {returnToListLink}
                   </div>
-                ) as React.ReactElement;
+                ) as React.ReactNode;
+              }
+              if (mutationData && !mutationData.registerForCourse.success) {
+                return (
+                  <div className="panel-body">
+                    <Alert type="warning">{mutationData.registerForCourse.message}</Alert>
+                    {returnToListLink}
+                  </div>
+                ) as React.ReactNode;
               }
               const userData = user && user.my && user.my.Persoon;
-              const contactData = user && user.my && user.my.Persoon.Contactgegevens;
+              const contactData =
+                user && user.my && user.my.Persoon && user.my.Persoon.Contactgegevens;
               if (!userData || !contactData) {
-                return <p>Er zijn geen gegevens gevonden.</p> as React.ReactElement;
+                return <p>Er zijn geen gegevens gevonden.</p> as React.ReactNode;
               }
               return (
                 <Formik
@@ -129,9 +141,9 @@ export function Register(properties: IRegister) {
                     Country: contactData.Land,
                     Zipcode: contactData.Postcode,
                     City: contactData.Woonplaats,
-                    PhoneNr: contactData.Telefoon,
+                    PhoneNr: contactData.Telefoon || '',
                     BirthPlace: '',
-                    EmailAddress: contactData.Email,
+                    EmailAddress: contactData.Email || '',
                     KnowledgeArea: '',
                     AccountAddress: '',
                   }}
@@ -149,6 +161,14 @@ export function Register(properties: IRegister) {
                       specialtyId: registerCourseDetails.specialtyId,
                       invoiceAddress: values.AccountAddress,
                       knowledgeArea: values.KnowledgeArea,
+                      street: values.Street,
+                      houseNr: values.HouseNr,
+                      houseNrExtension: values.HouseNrAddition,
+                      country: values.Country,
+                      zipcode: values.Zipcode,
+                      city: values.City,
+                      phoneNr: values.PhoneNr,
+                      email: values.EmailAddress,
                     };
                     registerCourse({ variables: { input } });
                     // setTimeout(() => {
@@ -284,7 +304,7 @@ export function Register(properties: IRegister) {
                           </div>
                         </div>
                       </form>
-                    );
+                    ) as React.ReactNode;
                   }}
                 />
               ) as React.ReactComponentElement<any>;

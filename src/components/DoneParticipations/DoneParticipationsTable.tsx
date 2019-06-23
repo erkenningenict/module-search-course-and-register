@@ -13,8 +13,9 @@ export default function DoneParticipationsTable(props) {
       variables={{
         licenseId: props.licenseId,
       }}
+      fetchPolicy="network-only"
     >
-      {({ loading, error, data }) => {
+      {({ loading, data, error }) => {
         if (loading) {
           return (
             <div className="panel-body">

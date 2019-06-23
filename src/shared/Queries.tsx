@@ -40,10 +40,62 @@ export const GET_MY_PERSON_QUERY = gql`
   }
 `;
 
+export const GET_MY_SIGNED_UP_PARTICIPATIONS_LIST_QUERY = gql`
+  query getMySignedUpParticipationsList {
+    my {
+      AangemeldeCursusDeelnames {
+        CursusDeelnameID
+        CursusID
+        Titel
+        Prijs
+        Status
+        Datum
+        Begintijd
+        Eindtijd
+        Locatie
+      }
+    }
+  }
+`;
+
+export const GET_MY_SIGNED_UP_PARTICIPATION_DETAILS_QUERY = gql`
+  query getMySignedUpParticipationsDetails($input: Boolean!) {
+    my {
+      AangemeldeCursusDeelnames {
+        CursusDeelnameID
+        CursusID
+        CursusCode
+        Thema
+        Competentie
+        PromotieTekst
+        Opmerkingen
+        Titel
+        Prijs
+        Status
+        Datum
+        Begintijd
+        Eindtijd
+        Locatie
+        LocationAddress {
+          Street
+          HouseNr
+          HouseNrExtension
+          Zipcode
+          City
+        }
+        Organizer
+        OrganizerEmail
+        OrganizerPhone
+      }
+    }
+  }
+`;
+
 export interface IMy {
   my: {
-    Persoon: IPersoon;
-    Certificeringen: ICertificering[];
+    Persoon?: IPersoon;
+    Certificeringen?: ICertificering[];
+    AangemeldeCursusDeelnames?: ISignedUpParticipation[];
   };
 }
 
@@ -139,6 +191,18 @@ interface ICertificeringAantekening {
   PersoonIDGewijzigd: number | null;
 }
 
+export interface ISignedUpParticipation {
+  CursusDeelnameID: number;
+  CursusID: number;
+  Titel: string;
+  Datum: Date;
+  Begintijd: Date;
+  Eindtijd: Date;
+  Prijs: number;
+  Locatie: string;
+  Status: string;
+}
+
 export const LISTS_QUERY = gql`
   query getLists {
     Themas {
@@ -228,12 +292,84 @@ export const GET_PARTICIPATIONS = gql`
         Titel
         Sessies {
           Datum
+          Begintijd
+          Eindtijd
         }
+        Prijs
+        Promotietekst
         Vak {
+          Titel
+          Kosten
           Themas {
             Naam
           }
           Competenties {
+            Naam
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_PARTICIPATION_DETAILS = gql`
+  query getCursusDeelnameDetails($participationId: Int!) {
+    CursusDeelnameDetails(cursusDeelnameId: $participationId) {
+      CursusDeelnameID
+      Status
+      Certificering {
+        CertificeringID
+        NummerWeergave
+      }
+      Cursus {
+        CursusID
+        Titel
+        Promotietekst
+        Prijs
+        CursusCode
+        Sessies {
+          Datum
+          Begintijd
+          Eindtijd
+          Lokatie {
+            Naam
+            Contactgegevens {
+              Adresregel1
+              Huisnummer
+              HuisnummerToevoeging
+              Postcode
+              Woonplaats
+            }
+          }
+        }
+        Vak {
+          VakID
+          Titel
+          Kosten
+          Promotietekst
+          DigitaalAanbod
+          Themas {
+            Naam
+          }
+          Competenties {
+            Naam
+          }
+          VakgroepID
+          Vakgroep {
+            Naam
+            Contactgegevens {
+              Adresregel1
+              Huisnummer
+              HuisnummerToevoeging
+              Postcode
+              Woonplaats
+              Telefoon
+              Email
+              Website
+            }
+          }
+          ExameninstellingID
+          Exameninstelling {
             Naam
           }
         }

@@ -20,4 +20,21 @@ export interface IRegisterForCourseInput {
   knowledgeArea: string;
   birthPlace: string;
   invoiceAddress: string;
+  street: string;
+  houseNr: string;
+  houseNrExtension: string | null;
+  zipcode: string;
+  city: string;
+  country: string;
+  email: string;
+  phoneNr: string | null;
 }
+
+export const UNREGISTER = gql`
+  mutation unRegisterForCourse($CursusDeelnameID: Int!) {
+    unRegisterForCourse(CursusDeelnameID: $CursusDeelnameID) {
+      success
+      message
+    }
+  }
+`;

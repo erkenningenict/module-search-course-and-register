@@ -20,6 +20,51 @@ interface INormalCoursesTable {
   };
 }
 
+interface ICourseSessionsQueryData {
+  CursusSessies: Array<{
+    CanUnRegister: boolean;
+    CourseId: number;
+    SpecialtyId: number;
+    CourseCode: string;
+    Title: string;
+    Date: number;
+    StartTime: string;
+    EndTime: string;
+    Price: number;
+    LocationName: string;
+    LocationAddress: {
+      Street: string;
+      HouseNr: string;
+      HouseNrExtension: string;
+      Zipcode: string;
+      City: string;
+      Email: string;
+      Website: string;
+    };
+    Distance: number;
+    Competence: string;
+    Theme: string;
+    Organizer: string;
+    OrganizerEmail: string;
+    OrganizerPhone: string;
+    OrganizerWebsite: string;
+    PromoText: string;
+    Registered: boolean | null;
+    RegisteredDate: number | null;
+    Remarks: string | null;
+  }>;
+}
+
+interface ISearchData {
+  knowledgeAreaId: number | null;
+  competenceId: number | null;
+  themeId: number | null;
+  zipcodeNumbers: number | null;
+  to: number | null;
+  from: number | null;
+  isOnlineCourse: boolean;
+}
+
 export function NormalCoursesTable(props: INormalCoursesTable) {
   if (!props.searchData) {
     return null;
@@ -47,13 +92,13 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
   delete searchInput.licenseId;
 
   return (
-    <Query
+    <Query<ICourseSessionsQueryData, { input: ISearchData }>
       query={COURSE_SESSIONS_QUERY}
       variables={{
         input: searchInput,
       }}
     >
-      {({ loading, error, data }) => {
+      {({ loading, data, error }) => {
         if (loading) {
           return (
             <div className="panel-body">
@@ -63,11 +108,10 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
         }
 
         if (error) {
-          return (
-            <Alert>
-              Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}
-            </Alert>
-          );
+          return <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>;
+        }
+        if (!data) {
+          return null;
         }
 
         return (

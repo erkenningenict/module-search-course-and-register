@@ -6,12 +6,13 @@ import { HashRouter, Route } from 'react-router-dom';
 
 import { Query } from 'react-apollo';
 import './App.scss';
+import DoneParticipations from './components/containers/Participations/DoneParticipations';
+import SignedUpParticipations from './components/containers/Participations/SignedUpParticipations';
 import { SearchCourse } from './components/containers/SearchCourseAndRegister/SearchCourse';
 // import { IRegisterCourseDetails } from './components/NormalCourses/Register';
 import Alert from './components/ui/Alert';
 import { GET_MY_PERSON_QUERY } from './shared/Queries';
 import { UserContext } from './shared/UserContext';
-import DoneParticipations from './components/containers/Participations/DoneParticipations';
 
 // const registerCourseDetails: IRegisterCourseDetails = {
 //   licenseId: 1,
@@ -25,7 +26,7 @@ import DoneParticipations from './components/containers/Participations/DoneParti
 
 export default function App() {
   return (
-    <div className="App container-fluid">
+    <div className="App container">
       <HashRouter>
         <>
           <Route
@@ -38,12 +39,12 @@ export default function App() {
           />
           <Query
             query={GET_MY_PERSON_QUERY}
-            fetchPolicy="no-cache"
+            fetchPolicy="network-only"
             variables={{
               input: true,
             }}
           >
-            {({ loading, error, data }) => {
+            {({ loading, data, error }) => {
               if (loading) {
                 return <p>Gegevens worden geladen...</p>;
               }
@@ -59,7 +60,7 @@ export default function App() {
                         <UserContext.Provider value={undefined}>
                           <SearchCourse />
                         </UserContext.Provider>
-                      ) as React.ReactElement;
+                      ) as React.ReactNode;
                       // return <Redirect push={true} to="/Default.aspx?tabid=154" />;
                     } else {
                       return <p>Fout</p>;
@@ -72,7 +73,7 @@ export default function App() {
                     nog een keer of neem contact op met de helpdesk.
                     {/* {{ error && error.length ?  }} */}
                   </Alert>
-                ) as React.ReactElement;
+                ) as React.ReactNode;
               }
               return (
                 <UserContext.Provider value={{ my: data.my }}>
@@ -87,6 +88,12 @@ export default function App() {
                     path="/wat-heb-ik-al-gevolgd"
                     render={(routerProps: any) => {
                       return <DoneParticipations {...routerProps} />;
+                    }}
+                  />
+                  <Route
+                    path="/waar-ben-ik-aangemeld"
+                    render={(routerProps: any) => {
+                      return <SignedUpParticipations {...routerProps} />;
                     }}
                   />
                 </UserContext.Provider>

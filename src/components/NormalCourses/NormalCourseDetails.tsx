@@ -1,15 +1,7 @@
-import moment from 'moment';
-import { Button } from 'primereact/button';
-import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import { toDutchDate } from '../../helpers/date-utils';
-import { UserContext } from '../../shared/UserContext';
+import { toDutchMoney } from '../../helpers/number-utils';
 import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
-import { Register } from '../Register';
-import Alert from '../ui/Alert';
-import Col from '../ui/Col';
-import Row from '../ui/Row';
-import { toDutchMoney } from './../../helpers/number-utils';
 
 interface INormalCourseDetailsProps {
   details: INormalCourseDetails;
@@ -17,8 +9,6 @@ interface INormalCourseDetailsProps {
 }
 
 export function NormalCourseDetails(props: INormalCourseDetailsProps) {
-  const [showRegister, setShowRegister] = useState(false);
-  const user = useContext(UserContext);
   const data: INormalCourseDetails = props && props.details && props.details;
   const address = data && data.LocationAddress;
   const locationAddress = address && (
@@ -39,8 +29,8 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
     </>
   );
 
-  return props.details && !showRegister ? (
-    <>
+  return (
+    props.details && (
       <table className="table table-striped">
         <tbody>
           <tr>
@@ -79,7 +69,7 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
             <td>
               <strong>Promotietekst</strong>
             </td>
-            <td>{data.PromoText}</td>
+            <td>{data.PromoText || 'onbekend'}</td>
           </tr>
           <tr>
             <td>
@@ -91,7 +81,7 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
             <td>
               <strong>Prijs</strong>
             </td>
-            <td>{toDutchMoney(data.Price)} (incl. btw)</td>
+            <td>{toDutchMoney(data.Price) || 'onbekend'} (incl. btw)</td>
           </tr>
           <tr>
             <td>
@@ -111,53 +101,6 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
           </tr>
         </tbody>
       </table>
-      <div className="panel-body">
-        <Row>
-          <Col>
-            {user ? (
-              <>
-                <Button
-                  label="Aanmelden"
-                  type="button"
-                  onClick={() => setShowRegister(true)}
-                  icon="pi pi-check"
-                />
-                <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
-              </>
-            ) : (
-              <>
-                <Alert type="warning">
-                  <div style={{ textAlign: 'left', fontWeight: 600 }}>
-                    U kunt nog niet aanmelden omdat u niet bent ingelogd. Klik op Inloggen om aan te
-                    melden om eerst in te loggen, keer dan hier terug om u aan te melden.
-                  </div>
-                </Alert>
-                <Button
-                  label="Inloggen om aan te melden"
-                  type="button"
-                  onClick={() => props.routerProps.history.push('/Default.aspx?tabid=154')}
-                  icon="pi pi-check"
-                />
-                <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
-              </>
-            )}
-          </Col>
-        </Row>
-      </div>
-    </>
-  ) : (
-    <Register
-      registerCourseDetails={{
-        code: data.CourseCode,
-        courseId: data.CourseId.toString(),
-        courseDateTime: moment(data.Date)
-          .add(data.StartTime.split(':')[0], 'hours')
-          .add(data.StartTime.split(':')[1], 'minutes')
-          .toDate(),
-        isDigitalSpecialty: false,
-        title: data.Title,
-      }}
-      onCancel={() => setShowRegister(false)}
-    />
+    )
   );
 }

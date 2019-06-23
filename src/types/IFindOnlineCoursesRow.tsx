@@ -1,6 +1,6 @@
 export interface IOnlineCourseDetails {
   Code: string;
-  SpecialtyId: number;
+  SpecialtyId: string;
   Title: string;
   Theme: string;
   Competence: string;

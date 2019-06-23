@@ -25,6 +25,25 @@ interface INormalCourseFormProps extends RouteComponentProps {
   isOnline: boolean;
 }
 
+interface IListData {
+  Themas: Array<{
+    ThemaID: string;
+    Naam: string;
+  }>;
+  Competenties: Array<{
+    CompetentieID: string;
+    Naam: string;
+  }>;
+  Kennisgebieden: Array<{
+    KennisgebiedID: string;
+    Naam: string;
+  }>;
+  Landen: Array<{
+    Value: string;
+    Text: string;
+  }>;
+}
+
 export function NormalCoursesForm(props: INormalCourseFormProps) {
   const [searchData, setSearchData] = useState();
   // const lic = useContext(SelectedLicenseContext);
@@ -58,31 +77,40 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
             name="Online bijeenkomsten"
           />
           {value && (
-            <LinkButton
-              to={{
-                pathname: `/wat-heb-ik-al-gevolgd/`,
-                search: props.location.search,
-              }}
-              name="Wat heb ik al gevolgd?"
-            />
+            <>
+              <LinkButton
+                to={{
+                  pathname: `/waar-ben-ik-aangemeld`,
+                  search: props.location.search,
+                }}
+                name="Waar ben ik aangemeld?"
+              />
+              <LinkButton
+                to={{
+                  pathname: `/wat-heb-ik-al-gevolgd/`,
+                  search: props.location.search,
+                }}
+                name="Wat heb ik al gevolgd?"
+              />
+            </>
           )}
         </LinkButtonContainer>
         <h3>Zoek een bijeenkomst op locatie</h3>
       </div>
-      <Query query={LISTS_QUERY}>
-        {({ loading, error, data }) => {
+      <Query<IListData> query={LISTS_QUERY}>
+        {({ loading, data, error }) => {
           if (loading) {
             return (
               <div className="panel-body">
                 <Spinner />
               </div>
-            ) as React.ReactElement;
+            ) as React.ReactNode;
           }
 
           if (error) {
             return (
               <p>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</p>
-            ) as React.ReactElement;
+            ) as React.ReactNode;
           }
 
           const licenseId: string | null =
@@ -120,9 +148,12 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
             return null;
           }
 
-          const knowledgeAreas = [{ KennisgebiedID: 0, Naam: 'Alle' }, ...data.Kennisgebieden];
-          const themes = [{ ThemaID: 0, Naam: 'Alle' }, ...data.Themas];
-          const competences = [{ CompetentieID: 0, Naam: 'Alle' }, ...data.Competenties];
+          if (!data) {
+            return null;
+          }
+          const knowledgeAreas = [{ KennisgebiedID: '0', Naam: 'Alle' }, ...data.Kennisgebieden];
+          const themes = [{ ThemaID: '0', Naam: 'Alle' }, ...data.Themas];
+          const competences = [{ CompetentieID: '0', Naam: 'Alle' }, ...data.Competenties];
           return (
             <Formik
               initialValues={{
@@ -150,10 +181,12 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
                   <FormSelect
                     id="knowledgeArea"
                     label="Sector"
-                    options={knowledgeAreas.map((item: IKennisgebied) => ({
-                      value: parseInt(item.KennisgebiedID, 10),
-                      label: item.Naam,
-                    }))}
+                    options={knowledgeAreas.map((item: IKennisgebied) => {
+                      return {
+                        value: parseInt(item.KennisgebiedID, 10),
+                        label: item.Naam,
+                      };
+                    })}
                     name="knowledgeAreaId"
                     loading={loading}
                     form={formProps}
@@ -226,7 +259,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
                 </form>
               )}
             />
-          ) as React.ReactElement;
+          ) as React.ReactNode;
         }}
       </Query>
       {searchData && <NormalCoursesTable searchData={searchData} />}

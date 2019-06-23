@@ -1,4 +1,4 @@
-export function toDutchDate(dateString: string): string {
+export function toDutchDate(date: string | number): string {
   const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  return new Date(dateString).toLocaleDateString('nl-NL', options);
+  return new Date(date).toLocaleDateString('nl-NL', options);
 }

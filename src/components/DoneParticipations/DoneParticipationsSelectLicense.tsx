@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Query } from 'react-apollo';
-import { Redirect } from 'react-router';
 import { GET_MY_PERSON_QUERY, ICertificering } from '../../shared/Queries';
 import Alert from '../ui/Alert';
 import FormSelect from '../ui/FormSelect';
@@ -13,12 +12,12 @@ export default function DoneParticipationSelectLicense(props: any) {
     <>
       <Query
         query={GET_MY_PERSON_QUERY}
-        fetchPolicy="no-cache"
+        fetchPolicy="network-only"
         variables={{
           input: false,
         }}
       >
-        {({ loading, error, data }) => {
+        {({ loading, data, error }) => {
           if (loading) {
             return <p>Gegevens worden geladen...</p>;
           }

@@ -30,6 +30,13 @@ export default function DoneParticipations(props) {
             }}
             name="Zoek online bijeenkomst"
           />
+          <LinkButton
+            to={{
+              pathname: `/waar-ben-ik-aangemeld`,
+              search: props.location.search,
+            }}
+            name="Waar ben ik aangemeld?"
+          />
         </LinkButtonContainer>
       </div>
     </Panel>

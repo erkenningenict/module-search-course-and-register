@@ -3,9 +3,9 @@ import { Query } from 'react-apollo';
 import { Link, Route, Switch } from 'react-router-dom';
 import { COURSE_SESSIONS_QUERY, SEARCH_SPECIALTIES } from '../../../shared/Queries';
 import { SelectedLicenseContext } from '../../../shared/SelectedLicenseContext';
-import { NormalCourseDetails } from '../../NormalCourses/NormalCourseDetails';
+import { NormalCourseDetailsContainer } from '../../NormalCourses/NormalCourseDetailsContainer';
 import { NormalCoursesForm } from '../../NormalCourses/NormalCoursesForm';
-import { OnlineCourseDetails } from '../../OnlineCourses/OnlineCourseDetails';
+import { OnlineCourseDetailsContainer } from '../../OnlineCourses/OnlineCourseDetailsContainer';
 import { OnlineCoursesForm } from '../../OnlineCourses/OnlineCoursesForm';
 import Alert from '../../ui/Alert';
 import Panel from '../../ui/Panel';
@@ -15,15 +15,9 @@ import { LicenseChooser } from '../LicenseChooser';
 export function SearchCourse(props: any) {
   const [licenseId, setLicenseId] = useState(0);
   const [seenOverview, setSeenOverview] = useState(false);
-  // console.log('#DH# et', window.location.hash.match('online') === null);
-  // if (window.location.hash.match('online') !== null) {
-  //   setIsOnline(true);
-  // }
+
   return (
     <Panel title="Zoek bijeenkomst en aanmelden" doNotIncludeBody={true}>
-      {/* <div className="panel-body">
-        <h3>Zoek een {isOnline ? 'bijeenkomst op locatie' : 'online bijeenkomst'}.</h3>
-      </div> */}
       <SelectedLicenseContext.Provider value={licenseId}>
         <Switch>
           <LicenseChooser
@@ -43,20 +37,21 @@ export function SearchCourse(props: any) {
                         isOnlineCourse: false,
                       },
                     }}
+                    fetchPolicy="network-only"
                   >
-                    {({ loading, error, data }) => {
+                    {({ loading, data, error }) => {
                       if (loading) {
                         return (
                           <div className="panel-body">
                             <Spinner />
                           </div>
-                        ) as React.ReactElement;
+                        ) as React.ReactNode;
                       }
 
                       if (error) {
                         return (
                           <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>
-                        ) as React.ReactElement;
+                        ) as React.ReactNode;
                       }
                       if (data && data.CursusSessies.length !== 1) {
                         return (
@@ -64,15 +59,15 @@ export function SearchCourse(props: any) {
                             <Alert>Bijeenkomst is niet gevonden.</Alert>
                             <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
                           </div>
-                        ) as React.ReactElement;
+                        ) as React.ReactNode;
                       }
 
                       return (
-                        <NormalCourseDetails
+                        <NormalCourseDetailsContainer
                           routerProps={routerProps}
                           details={data.CursusSessies[0]}
                         />
-                      ) as React.ReactElement;
+                      ) as React.ReactNode;
                     }}
                   </Query>
                 );
@@ -93,19 +88,19 @@ export function SearchCourse(props: any) {
                       },
                     }}
                   >
-                    {({ loading, error, data }) => {
+                    {({ loading, data, error }) => {
                       if (loading) {
                         return (
                           <div className="panel-body">
                             <Spinner />
                           </div>
-                        ) as React.ReactElement;
+                        ) as React.ReactNode;
                       }
 
                       if (error) {
                         return (
                           <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>
-                        ) as React.ReactElement;
+                        ) as React.ReactNode;
                       }
                       if (data && data.SearchSpecialties.length !== 1) {
                         return (
@@ -113,15 +108,15 @@ export function SearchCourse(props: any) {
                             <Alert>Bijeenkomst is niet gevonden.</Alert>
                             <Link to="/bijeenkomsten-zoeken/online">Terug naar de lijst</Link>
                           </div>
-                        ) as React.ReactElement;
+                        ) as React.ReactNode;
                       }
 
                       return (
-                        <OnlineCourseDetails
+                        <OnlineCourseDetailsContainer
                           routerProps={routerProps}
                           details={data.SearchSpecialties[0]}
                         />
-                      ) as React.ReactElement;
+                      ) as React.ReactNode;
                     }}
                   </Query>
                 );

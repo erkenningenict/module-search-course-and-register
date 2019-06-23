@@ -39,13 +39,22 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
             name="Bijeenkomsten op locatie"
           />
           {value && (
-            <LinkButton
-              to={{
-                pathname: `/wat-heb-ik-al-gevolgd/`,
-                search: props.location.search,
-              }}
-              name="Wat heb ik al gevolgd?"
-            />
+            <>
+              <LinkButton
+                to={{
+                  pathname: `/wat-heb-ik-al-gevolgd/`,
+                  search: props.location.search,
+                }}
+                name="Wat heb ik al gevolgd?"
+              />
+              <LinkButton
+                to={{
+                  pathname: `/waar-ben-ik-aangemeld`,
+                  search: props.location.search,
+                }}
+                name="Waar ben ik aangemeld?"
+              />
+            </>
           )}
         </LinkButtonContainer>
         <h3>Zoek een online bijeenkomst</h3>
@@ -57,13 +66,13 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
               <div>
                 <Spinner />
               </div>
-            ) as React.ReactElement;
+            ) as React.ReactNode;
           }
 
           if (error) {
             return (
               <p>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</p>
-            ) as React.ReactElement;
+            ) as React.ReactNode;
           }
 
           const licenseId: string | null =
@@ -151,7 +160,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
                 </form>
               )}
             />
-          ) as React.ReactElement;
+          ) as React.ReactNode;
         }}
       </Query>
       {searchData && <OnlineCoursesTable searchData={searchData} />}
