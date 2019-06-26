@@ -6,7 +6,6 @@ export interface IOnlineCourseDetails {
   Competence: string;
   PromoText: string;
   Price: number;
-  OrganizerId: number;
   Organizer: string | null;
   OrganizerPhone: string | null;
   OrganizerEmail: string | null;

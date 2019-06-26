@@ -4,8 +4,7 @@ import React, { useContext, useState } from 'react';
 import { Query } from 'react-apollo';
 import { RouteComponentProps } from 'react-router';
 import { IKennisgebied, IThema } from '../../shared/Model';
-import { LISTS_QUERY } from '../../shared/Queries';
-// import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
+import { IListsQuery, LISTS_QUERY } from '../../shared/Queries';
 import { UserContext } from '../../shared/UserContext';
 import FormSelect from '../ui/FormSelect';
 import LinkButton from '../ui/LinkButton';
@@ -13,11 +12,6 @@ import LinkButtonContainer from '../ui/LinkButtonContainer';
 import Spinner from '../ui/Spinner';
 import { parseLocationSearch } from './../../helpers/url-utils';
 import { OnlineCoursesTable } from './OnlineCoursesTable';
-
-interface IIdLabel {
-  Id: number;
-  Label: string;
-}
 
 interface IOnlineCourseFormProps extends RouteComponentProps {
   isOnline: boolean;
@@ -59,7 +53,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
         </LinkButtonContainer>
         <h3>Zoek een online bijeenkomst</h3>
       </div>
-      <Query query={LISTS_QUERY}>
+      <Query<IListsQuery> query={LISTS_QUERY}>
         {({ loading, error, data }) => {
           if (loading) {
             return (
@@ -109,8 +103,15 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
             return null;
           }
 
-          const knowledgeAreas = [{ KennisgebiedID: 0, Naam: 'Alle' }, ...data.Kennisgebieden];
-          const themes = [{ ThemaID: 0, Naam: 'Alle' }, ...data.Themas];
+          if (!data) {
+            return null;
+          }
+
+          const knowledgeAreas: IKennisgebied[] = [
+            { KennisgebiedID: '0', Naam: 'Alle' },
+            ...data.Kennisgebieden,
+          ];
+          const themes: IThema[] = [{ ThemaID: '0', Naam: 'Alle' }, ...data.Themas];
           return (
             <Formik
               initialValues={{
@@ -129,7 +130,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
                     id="knowledgeArea"
                     label="Sector"
                     options={knowledgeAreas.map((item: IKennisgebied) => ({
-                      value: parseInt(item.KennisgebiedID, 10),
+                      value: item.KennisgebiedID,
                       label: item.Naam,
                     }))}
                     name="knowledgeAreaId"
@@ -140,7 +141,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
                     id="themeId"
                     label="Thema"
                     options={themes.map((item: IThema) => ({
-                      value: parseInt(item.ThemaID, 10),
+                      value: item.ThemaID,
                       label: item.Naam,
                     }))}
                     loading={loading}

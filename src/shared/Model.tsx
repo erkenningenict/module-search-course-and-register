@@ -37,3 +37,8 @@ export interface IThema {
   ThemaID: string;
   Naam: string;
 }
+
+export interface ILand {
+  Value: string;
+  Text: string;
+}

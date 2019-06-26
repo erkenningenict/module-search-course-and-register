@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { toDutchDate } from '../../helpers/date-utils';
 import { ISignedUpParticipation } from '../../shared/Queries';
 
-interface IRow {
+interface ISignedUpParticipationsRowProps {
   row: ISignedUpParticipation;
 }
 
-export default function SignedUpParticipationsRow(props: IRow) {
+export default function SignedUpParticipationsRow(props: ISignedUpParticipationsRowProps) {
   const { row } = props;
   return (
     <>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Query } from 'react-apollo';
-import { SEARCH_SPECIALTIES } from '../../shared/Queries';
+import { ISearchSpecialty, SEARCH_SPECIALTIES } from '../../shared/Queries';
 import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
 import Alert from '../ui/Alert';
 import Spinner from '../ui/Spinner';
@@ -35,7 +35,7 @@ export function OnlineCoursesTable(props: IOnlineCoursesTable) {
   delete searchInput.licenseId;
 
   return (
-    <Query
+    <Query<{ SearchSpecialties: ISearchSpecialty[] }, { input: any }>
       query={SEARCH_SPECIALTIES}
       variables={{
         input: searchInput,
@@ -56,6 +56,10 @@ export function OnlineCoursesTable(props: IOnlineCoursesTable) {
               Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}
             </Alert>
           );
+        }
+
+        if (!data) {
+          return null;
         }
 
         return (

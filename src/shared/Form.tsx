@@ -1,8 +1,6 @@
 import { FormikProps } from 'formik';
 import * as Yup from 'yup';
 
-// import ILicenseFormValues from 'features/LicenseForm/ILicenseFormValues';
-
 // Validation schema
 const dateNow = new Date();
 const MessageRequired = 'Dit is een verplicht veld';

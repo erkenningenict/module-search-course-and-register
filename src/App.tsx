@@ -9,20 +9,9 @@ import './App.scss';
 import DoneParticipations from './components/containers/Participations/DoneParticipations';
 import SignedUpParticipations from './components/containers/Participations/SignedUpParticipations';
 import { SearchCourse } from './components/containers/SearchCourseAndRegister/SearchCourse';
-// import { IRegisterCourseDetails } from './components/NormalCourses/Register';
 import Alert from './components/ui/Alert';
-import { GET_MY_PERSON_QUERY } from './shared/Queries';
+import { GET_MY_PERSON_QUERY, IMy } from './shared/Queries';
 import { UserContext } from './shared/UserContext';
-
-// const registerCourseDetails: IRegisterCourseDetails = {
-//   licenseId: 1,
-//   specialtyId: 1,
-//   code: '12345678',
-//   courseId: 1,
-//   isDigitalSpecialty: false,
-//   title: 'Test bijeenkomst',
-//   courseDateTime: new Date(),
-// };
 
 export default function App() {
   return (
@@ -37,7 +26,7 @@ export default function App() {
               return null;
             }}
           />
-          <Query
+          <Query<IMy, { input: boolean }>
             query={GET_MY_PERSON_QUERY}
             fetchPolicy="network-only"
             variables={{
@@ -55,7 +44,6 @@ export default function App() {
                   for (const err of error.graphQLErrors) {
                     if (err.extensions && err.extensions.code === 'UNAUTHENTICATED') {
                       // Redirect to DNN login
-                      console.log('#DH# unauth');
                       return (
                         <UserContext.Provider value={undefined}>
                           <SearchCourse />
@@ -71,9 +59,11 @@ export default function App() {
                   <Alert type="danger">
                     Er is een fout opgetreden bij het ophalen van de accountgegevens. Probeer het
                     nog een keer of neem contact op met de helpdesk.
-                    {/* {{ error && error.length ?  }} */}
                   </Alert>
                 ) as React.ReactNode;
+              }
+              if (!data) {
+                return null;
               }
               return (
                 <UserContext.Provider value={{ my: data.my }}>

@@ -6,8 +6,9 @@ import { Mutation, Query } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import { toDutchDate } from '../helpers/date-utils';
+import { IKennisgebied, ILand } from '../shared/Model';
 import { IRegisterForCourseInput, REGISTER } from '../shared/Mutations';
-import { LISTS_QUERY } from '../shared/Queries';
+import { IListsQuery, LISTS_QUERY } from '../shared/Queries';
 import { SelectedLicenseContext } from '../shared/SelectedLicenseContext';
 import { UserContext } from '../shared/UserContext';
 import Alert from './ui/Alert';
@@ -84,12 +85,17 @@ export function Register(properties: IRegister) {
           TODO CourseDateTime {properties.registerCourseDetails.courseDateTime.toISOString()}
         </p>
       </div>
-      <Mutation mutation={REGISTER}>
+      <Mutation<
+        { registerForCourse: { success: boolean; message: string } },
+        { input: IRegisterForCourseInput }
+      >
+        mutation={REGISTER}
+      >
         {(
           registerCourse,
           { loading: mutationLoading, error: mutationError, data: mutationData },
         ) => (
-          <Query query={LISTS_QUERY}>
+          <Query<IListsQuery> query={LISTS_QUERY}>
             {({ loading, error, data }) => {
               if (loading || mutationLoading) {
                 return (
@@ -99,9 +105,7 @@ export function Register(properties: IRegister) {
                 ) as React.ReactNode;
               }
               if (error) {
-                return (
-                  <Alert type="danger">Fout bij ophalen lijsten...</Alert>
-                ) as React.ReactNode;
+                return <Alert type="danger">Fout bij ophalen lijsten...</Alert> as React.ReactNode;
               }
               if (mutationError) {
                 return (
@@ -126,6 +130,9 @@ export function Register(properties: IRegister) {
                   </div>
                 ) as React.ReactNode;
               }
+              if (!data) {
+                return null;
+              }
               const userData = user && user.my && user.my.Persoon;
               const contactData =
                 user && user.my && user.my.Persoon && user.my.Persoon.Contactgegevens;
@@ -149,7 +156,6 @@ export function Register(properties: IRegister) {
                   }}
                   validationSchema={RegisterSchema}
                   onSubmit={(values, { setSubmitting }) => {
-                    // console.log('#DH# ', registerCourseDetails);
                     const input: IRegisterForCourseInput = {
                       licenseId,
                       code: registerCourseDetails.code,
@@ -226,7 +232,7 @@ export function Register(properties: IRegister) {
                         <FormSelect
                           id="country"
                           label="Land"
-                          options={data.Landen.map((item: any) => ({
+                          options={data.Landen.map((item: ILand) => ({
                             value: item.Value,
                             label: item.Text,
                           }))}
@@ -275,7 +281,7 @@ export function Register(properties: IRegister) {
                         <FormSelect
                           id="knowledgeArea"
                           label="Sector"
-                          options={data.Kennisgebieden.map((item: any) => ({
+                          options={data.Kennisgebieden.map((item: IKennisgebied) => ({
                             value: item.Naam,
                             label: item.Naam,
                           }))}

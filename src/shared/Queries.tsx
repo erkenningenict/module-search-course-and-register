@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { IKennisgebied, ILand, IThema } from './Model';
 
 export const GET_MY_PERSON_QUERY = gql`
   query getMy($input: Boolean!) {
@@ -224,6 +225,16 @@ export const LISTS_QUERY = gql`
   }
 `;
 
+export interface IListsQuery {
+  Themas: IThema[];
+  Competenties: Array<{
+    CompetentieID: string;
+    Naam: string;
+  }>;
+  Kennisgebieden: IKennisgebied[];
+  Landen: ILand[];
+}
+
 export const COURSE_SESSIONS_QUERY = gql`
   query getCursusSessies($input: searchCourseSessionsInput!) {
     CursusSessies(input: $input) {
@@ -278,6 +289,20 @@ export const SEARCH_SPECIALTIES = gql`
   }
 `;
 
+export interface ISearchSpecialty {
+  SpecialtyId: string;
+  Code: string;
+  Title: string;
+  Price: number;
+  Competence: string;
+  Theme: string;
+  Organizer: string;
+  OrganizerEmail: string;
+  OrganizerPhone: string;
+  OrganizerWebsite: string;
+  PromoText: string;
+}
+
 export const GET_PARTICIPATIONS = gql`
   query getCursusDeelnames($licenseId: Int) {
     CursusDeelnames(certificeringId: $licenseId) {
@@ -311,6 +336,36 @@ export const GET_PARTICIPATIONS = gql`
     }
   }
 `;
+
+export interface IGetParticipation {
+  CursusDeelnameID: string;
+  Status: string;
+  Certificering: {
+    CertificeringID: string;
+    NummerWeergave: string;
+  };
+  Cursus: {
+    CursusID: string;
+    Titel: string;
+    Sessies: Array<{
+      Datum: Date;
+      Begintijd: Date;
+      Eindtijd: Date;
+    }>;
+    Prijs: number;
+    Promotietekst: string;
+    Vak: {
+      Titel: string;
+      Kosten: number;
+      Themas: Array<{
+        Naam: string;
+      }>;
+      Competenties: Array<{
+        Naam: string;
+      }>;
+    };
+  };
+}
 
 export const GET_PARTICIPATION_DETAILS = gql`
   query getCursusDeelnameDetails($participationId: Int!) {
@@ -371,9 +426,91 @@ export const GET_PARTICIPATION_DETAILS = gql`
           ExameninstellingID
           Exameninstelling {
             Naam
+            Contactgegevens {
+              Adresregel1
+              Huisnummer
+              HuisnummerToevoeging
+              Postcode
+              Woonplaats
+              Telefoon
+              Email
+              Website
+            }
           }
         }
       }
     }
   }
 `;
+
+export interface IParticipationDetails {
+  CursusDeelnameID: string;
+  Status: string;
+  Certificering: {
+    CertificeringID: string;
+    NummerWeergave: string;
+  };
+  Cursus: {
+    CursusID: number;
+    Titel: string;
+    Promotietekst: string;
+    Prijs: number;
+    CursusCode: string;
+    Sessies: {
+      Datum: Date;
+      Begintijd: Date;
+      Eindtijd: Date;
+      Lokatie: {
+        Naam: string;
+        Contactgegevens: {
+          Adresregel1: string;
+          Huisnummer: string;
+          HuisnummerToevoeging: string;
+          Postcode: string;
+          Woonplaats: string;
+        };
+      };
+    };
+    Vak: {
+      VakID: string;
+      Titel: string;
+      Kosten: number;
+      Promotietekst: string;
+      DigitaalAanbod: boolean;
+      Themas: Array<{
+        Naam: string;
+      }>;
+      Competenties: Array<{
+        Naam: string;
+      }>;
+      VakgroepID: number;
+      Vakgroep: {
+        Naam: string;
+        Contactgegevens: {
+          Adresregel1: string;
+          Huisnummer: string;
+          HuisnummerToevoeging: string;
+          Postcode: string;
+          Woonplaats: string;
+          Telefoon: string;
+          Email: string;
+          Website: string;
+        };
+      };
+      ExameninstellingID: number;
+      Exameninstelling: {
+        Naam: string;
+        Contactgegevens: {
+          Adresregel1: string;
+          Huisnummer: string;
+          HuisnummerToevoeging: string;
+          Postcode: string;
+          Woonplaats: string;
+          Telefoon: string;
+          Email: string;
+          Website: string;
+        };
+      };
+    };
+  };
+}

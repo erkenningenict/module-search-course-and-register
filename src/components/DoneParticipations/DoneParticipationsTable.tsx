@@ -1,14 +1,17 @@
 import React from 'react';
 import { Query } from 'react-apollo';
-import { GET_PARTICIPATIONS } from '../../shared/Queries';
-import { ICursusDeelname } from '../../types/ICursusDeelname';
+import { GET_PARTICIPATIONS, IGetParticipation } from '../../shared/Queries';
 import Alert from '../ui/Alert';
 import Spinner from '../ui/Spinner';
 import DoneParticipationsRow from './DoneParticipationsRow';
 
-export default function DoneParticipationsTable(props) {
+interface IDoneParticipationsTableProps {
+  licenseId: number;
+}
+
+export default function DoneParticipationsTable(props: IDoneParticipationsTableProps) {
   return props.licenseId ? (
-    <Query
+    <Query<{ CursusDeelnames: IGetParticipation[] }, { licenseId: number }>
       query={GET_PARTICIPATIONS}
       variables={{
         licenseId: props.licenseId,
@@ -47,7 +50,7 @@ export default function DoneParticipationsTable(props) {
                 <tbody>
                   {data &&
                     data.CursusDeelnames &&
-                    data.CursusDeelnames.map((item: ICursusDeelname) => (
+                    data.CursusDeelnames.map((item: IGetParticipation) => (
                       <DoneParticipationsRow key={item.CursusDeelnameID} row={item} />
                     ))}
                   {!data || data.CursusDeelnames.length === 0 ? (

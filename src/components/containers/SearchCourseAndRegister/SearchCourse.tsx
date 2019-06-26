@@ -3,6 +3,8 @@ import { Query } from 'react-apollo';
 import { Link, Route, Switch } from 'react-router-dom';
 import { COURSE_SESSIONS_QUERY, SEARCH_SPECIALTIES } from '../../../shared/Queries';
 import { SelectedLicenseContext } from '../../../shared/SelectedLicenseContext';
+import { INormalCourseDetails } from '../../../types/IFindNormalCoursesRow';
+import { IOnlineCourseDetails } from '../../../types/IFindOnlineCoursesRow';
 import { NormalCourseDetailsContainer } from '../../NormalCourses/NormalCourseDetailsContainer';
 import { NormalCoursesForm } from '../../NormalCourses/NormalCoursesForm';
 import { OnlineCourseDetailsContainer } from '../../OnlineCourses/OnlineCourseDetailsContainer';
@@ -12,7 +14,7 @@ import Panel from '../../ui/Panel';
 import Spinner from '../../ui/Spinner';
 import { LicenseChooser } from '../LicenseChooser';
 
-export function SearchCourse(props: any) {
+export function SearchCourse() {
   const [licenseId, setLicenseId] = useState(0);
   const [seenOverview, setSeenOverview] = useState(false);
 
@@ -29,7 +31,10 @@ export function SearchCourse(props: any) {
               path="/bijeenkomsten-zoeken/op-locatie/informatie-en-aanmelden/:courseId"
               render={(routerProps: any) => {
                 return (
-                  <Query
+                  <Query<
+                    { CursusSessies: INormalCourseDetails[] },
+                    { input: { currentCourseId: number; isOnlineCourse: boolean } }
+                  >
                     query={COURSE_SESSIONS_QUERY}
                     variables={{
                       input: {
@@ -63,11 +68,14 @@ export function SearchCourse(props: any) {
                       }
 
                       return (
-                        <NormalCourseDetailsContainer
-                          routerProps={routerProps}
-                          details={data.CursusSessies[0]}
-                        />
-                      ) as React.ReactNode;
+                        data &&
+                        ((
+                          <NormalCourseDetailsContainer
+                            routerProps={routerProps}
+                            details={data.CursusSessies[0]}
+                          />
+                        ) as React.ReactNode)
+                      );
                     }}
                   </Query>
                 );
@@ -79,7 +87,10 @@ export function SearchCourse(props: any) {
               path="/bijeenkomsten-zoeken/online/informatie-en-aanmelden/:courseId"
               render={(routerProps: any) => {
                 return (
-                  <Query
+                  <Query<
+                    { SearchSpecialties: IOnlineCourseDetails[] },
+                    { input: { specialtyId: number; isOnlineCourse: boolean } }
+                  >
                     query={SEARCH_SPECIALTIES}
                     variables={{
                       input: {
@@ -112,11 +123,14 @@ export function SearchCourse(props: any) {
                       }
 
                       return (
-                        <OnlineCourseDetailsContainer
-                          routerProps={routerProps}
-                          details={data.SearchSpecialties[0]}
-                        />
-                      ) as React.ReactNode;
+                        data &&
+                        ((
+                          <OnlineCourseDetailsContainer
+                            routerProps={routerProps}
+                            details={data.SearchSpecialties[0]}
+                          />
+                        ) as React.ReactNode)
+                      );
                     }}
                   </Query>
                 );

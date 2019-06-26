@@ -4,8 +4,7 @@ import React, { useContext, useState } from 'react';
 import { Query } from 'react-apollo';
 import { RouteComponentProps } from 'react-router';
 import { ICompetentie, IKennisgebied, IThema } from '../../shared/Model';
-import { LISTS_QUERY } from '../../shared/Queries';
-// import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
+import { IListsQuery, LISTS_QUERY } from '../../shared/Queries';
 import { UserContext } from '../../shared/UserContext';
 import FormCalendar from '../ui/FormCalendar';
 import FormSelect from '../ui/FormSelect';
@@ -25,28 +24,8 @@ interface INormalCourseFormProps extends RouteComponentProps {
   isOnline: boolean;
 }
 
-interface IListData {
-  Themas: Array<{
-    ThemaID: string;
-    Naam: string;
-  }>;
-  Competenties: Array<{
-    CompetentieID: string;
-    Naam: string;
-  }>;
-  Kennisgebieden: Array<{
-    KennisgebiedID: string;
-    Naam: string;
-  }>;
-  Landen: Array<{
-    Value: string;
-    Text: string;
-  }>;
-}
-
 export function NormalCoursesForm(props: INormalCourseFormProps) {
   const [searchData, setSearchData] = useState();
-  // const lic = useContext(SelectedLicenseContext);
 
   const distances: IIdLabel[] = [
     { Id: 0, Label: 'Alle' },
@@ -97,7 +76,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
         </LinkButtonContainer>
         <h3>Zoek een bijeenkomst op locatie</h3>
       </div>
-      <Query<IListData> query={LISTS_QUERY}>
+      <Query<IListsQuery> query={LISTS_QUERY}>
         {({ loading, data, error }) => {
           if (loading) {
             return (
