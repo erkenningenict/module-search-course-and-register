@@ -8,7 +8,7 @@ Run `npm install` in the `aanvragen-licentie` folder
 
 Copy the `.env` to `.env.local` to set and override the `REACT_APP_GRAPHQL_URL` value.
 
-> Note: Each variable should start with `REACT_APP_` otherwise it will not be added to the `process.env.` global vairable
+> Note: Each variable should start with `REACT_APP_` otherwise it will not be added to the `process.env.` global variable
 
 ## Run locally
 
