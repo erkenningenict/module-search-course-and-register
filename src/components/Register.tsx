@@ -1,4 +1,4 @@
-import { Alert, Spinner } from '@erkenningen/ui';
+import { Alert, PanelBody, Spinner } from '@erkenningen/ui';
 import { Formik } from 'formik';
 import { Button } from 'primereact/button';
 import * as React from 'react';
@@ -76,12 +76,12 @@ export function Register(properties: IRegister) {
 
   return (
     <>
-      <div className="panel-body">
+      <PanelBody>
         <p>
           Deze gegevens worden aan de organisator doorgegeven. De organisator verwerkt deze gegevens
           volgens haar richtlijnen. De richtlijnen zijn bij de organisator beschikbaar.
         </p>
-      </div>
+      </PanelBody>
       <Mutation<
         { registerForCourse: { success: boolean; message: string } },
         { input: IRegisterForCourseInput }
@@ -106,25 +106,25 @@ export function Register(properties: IRegister) {
               }
               if (mutationError) {
                 return (
-                  <div className="panel-body">
+                  <PanelBody>
                     <Alert type="danger">Fout bij opslaan gegevens...</Alert>
-                  </div>
+                  </PanelBody>
                 ) as React.ReactNode;
               }
               if (mutationData && mutationData.registerForCourse.success) {
                 return (
-                  <div className="panel-body">
+                  <PanelBody>
                     <Alert type="success">Uw aanvraag is gedaan.</Alert>
                     {returnToListLink}
-                  </div>
+                  </PanelBody>
                 ) as React.ReactNode;
               }
               if (mutationData && !mutationData.registerForCourse.success) {
                 return (
-                  <div className="panel-body">
+                  <PanelBody>
                     <Alert type="warning">{mutationData.registerForCourse.message}</Alert>
                     {returnToListLink}
-                  </div>
+                  </PanelBody>
                 ) as React.ReactNode;
               }
               if (!data) {

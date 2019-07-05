@@ -1,4 +1,4 @@
-import { Alert } from '@erkenningen/ui';
+import { Alert, PanelBody } from '@erkenningen/ui';
 import React, { useState } from 'react';
 import { Query } from 'react-apollo';
 import { RouteComponentProps } from 'react-router';
@@ -65,9 +65,9 @@ export default function DoneParticipationSelectLicense(
         }
         return (
           <div>
-            <div className="panel-body">
+            <PanelBody>
               <p>Kies een van uw licenties om de gevolgde bijeenkomsten te tonen.</p>
-            </div>
+            </PanelBody>
             <form className="form form-horizontal" onSubmit={(e: any) => e.preventDefault()}>
               {certs && (
                 <FormSelect

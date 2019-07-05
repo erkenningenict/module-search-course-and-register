@@ -1,4 +1,4 @@
-import { Alert, Spinner } from '@erkenningen/ui';
+import { Alert, PanelBody, Spinner } from '@erkenningen/ui';
 import React from 'react';
 import { Query } from 'react-apollo';
 import {
@@ -15,17 +15,17 @@ export default function SignedUpParticipationsTable() {
         {({ loading, data, error }) => {
           if (loading) {
             return (
-              <div className="panel-body">
+              <PanelBody>
                 <Spinner />
-              </div>
+              </PanelBody>
             ) as React.ReactNode;
           }
 
           if (error) {
             return (
-              <div className="panel-body">
+              <PanelBody>
                 <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>
-              </div>
+              </PanelBody>
             ) as React.ReactNode;
           }
           if (data) {
@@ -61,14 +61,14 @@ export default function SignedUpParticipationsTable() {
                     </tbody>
                   </table>
                 </div>
-                <div className="panel-body">
+                <PanelBody>
                   <p>Kies een bijeenkomst uit de lijst hierboven als u zich wilt afmelden.</p>
                   <p>
                     Aanmeldingen voor digitale bijeenkomsten worden hier niet getoond. Voor
                     afmelding van een digitale bijeenkomst neemt u contact op met de organisator van
                     de digitale bijeenkomst.
                   </p>
-                </div>
+                </PanelBody>
               </>
             );
           }

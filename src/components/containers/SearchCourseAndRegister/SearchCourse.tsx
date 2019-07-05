@@ -1,4 +1,4 @@
-import { Alert, Panel, Spinner } from '@erkenningen/ui';
+import { Alert, Panel, PanelBody, Spinner } from '@erkenningen/ui';
 import React, { useState } from 'react';
 import { Query } from 'react-apollo';
 import { Link, Route, Switch } from 'react-router-dom';
@@ -45,9 +45,9 @@ export function SearchCourse() {
                     {({ loading, data, error }) => {
                       if (loading) {
                         return (
-                          <div className="panel-body">
+                          <PanelBody>
                             <Spinner />
-                          </div>
+                          </PanelBody>
                         ) as React.ReactNode;
                       }
 
@@ -58,10 +58,10 @@ export function SearchCourse() {
                       }
                       if (data && data.CursusSessies.length !== 1) {
                         return (
-                          <div className="panel-body">
+                          <PanelBody>
                             <Alert>Bijeenkomst is niet gevonden.</Alert>
                             <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
-                          </div>
+                          </PanelBody>
                         ) as React.ReactNode;
                       }
 
@@ -100,9 +100,9 @@ export function SearchCourse() {
                     {({ loading, data, error }) => {
                       if (loading) {
                         return (
-                          <div className="panel-body">
+                          <PanelBody>
                             <Spinner />
-                          </div>
+                          </PanelBody>
                         ) as React.ReactNode;
                       }
 
@@ -113,10 +113,10 @@ export function SearchCourse() {
                       }
                       if (data && data.SearchSpecialties.length !== 1) {
                         return (
-                          <div className="panel-body">
+                          <PanelBody>
                             <Alert>Bijeenkomst is niet gevonden.</Alert>
                             <Link to="/bijeenkomsten-zoeken/online">Terug naar de lijst</Link>
-                          </div>
+                          </PanelBody>
                         ) as React.ReactNode;
                       }
 

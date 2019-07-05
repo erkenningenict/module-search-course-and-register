@@ -1,4 +1,4 @@
-import { LinkButtonContainer, Spinner } from '@erkenningen/ui';
+import { LinkButtonContainer, PanelBody, Spinner } from '@erkenningen/ui';
 import { Formik } from 'formik';
 import { Button } from 'primereact/button';
 import React, { useContext, useState } from 'react';
@@ -45,7 +45,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
   const value = useContext(UserContext);
   return (
     <>
-      <div className="panel-body">
+      <PanelBody>
         <LinkButtonContainer>
           <LinkButton
             to={{
@@ -77,14 +77,14 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
           )}
         </LinkButtonContainer>
         <h3>Zoek een bijeenkomst op locatie</h3>
-      </div>
+      </PanelBody>
       <Query<IListsQuery> query={LISTS_QUERY}>
         {({ loading, data, error }) => {
           if (loading) {
             return (
-              <div className="panel-body">
+              <PanelBody>
                 <Spinner />
-              </div>
+              </PanelBody>
             ) as React.ReactNode;
           }
 

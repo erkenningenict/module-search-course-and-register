@@ -1,4 +1,4 @@
-import { Alert, Spinner } from '@erkenningen/ui';
+import { Alert, PanelBody, Spinner } from '@erkenningen/ui';
 import React from 'react';
 import { Query } from 'react-apollo';
 import { COURSE_SESSIONS_QUERY } from '../../shared/Queries';
@@ -100,9 +100,9 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
       {({ loading, data, error }) => {
         if (loading) {
           return (
-            <div className="panel-body">
+            <PanelBody>
               <Spinner />
-            </div>
+            </PanelBody>
           );
         }
 

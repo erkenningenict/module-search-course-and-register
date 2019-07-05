@@ -1,4 +1,4 @@
-import { LinkButtonContainer, Spinner } from '@erkenningen/ui';
+import { LinkButtonContainer, Spinner, PanelBody } from '@erkenningen/ui';
 import { Formik } from 'formik';
 import { Button } from 'primereact/button';
 import React, { useContext, useState } from 'react';
@@ -22,7 +22,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
   const value = useContext(UserContext);
   return (
     <>
-      <div className="panel-body">
+      <PanelBody>
         <LinkButtonContainer>
           <LinkButton
             to={{
@@ -54,7 +54,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
           )}
         </LinkButtonContainer>
         <h3>Zoek een online bijeenkomst</h3>
-      </div>
+      </PanelBody>
       <Query<IListsQuery> query={LISTS_QUERY}>
         {({ loading, error, data }) => {
           if (loading) {

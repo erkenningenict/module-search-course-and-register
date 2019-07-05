@@ -1,4 +1,4 @@
-import { LinkButtonContainer, Panel } from '@erkenningen/ui';
+import { LinkButtonContainer, Panel, PanelBody } from '@erkenningen/ui';
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import DoneParticipationSelectLicense from '../../DoneParticipations/DoneParticipationsSelectLicense';
@@ -17,7 +17,7 @@ export default function DoneParticipations(props: IDoneParticipationsProps) {
         {...props}
       />
       <DoneParticipationsTable licenseId={licenseId} />
-      <div className="panel-body">
+      <PanelBody>
         <LinkButtonContainer>
           <LinkButton
             to={{
@@ -45,7 +45,7 @@ export default function DoneParticipations(props: IDoneParticipationsProps) {
             Waar ben ik aangemeld?
           </LinkButton>
         </LinkButtonContainer>
-      </div>
+      </PanelBody>
     </Panel>
   );
 }

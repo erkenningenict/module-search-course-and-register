@@ -1,4 +1,4 @@
-import { Alert, Button, Col, Row } from '@erkenningen/ui';
+import { Alert, Button, Col, PanelBody, Row } from '@erkenningen/ui';
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../shared/UserContext';
@@ -19,7 +19,7 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
   return props.details && !showRegister ? (
     <>
       <OnlineCourseDetails details={data} />
-      <div className="panel-body">
+      <PanelBody>
         <Row>
           <Col>
             {user ? (
@@ -49,7 +49,7 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
             )}
           </Col>
         </Row>
-      </div>
+      </PanelBody>
     </>
   ) : (
     <Register

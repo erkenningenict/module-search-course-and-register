@@ -1,4 +1,4 @@
-import { Alert } from '@erkenningen/ui';
+import { Alert, PanelBody } from '@erkenningen/ui';
 import React, { useContext, useState } from 'react';
 import { ICertificering } from '../../shared/Queries';
 import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
@@ -31,9 +31,9 @@ export function LicenseChooser(props: any) {
   }
   return (
     <>
-      <div className="panel-body">
+      <PanelBody>
         <p> Kies uw licentie waarmee u een bijeenkomst wilt zoeken en aanmelden.</p>
-      </div>
+      </PanelBody>
       <form className="form form-horizontal" onSubmit={(e: any) => e.preventDefault()}>
         {certs && (
           <FormSelect

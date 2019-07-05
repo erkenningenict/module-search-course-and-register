@@ -1,4 +1,4 @@
-import { Alert, Spinner } from '@erkenningen/ui';
+import { Alert, PanelBody, Spinner } from '@erkenningen/ui';
 import React from 'react';
 import { Query } from 'react-apollo';
 import { ISearchSpecialty, SEARCH_SPECIALTIES } from '../../shared/Queries';
@@ -43,17 +43,19 @@ export function OnlineCoursesTable(props: IOnlineCoursesTable) {
       {({ loading, error, data }) => {
         if (loading) {
           return (
-            <div className="panel-body">
+            <PanelBody>
               <Spinner />
-            </div>
+            </PanelBody>
           );
         }
 
         if (error) {
           return (
-            <Alert>
-              Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}
-            </Alert>
+            <PanelBody>
+              <Alert>
+                Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}
+              </Alert>
+            </PanelBody>
           );
         }
 

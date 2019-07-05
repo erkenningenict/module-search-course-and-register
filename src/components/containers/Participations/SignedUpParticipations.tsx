@@ -1,4 +1,4 @@
-import { Alert, Button, Spinner } from '@erkenningen/ui';
+import { Alert, Button, PanelBody, Spinner } from '@erkenningen/ui';
 import { LinkButtonContainer, Panel } from '@erkenningen/ui';
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
@@ -57,37 +57,37 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
                         {({ loading, data, error }) => {
                           if (mutationLoading || loading) {
                             return (
-                              <div className="panel-body">
+                              <PanelBody>
                                 <Spinner />
-                              </div>
+                              </PanelBody>
                             ) as React.ReactNode;
                           }
 
                           if (error || mutationError) {
                             return (
-                              <div className="panel-body">
+                              <PanelBody>
                                 <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>
-                              </div>
+                              </PanelBody>
                             ) as React.ReactNode;
                           }
                           if (mutationData && mutationData.unRegisterForCourse.success) {
                             return (
-                              <div className="panel-body">
+                              <PanelBody>
                                 <Alert type="success">
                                   {mutationData.unRegisterForCourse.message}
                                 </Alert>
                                 {returnToListLink}
-                              </div>
+                              </PanelBody>
                             ) as React.ReactNode;
                           }
                           if (mutationData && !mutationData.unRegisterForCourse.success) {
                             return (
-                              <div className="panel-body">
+                              <PanelBody>
                                 <Alert type="warning">
                                   {mutationData.unRegisterForCourse.message}
                                 </Alert>
                                 {returnToListLink}
-                              </div>
+                              </PanelBody>
                             ) as React.ReactNode;
                           }
                           if (!data) {
@@ -96,10 +96,10 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
 
                           if (data && data.CursusDeelnameDetails === null) {
                             return (
-                              <div className="panel-body">
+                              <PanelBody>
                                 <Alert>Gegevens van de bijeenkomst zijn niet gevonden.</Alert>
                                 <Link to="/waar-ben-ik-aangemeld">Terug naar de lijst</Link>
-                              </div>
+                              </PanelBody>
                             ) as React.ReactNode;
                           }
                           const d = data.CursusDeelnameDetails;
@@ -178,7 +178,7 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
                       </Query>
 
                       {!mutationData && (
-                        <div className="panel-body">
+                        <PanelBody>
                           <Button
                             label="Afmelden"
                             icon="pi pi-check"
@@ -193,7 +193,7 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
                             }}
                           />
                           {returnToListLink}
-                        </div>
+                        </PanelBody>
                       )}
                     </>
                   )}
@@ -203,7 +203,7 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
           }}
         />
       </Switch>
-      <div className="panel-body">
+      <PanelBody>
         <LinkButtonContainer>
           <LinkButton
             to={{
@@ -230,7 +230,7 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
             Wat heb ik al gevolgd?
           </LinkButton>
         </LinkButtonContainer>
-      </div>
+      </PanelBody>
     </Panel>
   );
 }

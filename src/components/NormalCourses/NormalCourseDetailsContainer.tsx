@@ -1,4 +1,4 @@
-import { Alert, Button, Col, Row } from '@erkenningen/ui';
+import { Alert, Button, Col, PanelBody, Row } from '@erkenningen/ui';
 import moment from 'moment';
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -21,7 +21,7 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
   return props.details && !showRegister ? (
     <>
       <NormalCourseDetails details={props.details} />
-      <div className="panel-body">
+      <PanelBody>
         <Row>
           <Col>
             {user ? (
@@ -51,7 +51,7 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
             )}
           </Col>
         </Row>
-      </div>
+      </PanelBody>
     </>
   ) : (
     <Register
