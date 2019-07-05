@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@erkenningen/build": "1.0.7",
-    "@erkenningen/ui": "1.0.38",
+    "@erkenningen/ui": "^1.0.40",
     "apollo-boost": "0.4.2",
     "apollo-link-schema": "1.2.3",
     "classnames": "2.2.6",
@@ -66,16 +66,16 @@
     "start": "run-p -r mockserver start:app",
     "start:app": "react-scripts start",
     "build": "react-scripts build",
-    "build:dnn": "node ./node_modules/@erkenningen/build/scripts/create-dnn-module.js",
-    "build:prod": "npm-run-all build build:dnn",
-    "build:deploy": "node ./node_modules/@erkenningen/build/scripts/create-deploy-file.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "precommit": "pretty-quick --staged",
     "mockserver": "node ./mocks/mocks.js",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "cypress:open": "cypress open",
-    "prettier:all": "prettier --write \"**/*.{css,js,json,md,scss,ts,tsx,html}\""
+    "prettier:all": "prettier --write \"**/*.{css,js,json,md,scss,ts,tsx,html}\"",
+    "build:dnn": "node ./node_modules/@erkenningen/build/scripts/create-dnn-module.js",
+    "build:prod": "npm-run-all build build:dnn",
+    "build:deploy": "node ./node_modules/@erkenningen/build/scripts/create-deploy-file.js"
   },
   "proxy": "http://localhost:4000",
   "browserslist": [
