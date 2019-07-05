@@ -1,3 +1,4 @@
+import { LinkButtonContainer, Spinner } from '@erkenningen/ui';
 import { Formik } from 'formik';
 import { Button } from 'primereact/button';
 import React, { useContext, useState } from 'react';
@@ -8,8 +9,6 @@ import { IListsQuery, LISTS_QUERY } from '../../shared/Queries';
 import { UserContext } from '../../shared/UserContext';
 import FormSelect from '../ui/FormSelect';
 import LinkButton from '../ui/LinkButton';
-import LinkButtonContainer from '../ui/LinkButtonContainer';
-import Spinner from '../ui/Spinner';
 import { parseLocationSearch } from './../../helpers/url-utils';
 import { OnlineCoursesTable } from './OnlineCoursesTable';
 
@@ -30,8 +29,9 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
               pathname: `/bijeenkomsten-zoeken/op-locatie`,
               search: props.location.search,
             }}
-            name="Bijeenkomsten op locatie"
-          />
+          >
+            Bijeenkomsten op locatie
+          </LinkButton>
           {value && (
             <>
               <LinkButton
@@ -39,15 +39,17 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
                   pathname: `/wat-heb-ik-al-gevolgd/`,
                   search: props.location.search,
                 }}
-                name="Wat heb ik al gevolgd?"
-              />
+              >
+                Wat heb ik al gevolgd?
+              </LinkButton>
               <LinkButton
                 to={{
                   pathname: `/waar-ben-ik-aangemeld`,
                   search: props.location.search,
                 }}
-                name="Waar ben ik aangemeld?"
-              />
+              >
+                Waar ben ik aangemeld?
+              </LinkButton>
             </>
           )}
         </LinkButtonContainer>

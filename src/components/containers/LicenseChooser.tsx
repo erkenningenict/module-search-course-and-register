@@ -1,8 +1,8 @@
+import { Alert } from '@erkenningen/ui';
 import React, { useContext, useState } from 'react';
 import { ICertificering } from '../../shared/Queries';
 import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
 import { UserContext } from '../../shared/UserContext';
-import Alert from '../ui/Alert';
 import FormSelect from '../ui/FormSelect';
 
 export function LicenseChooser(props: any) {

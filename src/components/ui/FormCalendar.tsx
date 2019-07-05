@@ -1,9 +1,8 @@
+import { Datepicker } from '@erkenningen/ui';
 import { FormikProps } from 'formik';
 import moment from 'moment';
-import { Calendar } from 'primereact/calendar';
 import * as React from 'react';
 import { validateField } from '../../shared/Form';
-import Locale from '../../shared/Locale';
 import FormItem from './FormItem';
 
 interface IFormCalendarProps {
@@ -71,10 +70,8 @@ class FormCalendar extends React.Component<IFormCalendarProps, {}> {
         labelClassNames={this.props.labelClassNames}
         formControlClassName={this.props.formControlClassName}
       >
-        <Calendar
+        <Datepicker
           id={this.props.id}
-          inputId={this.props.id + 'Input'}
-          locale={Locale}
           dateFormat="dd-mm-yy"
           value={this.getFormValue()}
           disabled={this.props.readonly}

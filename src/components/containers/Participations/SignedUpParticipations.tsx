@@ -1,7 +1,8 @@
-import { Button } from 'primereact/button';
+import { Alert, Button, Spinner } from '@erkenningen/ui';
+import { LinkButtonContainer, Panel } from '@erkenningen/ui';
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
-import { Route, Switch, RouteComponentProps } from 'react-router';
+import { Route, RouteComponentProps, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
 import { UNREGISTER } from '../../../shared/Mutations';
 import { GET_PARTICIPATION_DETAILS, IParticipationDetails } from '../../../shared/Queries';
@@ -10,11 +11,7 @@ import { IOnlineCourseDetails } from '../../../types/IFindOnlineCoursesRow';
 import { NormalCourseDetails } from '../../NormalCourses/NormalCourseDetails';
 import { OnlineCourseDetails } from '../../OnlineCourses/OnlineCourseDetails';
 import SignedUpParticipationsTable from '../../SignedUpParticipations/SignedUpParticipationsTable';
-import Alert from '../../ui/Alert';
 import LinkButton from '../../ui/LinkButton';
-import LinkButtonContainer from '../../ui/LinkButtonContainer';
-import Panel from '../../ui/Panel';
-import Spinner from '../../ui/Spinner';
 
 interface ISignedUpParticipationsProps extends RouteComponentProps<any> {}
 
@@ -183,7 +180,6 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
                       {!mutationData && (
                         <div className="panel-body">
                           <Button
-                            type="button"
                             label="Afmelden"
                             icon="pi pi-check"
                             onClick={() => {
@@ -214,22 +210,25 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
               pathname: `/bijeenkomsten-zoeken/op-locatie`,
               search: props.location.search,
             }}
-            name="Zoek bijeenkomst op locatie"
-          />
+          >
+            Zoek bijeenkomst op locatie
+          </LinkButton>
           <LinkButton
             to={{
               pathname: `/bijeenkomsten-zoeken/online`,
               search: props.location.search,
             }}
-            name="Zoek online bijeenkomst"
-          />
+          >
+            Zoek online bijeenkomst
+          </LinkButton>
           <LinkButton
             to={{
               pathname: `/wat-heb-ik-al-gevolgd/`,
               search: props.location.search,
             }}
-            name="Wat heb ik al gevolgd?"
-          />
+          >
+            Wat heb ik al gevolgd?
+          </LinkButton>
         </LinkButtonContainer>
       </div>
     </Panel>

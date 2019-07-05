@@ -1,9 +1,8 @@
+import { Alert, Spinner } from '@erkenningen/ui';
 import React from 'react';
 import { Query } from 'react-apollo';
 import { ISearchSpecialty, SEARCH_SPECIALTIES } from '../../shared/Queries';
 import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
-import Alert from '../ui/Alert';
-import Spinner from '../ui/Spinner';
 import { OnlineCoursesRow } from './OnlineCoursesRow';
 
 interface IOnlineCoursesTable {

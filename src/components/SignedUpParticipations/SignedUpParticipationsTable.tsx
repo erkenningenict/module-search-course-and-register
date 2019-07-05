@@ -1,3 +1,4 @@
+import { Alert, Spinner } from '@erkenningen/ui';
 import React from 'react';
 import { Query } from 'react-apollo';
 import {
@@ -5,8 +6,6 @@ import {
   IMy,
   ISignedUpParticipation,
 } from '../../shared/Queries';
-import Alert from '../ui/Alert';
-import Spinner from '../ui/Spinner';
 import SignedUpParticipationsRow from './SignedUpParticipationsRow';
 
 export default function SignedUpParticipationsTable() {

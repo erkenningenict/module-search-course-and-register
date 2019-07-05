@@ -1,8 +1,8 @@
+import { Alert } from '@erkenningen/ui';
 import React, { useState } from 'react';
 import { Query } from 'react-apollo';
 import { RouteComponentProps } from 'react-router';
 import { GET_MY_PERSON_QUERY, ICertificering, IMy } from '../../shared/Queries';
-import Alert from '../ui/Alert';
 import FormSelect from '../ui/FormSelect';
 
 interface IDoneParticipationSelectLicenseProps {

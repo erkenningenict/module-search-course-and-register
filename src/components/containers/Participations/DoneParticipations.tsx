@@ -1,10 +1,9 @@
+import { LinkButtonContainer, Panel } from '@erkenningen/ui';
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import DoneParticipationSelectLicense from '../../DoneParticipations/DoneParticipationsSelectLicense';
 import DoneParticipationsTable from '../../DoneParticipations/DoneParticipationsTable';
 import LinkButton from '../../ui/LinkButton';
-import LinkButtonContainer from '../../ui/LinkButtonContainer';
-import Panel from '../../ui/Panel';
 
 interface IDoneParticipationsProps extends RouteComponentProps<any> {}
 
@@ -25,22 +24,26 @@ export default function DoneParticipations(props: IDoneParticipationsProps) {
               pathname: `/bijeenkomsten-zoeken/op-locatie`,
               search: props.location.search,
             }}
-            name="Zoek bijeenkomst op locatie"
-          />
+          >
+            Zoek bijeenkomst op locatie
+          </LinkButton>
           <LinkButton
             to={{
               pathname: `/bijeenkomsten-zoeken/online`,
               search: props.location.search,
             }}
-            name="Zoek online bijeenkomst"
-          />
+          >
+            Zoek online bijeenkomst
+          </LinkButton>
+
           <LinkButton
             to={{
               pathname: `/waar-ben-ik-aangemeld`,
               search: props.location.search,
             }}
-            name="Waar ben ik aangemeld?"
-          />
+          >
+            Waar ben ik aangemeld?
+          </LinkButton>
         </LinkButtonContainer>
       </div>
     </Panel>

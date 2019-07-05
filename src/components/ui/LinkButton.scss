@@ -36,6 +36,12 @@ $container-max-widths: (
   font-size: 19.2px;
   word-break: break-word;
   word-wrap: break-word;
+  transition: all 0.15s ease-in;
+  cursor: pointer;
+  &:hover {
+    background-color: lighten($be-dark-green, 5%);
+    text-decoration: none;
+  }
 }
 
 .link-button__line {

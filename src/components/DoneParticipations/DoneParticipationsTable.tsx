@@ -1,8 +1,7 @@
+import { Alert, Spinner } from '@erkenningen/ui';
 import React from 'react';
 import { Query } from 'react-apollo';
 import { GET_PARTICIPATIONS, IGetParticipation } from '../../shared/Queries';
-import Alert from '../ui/Alert';
-import Spinner from '../ui/Spinner';
 import DoneParticipationsRow from './DoneParticipationsRow';
 
 interface IDoneParticipationsTableProps {

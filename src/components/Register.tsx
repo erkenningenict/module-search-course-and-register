@@ -1,3 +1,4 @@
+import { Alert, Spinner } from '@erkenningen/ui';
 import { Formik } from 'formik';
 import { Button } from 'primereact/button';
 import * as React from 'react';
@@ -11,10 +12,8 @@ import { IRegisterForCourseInput, REGISTER } from '../shared/Mutations';
 import { IListsQuery, LISTS_QUERY } from '../shared/Queries';
 import { SelectedLicenseContext } from '../shared/SelectedLicenseContext';
 import { UserContext } from '../shared/UserContext';
-import Alert from './ui/Alert';
 import FormSelect from './ui/FormSelect';
 import FormText from './ui/FormText';
-import Spinner from './ui/Spinner';
 
 export interface IRegisterCourseDetails {
   specialtyId: number;
@@ -80,9 +79,7 @@ export function Register(properties: IRegister) {
       <div className="panel-body">
         <p>
           Deze gegevens worden aan de organisator doorgegeven. De organisator verwerkt deze gegevens
-          volgens haar richtlijnen. De richtlijnen zijn bij de organisator beschikbaar. License{' '}
-          {licenseId}
-          TODO CourseDateTime {properties.registerCourseDetails.courseDateTime.toISOString()}
+          volgens haar richtlijnen. De richtlijnen zijn bij de organisator beschikbaar.
         </p>
       </div>
       <Mutation<
@@ -237,6 +234,7 @@ export function Register(properties: IRegister) {
                             label: item.Text,
                           }))}
                           name="Country"
+                          filter={true}
                           loading={loading}
                           readonly={!!userData.IsGbaGeregistreerd}
                           form={props}
@@ -286,6 +284,7 @@ export function Register(properties: IRegister) {
                             label: item.Naam,
                           }))}
                           name="KnowledgeArea"
+                          filter={true}
                           loading={loading}
                           form={props}
                         />

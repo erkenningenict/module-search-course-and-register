@@ -4,12 +4,12 @@ import 'primereact/resources/themes/nova-light/theme.css';
 import * as React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
 
+import { Alert } from '@erkenningen/ui';
 import { Query } from 'react-apollo';
 import './App.scss';
 import DoneParticipations from './components/containers/Participations/DoneParticipations';
 import SignedUpParticipations from './components/containers/Participations/SignedUpParticipations';
 import { SearchCourse } from './components/containers/SearchCourseAndRegister/SearchCourse';
-import Alert from './components/ui/Alert';
 import { GET_MY_PERSON_QUERY, IMy } from './shared/Queries';
 import { UserContext } from './shared/UserContext';
 

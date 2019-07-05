@@ -1,12 +1,9 @@
-import { Button } from 'primereact/button';
+import { Alert, Button, Col, Row } from '@erkenningen/ui';
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../shared/UserContext';
 import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
 import { Register } from '../Register';
-import Alert from '../ui/Alert';
-import Col from '../ui/Col';
-import Row from '../ui/Row';
 import { OnlineCourseDetails } from './OnlineCourseDetails';
 
 interface IOnlineCourseDetailsProps {
@@ -29,7 +26,6 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
               <>
                 <Button
                   label="Aanmelden"
-                  type="button"
                   onClick={() => setShowRegister(true)}
                   icon="pi pi-check"
                 />
@@ -45,7 +41,6 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
                 </Alert>
                 <Button
                   label="Inloggen om aan te melden"
-                  type="button"
                   onClick={() => props.routerProps.history.push('/Default.aspx?tabid=154')}
                   icon="pi pi-check"
                 />

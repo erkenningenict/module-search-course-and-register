@@ -1,3 +1,4 @@
+import { Alert, Panel, Spinner } from '@erkenningen/ui';
 import React, { useState } from 'react';
 import { Query } from 'react-apollo';
 import { Link, Route, Switch } from 'react-router-dom';
@@ -9,9 +10,6 @@ import { NormalCourseDetailsContainer } from '../../NormalCourses/NormalCourseDe
 import { NormalCoursesForm } from '../../NormalCourses/NormalCoursesForm';
 import { OnlineCourseDetailsContainer } from '../../OnlineCourses/OnlineCourseDetailsContainer';
 import { OnlineCoursesForm } from '../../OnlineCourses/OnlineCoursesForm';
-import Alert from '../../ui/Alert';
-import Panel from '../../ui/Panel';
-import Spinner from '../../ui/Spinner';
 import { LicenseChooser } from '../LicenseChooser';
 
 export function SearchCourse() {

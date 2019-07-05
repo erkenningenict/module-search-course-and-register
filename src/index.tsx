@@ -7,6 +7,7 @@ import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
+import { ThemeContext } from '@erkenningen/ui';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
@@ -21,12 +22,14 @@ const client = new ApolloClient({
     uri: process.env.REACT_APP_GRAPHQL_URL,
     credentials: 'include',
   }),
-  cache
+  cache,
 });
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <App />
+    <ThemeContext.Provider value={{ mode: 'student' }}>
+      <App />
+    </ThemeContext.Provider>
   </ApolloProvider>,
   document.getElementById('root'),
 );

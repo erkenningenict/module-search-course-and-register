@@ -1,9 +1,8 @@
+import { Alert, Spinner } from '@erkenningen/ui';
 import React from 'react';
 import { Query } from 'react-apollo';
 import { COURSE_SESSIONS_QUERY } from '../../shared/Queries';
 import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
-import Alert from '../ui/Alert';
-import Spinner from '../ui/Spinner';
 import { NormalCoursesRow } from './NormalCoursesRow';
 
 interface INormalCoursesTable {

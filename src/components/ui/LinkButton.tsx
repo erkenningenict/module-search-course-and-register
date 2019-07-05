@@ -14,7 +14,7 @@ export default function LinkButton(props) {
   };
   return (
     <Link className="link-button" to={props.to}>
-      {props.name}
+      {props.children}
       {getSvgLine()}
     </Link>
   );

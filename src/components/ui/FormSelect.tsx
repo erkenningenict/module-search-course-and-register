@@ -2,10 +2,9 @@ import * as React from 'react';
 
 import { FormikProps } from 'formik';
 
-import { Dropdown } from 'primereact/components/dropdown/Dropdown';
+import { Select, Spinner } from '@erkenningen/ui';
 import { validateField } from '../../shared/Form';
 import FormItem from './FormItem';
-import Spinner from './Spinner';
 
 interface IFormSelectProps {
   id: string;
@@ -54,7 +53,7 @@ class FormSelect extends React.Component<IFormSelectProps, {}> {
             <Spinner />
           </span>
         ) : (
-          <Dropdown
+          <Select
             id={this.props.id}
             options={this.props.options}
             placeholder={this.props.placeholder || this.props.label}
@@ -63,7 +62,7 @@ class FormSelect extends React.Component<IFormSelectProps, {}> {
             disabled={this.props.readonly}
             className="w-100"
             filter={this.props.filter}
-            style={{ maxWidth: '100%', width: this.props.width || '100%' }}
+            // style={{ maxWidth: '100%', width: this.props.width || '100%' }}
           />
         )}
       </FormItem>
