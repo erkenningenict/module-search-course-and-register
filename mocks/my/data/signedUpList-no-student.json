@@ -1,0 +1,9 @@
+{
+  "data": {
+    "my": {
+      "Roles": ["Registered User"],
+      "AangemeldeCursusDeelnames": [],
+      "__typename": "My"
+    }
+  }
+}

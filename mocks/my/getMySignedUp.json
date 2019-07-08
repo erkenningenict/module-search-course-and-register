@@ -1,0 +1,23 @@
+{
+  "expression": "/graphql",
+  "body": "(.*)getMySignedUpParticipationsList(.*)",
+  "method": "POST",
+  "name": "getMySignedUpParticipationsList",
+  "responses": {
+    "getSignedUpListEmpty": {
+      "status": 200,
+      "delay": 200,
+      "file": "mocks/my/data/signedUpList-empty.json"
+    },
+    "getNonStudent": {
+      "status": 200,
+      "delay": 200,
+      "file": "mocks/my/data/signedUpList-no-student.json"
+    },
+    "getUnauthenticated": {
+      "status": 200,
+      "delay": 200,
+      "file": "mocks/my/data/unauthenticated.json"
+    }
+  }
+}

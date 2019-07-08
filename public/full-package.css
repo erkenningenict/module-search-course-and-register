@@ -5838,21 +5838,7 @@ button.close {
 @media print {
   .hidden-print {
     display: none !important; } }
-
-/* @font-face {
-  font-family: "SourceSansProLight";
-  font-style: normal;
-  font-weight: normal;
-  src: url("SourceSansPro-Light.ttf") format("truetype"); */
-  /*src: url("./fonts/SourceSansPro-Light.ttf") format("truetype");*/ }
-
-/* @font-face {
-  font-family: "SourceSansProRegular";
-  font-style: normal;
-  font-weight: normal;
-  src: url("SourceSansPro-Regular.ttf") format("truetype"); } */
-
-/*$font-family-sans-serif:  'Open Sans','Helvetica Neue',Arial,Verdana,sans-serif !default;*/
+  
 .footer {
   background: red; }
   .footer div {
@@ -5866,20 +5852,6 @@ button.close {
     padding: 0.8rem;
     text-decoration: none; }
 
-/* @font-face {
-  font-family: "SourceSansProLight";
-  font-style: normal;
-  font-weight: normal;
-  src: url("SourceSansPro-Light.ttf") format("truetype"); */
-  /*src: url("./fonts/SourceSansPro-Light.ttf") format("truetype");*/ }
-
-/* @font-face {
-  font-family: "SourceSansProRegular";
-  font-style: normal;
-  font-weight: normal;
-  src: url("SourceSansPro-Regular.ttf") format("truetype"); } */
-
-/*$font-family-sans-serif:  'Open Sans','Helvetica Neue',Arial,Verdana,sans-serif !default;*/
 .navbar {
   border-radius: 0;
   margin-bottom: 0; }
@@ -7628,3 +7600,7 @@ a.btn.btn:link, a.btn.btn:visited, a.btn.btn:hover {
     display: none; } }
 
 /*# sourceMappingURL=full-package.css.map */
+
+.DnnModule {
+  margin-top: 15px;
+}

@@ -28,6 +28,19 @@ export default function SignedUpParticipationsTable() {
               </PanelBody>
             ) as React.ReactNode;
           }
+          if (!data || !data.my) {
+            return null;
+          }
+          if (data.my.Roles && data.my.Roles.indexOf('Student') === -1) {
+            return (
+              <PanelBody>
+                <Alert type="warning">
+                  U heeft geen geldige licentie, daarom kunt u zich niet voor een bijeenkomst
+                  aanmelden!
+                </Alert>
+              </PanelBody>
+            );
+          }
           if (data) {
             return (
               <>

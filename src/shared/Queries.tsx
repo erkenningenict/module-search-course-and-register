@@ -4,6 +4,7 @@ import { IKennisgebied, ILand, IThema } from './Model';
 export const GET_MY_PERSON_QUERY = gql`
   query getMy($input: Boolean!) {
     my {
+      Roles
       Persoon {
         PersoonID
         BSN
@@ -44,6 +45,7 @@ export const GET_MY_PERSON_QUERY = gql`
 export const GET_MY_SIGNED_UP_PARTICIPATIONS_LIST_QUERY = gql`
   query getMySignedUpParticipationsList {
     my {
+      Roles
       AangemeldeCursusDeelnames {
         CursusDeelnameID
         CursusID
@@ -62,6 +64,7 @@ export const GET_MY_SIGNED_UP_PARTICIPATIONS_LIST_QUERY = gql`
 export const GET_MY_SIGNED_UP_PARTICIPATION_DETAILS_QUERY = gql`
   query getMySignedUpParticipationsDetails($input: Boolean!) {
     my {
+      Roles
       AangemeldeCursusDeelnames {
         CursusDeelnameID
         CursusID
@@ -94,6 +97,7 @@ export const GET_MY_SIGNED_UP_PARTICIPATION_DETAILS_QUERY = gql`
 
 export interface IMy {
   my: {
+    Roles: string[];
     Persoon?: IPersoon;
     Certificeringen?: ICertificering[];
     AangemeldeCursusDeelnames?: ISignedUpParticipation[];
