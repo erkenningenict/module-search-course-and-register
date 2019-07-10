@@ -1,4 +1,4 @@
-import { Alert, PanelBody, Spinner } from '@erkenningen/ui';
+import { Alert, PanelBody, Spinner, TableResponsive } from '@erkenningen/ui';
 import React from 'react';
 import { Query } from 'react-apollo';
 import {
@@ -44,7 +44,7 @@ export default function SignedUpParticipationsTable() {
           if (data) {
             return (
               <>
-                <div className="table table-responsive">
+                <TableResponsive>
                   <table className="table table-striped" key="table">
                     <thead>
                       <tr key="headerRow">
@@ -73,7 +73,7 @@ export default function SignedUpParticipationsTable() {
                       ) : null}
                     </tbody>
                   </table>
-                </div>
+                </TableResponsive>
                 <PanelBody>
                   <p>Kies een bijeenkomst uit de lijst hierboven als u zich wilt afmelden.</p>
                   <p>

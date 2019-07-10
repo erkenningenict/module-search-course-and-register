@@ -1,4 +1,4 @@
-import { Alert, PanelBody, Spinner } from '@erkenningen/ui';
+import { Alert, PanelBody, Spinner, TableResponsive } from '@erkenningen/ui';
 import React from 'react';
 import { Query } from 'react-apollo';
 import { ISearchSpecialty, SEARCH_SPECIALTIES } from '../../shared/Queries';
@@ -64,35 +64,33 @@ export function OnlineCoursesTable(props: IOnlineCoursesTable) {
         }
 
         return (
-          <>
-            <div className="table table-responsive">
-              <table className="table table-striped" key="table">
-                <thead>
-                  <tr key="headerRow">
-                    <th>Titel (aantal resultaten: {data.SearchSpecialties.length})</th>
-                    <th>Organisator</th>
-                    <th>Prijs (incl. btw)</th>
+          <TableResponsive>
+            <table className="table table-striped" key="table">
+              <thead>
+                <tr key="headerRow">
+                  <th>Titel</th>
+                  <th>Organisator</th>
+                  <th>Prijs (incl. btw)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data &&
+                  data.SearchSpecialties &&
+                  data.SearchSpecialties.map((item: IOnlineCourseDetails) => {
+                    return <OnlineCoursesRow key={item.Code} row={item} />;
+                  })}
+                {!data || data.SearchSpecialties.length === 0 ? (
+                  <tr>
+                    <td>
+                      <Alert type="info">
+                        Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan.
+                      </Alert>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {data &&
-                    data.SearchSpecialties &&
-                    data.SearchSpecialties.map((item: IOnlineCourseDetails) => {
-                      return <OnlineCoursesRow key={item.Code} row={item} />;
-                    })}
-                  {!data || data.SearchSpecialties.length === 0 ? (
-                    <tr>
-                      <td>
-                        <Alert type="info">
-                          Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan.
-                        </Alert>
-                      </td>
-                    </tr>
-                  ) : null}
-                </tbody>
-              </table>
-            </div>
-          </>
+                ) : null}
+              </tbody>
+            </table>
+          </TableResponsive>
         );
       }}
     </Query>

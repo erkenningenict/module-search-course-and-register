@@ -1,4 +1,4 @@
-import { Alert, PanelBody, Spinner } from '@erkenningen/ui';
+import { Alert, PanelBody, Spinner, TableResponsive } from '@erkenningen/ui';
 import React from 'react';
 import { Query } from 'react-apollo';
 import { GET_PARTICIPATIONS, IGetParticipation } from '../../shared/Queries';
@@ -34,7 +34,7 @@ export default function DoneParticipationsTable(props: IDoneParticipationsTableP
 
         return (
           <>
-            <div className="table table-responsive">
+            <TableResponsive>
               <table className="table table-striped" key="table">
                 <thead>
                   <tr key="headerRow">
@@ -61,13 +61,13 @@ export default function DoneParticipationsTable(props: IDoneParticipationsTableP
                   ) : null}
                 </tbody>
               </table>
-              <PanelBody>
-                <p>
-                  * Status 'voorlopig' kan betekenen dat de deelnamelijst nog niet compleet is of
-                  dat de kennisaanbieder nog niet betaald heeft.
-                </p>
-              </PanelBody>
-            </div>
+            </TableResponsive>
+            <PanelBody>
+              <p>
+                * Status 'voorlopig' kan betekenen dat de deelnamelijst nog niet compleet is of dat
+                de kennisaanbieder nog niet betaald heeft.
+              </p>
+            </PanelBody>
           </>
         ) as React.ReactNode;
       }}
