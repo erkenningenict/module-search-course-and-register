@@ -1,6 +1,10 @@
+import { PanelBody } from '@erkenningen/ui';
 import React from 'react';
 import { toDutchMoney } from '../../helpers/number-utils';
 import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
+
+import OrganizerDetails from '../ui/OrganizerDetails';
+import './OnlineCourseDetails.scss';
 
 interface IOnlineCourseDetailsProps {
   details: IOnlineCourseDetails;
@@ -9,66 +13,47 @@ interface IOnlineCourseDetailsProps {
 
 export function OnlineCourseDetails(props: IOnlineCourseDetailsProps) {
   const data: IOnlineCourseDetails = props && props.details && props.details;
-  const organizerDetails = data && (
-    <>
-      {data.Organizer}
-      {data.OrganizerPhone && <>, telefoon: {data.OrganizerPhone || 'onbekend'}</>}
-      {data.OrganizerEmail && (
-        <>
-          , email: <a href={`mailto:${data.OrganizerEmail}`}>{data.OrganizerEmail}</a>
-        </>
-      )}
-    </>
-  );
 
   return (
     props.details && (
-      <table className="table table-striped">
-        <tbody>
-          <tr>
-            <td>
-              <strong>Titel</strong>
-            </td>
-            <td>{data.Title}</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Erkenningsnummer</strong>
-            </td>
-            <td>{data.Code}</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Thema</strong>
-            </td>
-            <td>{data.Theme}</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Licentie</strong>
-            </td>
-            <td>{data.Competence}</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Promotietekst</strong>
-            </td>
-            <td>{data.PromoText}</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Prijs</strong>
-            </td>
-            <td>{toDutchMoney(data.Price)} (incl. btw)</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Organisator</strong>
-            </td>
-            <td>{organizerDetails}</td>
-          </tr>
-        </tbody>
-      </table>
+      <>
+        <PanelBody>
+          <div className="row">
+            <div className="col-md-12">
+              <div className="flex-container">
+                <i className="fas fa-desktop online" />
+                <div className="flex-container flex-col">
+                  <h3 className="title">
+                    <span>{data.Title}</span>
+                  </h3>
+                  <p className="code">Erkenningsnummer: {data.Code}</p>
+                </div>
+              </div>
+              <p>{data.PromoText}</p>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-md-12">
+              <div className="price">
+                <strong>{toDutchMoney(data.Price)}</strong> (incl. btw)
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-md-6">
+              <p className="characteristics">
+                Thema: <strong>{data.Theme}</strong>
+              </p>
+            </div>
+            <div className="col-md-6">
+              <p className="characteristics">
+                Licentie: <strong>{data.Competence}</strong>
+              </p>
+            </div>
+          </div>
+          <OrganizerDetails data={data} />
+        </PanelBody>
+      </>
     )
   );
 }

@@ -1,4 +1,4 @@
-import { Alert, PanelBody, Spinner } from '@erkenningen/ui';
+import { Alert, PanelBody, Spinner, TableResponsive } from '@erkenningen/ui';
 import React from 'react';
 import { Query } from 'react-apollo';
 import {
@@ -28,10 +28,23 @@ export default function SignedUpParticipationsTable() {
               </PanelBody>
             ) as React.ReactNode;
           }
+          if (!data || !data.my) {
+            return null;
+          }
+          if (data.my.Roles && data.my.Roles.indexOf('Student') === -1) {
+            return (
+              <PanelBody>
+                <Alert type="warning">
+                  U heeft geen geldige licentie, daarom kunt u zich niet voor een bijeenkomst
+                  aanmelden!
+                </Alert>
+              </PanelBody>
+            );
+          }
           if (data) {
             return (
               <>
-                <div className="table table-responsive">
+                <TableResponsive>
                   <table className="table table-striped" key="table">
                     <thead>
                       <tr key="headerRow">
@@ -60,7 +73,7 @@ export default function SignedUpParticipationsTable() {
                       ) : null}
                     </tbody>
                   </table>
-                </div>
+                </TableResponsive>
                 <PanelBody>
                   <p>Kies een bijeenkomst uit de lijst hierboven als u zich wilt afmelden.</p>
                   <p>

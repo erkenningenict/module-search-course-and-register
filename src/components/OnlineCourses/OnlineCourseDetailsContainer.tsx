@@ -41,7 +41,14 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
                 </Alert>
                 <Button
                   label="Inloggen om aan te melden"
-                  onClick={() => props.routerProps.history.push('/Default.aspx?tabid=154')}
+                  onClick={() => {
+                    const { origin, href } = window.location;
+                    const loginUrl = process.env.REACT_APP_DNN_LOGIN_URL;
+                    const redirectUrl = `${loginUrl}&returnurl=${encodeURIComponent(
+                      href.replace(origin, ''),
+                    )}`;
+                    window.location.href = redirectUrl;
+                  }}
                   icon="pi pi-check"
                 />
                 <Link to="/bijeenkomsten-zoeken/online">Terug naar de lijst</Link>

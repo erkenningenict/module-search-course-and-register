@@ -34,13 +34,7 @@ export default function DoneParticipationSelectLicense(
           if (error.graphQLErrors) {
             for (const err of error.graphQLErrors) {
               if (err.extensions && err.extensions.code === 'UNAUTHENTICATED') {
-                // Redirect to DNN login
-                //   return (
-                //     <p>U bent niet ingelogd. Log in om verder te gaan.</p>
-                //   ) as React.ReactElement;
-                //   return <Redirect push={true} to="/Default.aspx?tabid=154" />;
                 return props.history.push('/bijeenkomsten-zoeken/op-locatie') as React.ReactNode;
-                //   return <Redirect push={true} to="/bijeenkomsten-zoeken/op-locatie" />;
               } else {
                 return <p>Fout</p> as React.ReactNode;
               }
@@ -52,6 +46,12 @@ export default function DoneParticipationSelectLicense(
               keer of neem contact op met de helpdesk.
             </Alert>
           ) as React.ReactNode;
+        }
+        if (!data || !data.my || data.my.Roles === null) {
+          return null;
+        }
+        if (data.my.Roles && data.my.Roles.indexOf('Student') === -1) {
+          data.my.Certificeringen = undefined;
         }
         if (data) {
           certificeringen = (data && data.my && data.my.Certificeringen) || [];
@@ -84,10 +84,12 @@ export default function DoneParticipationSelectLicense(
                 />
               )}
               {certificeringen.length === 0 && (
-                <Alert type="warning">
-                  U heeft geen geldige licentie, daarom kunt u zich niet voor een bijeenkomst
-                  aanmelden!
-                </Alert>
+                <PanelBody>
+                  <Alert type="warning">
+                    U heeft geen geldige licentie, daarom kunt u zich niet voor een bijeenkomst
+                    aanmelden!
+                  </Alert>
+                </PanelBody>
               )}
             </form>
             <hr />

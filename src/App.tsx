@@ -39,19 +39,22 @@ export default function App() {
               }
 
               if (error) {
-                // Check if it's an authentication error, then redirect to login
+                // Check if it's an authentication error
                 if (error.graphQLErrors) {
                   for (const err of error.graphQLErrors) {
                     if (err.extensions && err.extensions.code === 'UNAUTHENTICATED') {
-                      // Redirect to DNN login
                       return (
                         <UserContext.Provider value={undefined}>
                           <SearchCourse />
                         </UserContext.Provider>
                       ) as React.ReactNode;
-                      // return <Redirect push={true} to="/Default.aspx?tabid=154" />;
                     } else {
-                      return <p>Fout</p>;
+                      return (
+                        <Alert type="danger">
+                          Er is een fout opgetreden bij het ophalen van de accountgegevens. Probeer
+                          het nog een keer of neem contact op met de helpdesk.
+                        </Alert>
+                      ) as React.ReactNode;
                     }
                   }
                 }
@@ -62,8 +65,11 @@ export default function App() {
                   </Alert>
                 ) as React.ReactNode;
               }
-              if (!data) {
+              if (!data || !data.my || data.my.Roles === null) {
                 return null;
+              }
+              if (data.my.Roles && data.my.Roles.indexOf('Student') === -1) {
+                data.my.Certificeringen = undefined;
               }
               return (
                 <UserContext.Provider value={{ my: data.my }}>

@@ -1,0 +1,34 @@
+.online {
+  font-size: 30px;
+  display: inline-block;
+  color: #fff;
+  background: #6abbb7;
+  border-radius: 50%;
+  padding: 20px;
+  margin-right: 20px;
+  height: 70px;
+  width: 80px;
+  text-align: center;
+  align-self: center;
+  opacity: 0.8;
+}
+
+.code {
+  color: #aaa;
+}
+
+.flex-container {
+  display: flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+
+.price {
+  font-size: 27px;
+  margin-bottom: 20px;
+}
+
+.characteristics {
+  font-size: 1.1em;
+}

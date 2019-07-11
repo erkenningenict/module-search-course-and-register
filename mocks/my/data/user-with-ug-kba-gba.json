@@ -1,6 +1,7 @@
 {
   "data": {
     "my": {
+      "Roles": ["Registered User", "Student"],
       "Persoon": {
         "PersoonID": "62926",
         "BSN": "123456789",

@@ -132,9 +132,22 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
           if (!data) {
             return null;
           }
-          const knowledgeAreas = [{ KennisgebiedID: '0', Naam: 'Alle' }, ...data.Kennisgebieden];
-          const themes = [{ ThemaID: '0', Naam: 'Alle' }, ...data.Themas];
-          const competences = [{ CompetentieID: '0', Naam: 'Alle' }, ...data.Competenties];
+          const knowledgeAreas = [
+            { KennisgebiedID: '0', Naam: 'Alle' },
+            ...data.Kennisgebieden.sort((a: IKennisgebied, b: IKennisgebied) =>
+              a.Naam < b.Naam ? -1 : 1,
+            ),
+          ];
+          const themes = [
+            { ThemaID: '0', Naam: 'Alle' },
+            ...data.Themas.sort((a: IThema, b: IThema) => (a.Naam < b.Naam ? -1 : 1)),
+          ];
+          const competences = [
+            { CompetentieID: '0', Naam: 'Alle' },
+            ...data.Competenties.sort((a: ICompetentie, b: ICompetentie) =>
+              a.Naam < b.Naam ? -1 : 1,
+            ),
+          ];
           return (
             <Formik
               initialValues={{

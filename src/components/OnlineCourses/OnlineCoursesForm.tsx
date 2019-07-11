@@ -1,4 +1,4 @@
-import { LinkButtonContainer, Spinner, PanelBody } from '@erkenningen/ui';
+import { LinkButtonContainer, PanelBody, Spinner } from '@erkenningen/ui';
 import { Formik } from 'formik';
 import { Button } from 'primereact/button';
 import React, { useContext, useState } from 'react';
@@ -111,9 +111,14 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
 
           const knowledgeAreas: IKennisgebied[] = [
             { KennisgebiedID: '0', Naam: 'Alle' },
-            ...data.Kennisgebieden,
+            ...data.Kennisgebieden.sort((a: IKennisgebied, b: IKennisgebied) =>
+              a.Naam < b.Naam ? -1 : 1,
+            ),
           ];
-          const themes: IThema[] = [{ ThemaID: '0', Naam: 'Alle' }, ...data.Themas];
+          const themes = [
+            { ThemaID: '0', Naam: 'Alle' },
+            ...data.Themas.sort((a: IThema, b: IThema) => (a.Naam < b.Naam ? -1 : 1)),
+          ];
           return (
             <Formik
               initialValues={{

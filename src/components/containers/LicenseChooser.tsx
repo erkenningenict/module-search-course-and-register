@@ -50,9 +50,11 @@ export function LicenseChooser(props: any) {
           />
         )}
         {certificeringen.length === 0 && (
-          <Alert type="warning">
-            U heeft geen geldige licentie, daarom kunt u zich niet voor een bijeenkomst aanmelden!
-          </Alert>
+          <PanelBody>
+            <Alert type="warning">
+              U heeft geen geldige licentie, daarom kunt u zich niet voor een bijeenkomst aanmelden!
+            </Alert>
+          </PanelBody>
         )}
       </form>
       <hr />

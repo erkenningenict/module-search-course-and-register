@@ -1,7 +1,10 @@
+import { PanelBody } from '@erkenningen/ui';
 import React from 'react';
 import { toDutchDate } from '../../helpers/date-utils';
 import { toDutchMoney } from '../../helpers/number-utils';
 import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
+import OrganizerDetails from '../ui/OrganizerDetails';
+import './NormalCourseDetails.scss';
 
 interface INormalCourseDetailsProps {
   details: INormalCourseDetails;
@@ -12,95 +15,70 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
   const data: INormalCourseDetails = props && props.details && props.details;
   const address = data && data.LocationAddress;
   const locationAddress = address && (
-    <>
-      {address.Street} {address.HouseNr}
-      {address.HouseNrExtension || ''}, {address.Zipcode} {address.City}
-    </>
-  );
-  const organizerDetails = data && (
-    <>
-      {data.Organizer}
-      {data.OrganizerPhone && <>, telefoon: {data.OrganizerPhone || 'onbekend'}</>}
-      {data.OrganizerEmail && (
-        <>
-          , email: <a href={`mailto:${data.OrganizerEmail}`}>{data.OrganizerEmail}</a>
-        </>
-      )}
-    </>
+    <div className="location-area">
+      <p className="location-label">Locatie</p>
+      <p>{data.LocationName}</p>
+      <p>
+        {address.Street} {address.HouseNr}
+        {address.HouseNrExtension || ''}, {address.Zipcode} {address.City}
+      </p>
+    </div>
   );
 
   return (
     props.details && (
-      <table className="table table-striped">
-        <tbody>
-          <tr>
-            <td>
-              <strong>Titel</strong>
-            </td>
-            <td>{data.Title}</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Datum/tijd</strong>
-            </td>
-            <td>
-              {toDutchDate(data.Date)} {data.StartTime} - {data.EndTime}
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Erkenningsnummer</strong>
-            </td>
-            <td>{data.CourseCode}</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Thema</strong>
-            </td>
-            <td>{data.Theme}</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Licentie</strong>
-            </td>
-            <td>{data.Competence}</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Promotietekst</strong>
-            </td>
-            <td>{data.PromoText || 'onbekend'}</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Opmerkingen</strong>
-            </td>
-            <td>{data.Remarks || 'geen'}</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Prijs</strong>
-            </td>
-            <td>{toDutchMoney(data.Price) || 'onbekend'} (incl. btw)</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Locatie</strong>
-            </td>
-            <td>
-              {data.LocationName}
-              <br />
-              {locationAddress}
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Organisator</strong>
-            </td>
-            <td>{organizerDetails}</td>
-          </tr>
-        </tbody>
-      </table>
+      <>
+        <PanelBody>
+          <div className="row">
+            <div className="col-md-12">
+              <div className="flex-container">
+                <i className="fas fa-building online" />
+                <div className="flex-container flex-col">
+                  <h3 className="title">
+                    <span>{data.Title}</span>
+                  </h3>
+                  <p className="code">Erkenningsnummer: {data.CourseCode}</p>
+                </div>
+              </div>
+              <p>{data.PromoText || 'Er is geen promotietekst bekend'}</p>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-md-6">
+              <div className="price">
+                <strong>
+                  {toDutchDate(data.Date)}
+                  <span>
+                    {data.StartTime} - {data.EndTime}
+                  </span>
+                </strong>
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="price">
+                <strong>{toDutchMoney(data.Price)}</strong> (incl. btw)
+              </div>
+            </div>
+          </div>
+          <div className="row">{locationAddress}</div>
+          <div className="row">
+            <div className="col-md-6">
+              <p className="characteristics">
+                Thema: <strong>{data.Theme}</strong>
+              </p>
+            </div>
+            <div className="col-md-6">
+              <p className="characteristics">
+                Licentie: <strong>{data.Competence}</strong>
+              </p>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-md-12">{data.Remarks}</div>
+          </div>
+          <OrganizerDetails data={data} />
+        </PanelBody>
+      </>
     )
   );
 }

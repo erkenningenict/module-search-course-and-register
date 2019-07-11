@@ -1,4 +1,4 @@
-import { Alert, PanelBody, Spinner } from '@erkenningen/ui';
+import { Alert, PanelBody, Spinner, TableResponsive } from '@erkenningen/ui';
 import React from 'react';
 import { Query } from 'react-apollo';
 import { COURSE_SESSIONS_QUERY } from '../../shared/Queries';
@@ -114,43 +114,41 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
         }
 
         return (
-          <>
-            <div className="table table-responsive">
-              <table className="table table-striped" key="table">
-                <thead>
-                  <tr key="headerRow">
-                    <th>Titel (aantal resultaten: {data.CursusSessies.length})</th>
-                    <th style={{ width: '88px' }}>Datum</th>
-                    <th style={{ width: '97px' }}>Van - tot</th>
-                    <th>Locatie</th>
-                    {!searchData.distanceRadius ||
-                      (searchData.distanceRadius !== 0 && <th>Afstand (km)</th>)}
-                    <th>Prijs (incl. btw)</th>
+          <TableResponsive>
+            <table className="table table-striped" key="table">
+              <thead>
+                <tr key="headerRow">
+                  <th>Titel</th>
+                  <th style={{ width: '88px' }}>Datum</th>
+                  <th style={{ width: '97px' }}>Van - tot</th>
+                  <th>Locatie</th>
+                  {!searchData.distanceRadius ||
+                    (searchData.distanceRadius !== 0 && <th>Afstand (km)</th>)}
+                  <th>Prijs (incl. btw)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data &&
+                  data.CursusSessies &&
+                  data.CursusSessies.map((item: INormalCourseDetails) => (
+                    <NormalCoursesRow
+                      key={item.CourseCode}
+                      row={item}
+                      showDistance={searchData.distanceRadius !== 0}
+                    />
+                  ))}
+                {!data || data.CursusSessies.length === 0 ? (
+                  <tr>
+                    <td colSpan={searchData.distanceRadius !== 0 ? 6 : 5}>
+                      <Alert type="info">
+                        Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan.
+                      </Alert>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {data &&
-                    data.CursusSessies &&
-                    data.CursusSessies.map((item: INormalCourseDetails) => (
-                      <NormalCoursesRow
-                        key={item.CourseCode}
-                        row={item}
-                        showDistance={searchData.distanceRadius !== 0}
-                      />
-                    ))}
-                  {!data || data.CursusSessies.length === 0 ? (
-                    <tr>
-                      <td colSpan={searchData.distanceRadius !== 0 ? 6 : 5}>
-                        <Alert type="info">
-                          Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan.
-                        </Alert>
-                      </td>
-                    </tr>
-                  ) : null}
-                </tbody>
-              </table>
-            </div>
-          </>
+                ) : null}
+              </tbody>
+            </table>
+          </TableResponsive>
         );
       }}
     </Query>

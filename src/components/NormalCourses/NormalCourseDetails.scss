@@ -1,0 +1,58 @@
+.online {
+  font-size: 30px;
+  display: inline-block;
+  color: #fff;
+  background: #6abbb7;
+  border-radius: 50%;
+  padding: 20px;
+  margin-right: 20px;
+  height: 70px;
+  width: 80px;
+  text-align: center;
+  align-self: center;
+  opacity: 0.8;
+}
+
+.code {
+  color: #aaa;
+}
+
+.flex-container {
+  display: flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+
+.price {
+  font-size: 27px;
+  margin-bottom: 20px;
+  & span {
+    margin-left: 20px;
+  }
+}
+
+.characteristics {
+  font-size: 1.1em;
+  margin-bottom: 0;
+}
+
+.location-area {
+  border: 1px solid #eee;
+  padding: 10px 20px 0px 20px;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.location-label {
+  font-weight: bold;
+  font-variant: small-caps;
+}
+
+.fa-icon {
+  width: 25px;
+  margin-right: 15px;
+  color: #aaa;
+}
