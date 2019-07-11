@@ -4,6 +4,7 @@ import 'core-js/es6/set';
 import 'es6-shim';
 import 'react-app-polyfill/ie11';
 
+import { ERKENNINGEN_GRAPHQL_API_URL } from '@erkenningen/config';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
@@ -19,7 +20,7 @@ const cache = new InMemoryCache();
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: process.env.REACT_APP_GRAPHQL_URL,
+    uri: ERKENNINGEN_GRAPHQL_API_URL,
     credentials: 'include',
   }),
   cache,
