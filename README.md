@@ -20,7 +20,7 @@ E.g. **ModHeader** for Chrome which allows to set a custom response header for `
 
 ### Cookies
 
-To emulate a logged in user we need to add a cookie to the running React app. This can also be done using **ModHeader** bij add a custom request header for `Cookie` with a Cookie value grabbed from the production site. Use Chrome DevTools to inspect an authenticated request and copy the Cookie header value.
+To emulate a logged in user we need to add a cookie to the running React app. This can also be done using **ModHeader** bij add a custom request header for `Cookie` with a Cookie value grabbed from the production site. Use Chrome DevTools to inspect an authenticated request and copy the Cookie header value. 
 
 ## Building
 
