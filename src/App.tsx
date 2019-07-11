@@ -15,7 +15,7 @@ import { UserContext } from './shared/UserContext';
 
 export default function App() {
   return (
-    <div className="App container-fluid">
+    <div className="App">
       <HashRouter>
         <>
           <Route
