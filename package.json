@@ -67,7 +67,7 @@
     "start": "run-p -r mockserver start:app",
     "start:app": "react-scripts start",
     "build": "react-scripts build",
-    "build:netlify": "react-scripts build && cp public/index.netlify.html build/index.html",
+    "build:netlify": "cp public/index.netlify.html public/index.html && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "precommit": "pretty-quick --staged",
