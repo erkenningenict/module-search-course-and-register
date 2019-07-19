@@ -1,8 +1,4 @@
-[context.production.headers]
+[headers]
   for = "/*"
-  [context.production.headers.values]
-    ACCESS-CONTROL-ALLOW-ORIGIN = "https://acceptatie.erkenningen.nl"
-[context.deploy-preview.headers]
-  for = "/*"
-  [context.deploy-preview.headers.values]
+  [headers.values]
     ACCESS-CONTROL-ALLOW-ORIGIN = "https://acceptatie.erkenningen.nl"
