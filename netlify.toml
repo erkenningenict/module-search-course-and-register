@@ -1,0 +1,8 @@
+[context.production.headers]
+  for = "/*"
+  [headers.values]
+    ACCESS-CONTROL-ALLOW-ORIGIN = "https://acceptatie.erkenningen.nl"
+[context.deploy-preview.headers]
+  for = "/*"
+  [headers.values]
+    ACCESS-CONTROL-ALLOW-ORIGIN = "https://acceptatie.erkenningen.nl"
