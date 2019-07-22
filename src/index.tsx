@@ -32,5 +32,5 @@ ReactDOM.render(
       <App />
     </ThemeContext.Provider>
   </ApolloProvider>,
-  document.getElementById('root'),
+  document.getElementById('module-search-course-and-register'),
 );
