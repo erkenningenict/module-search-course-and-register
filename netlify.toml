@@ -1,4 +1,4 @@
-[headers]
+[[headers]]
   for = "/*"
   [headers.values]
-    ACCESS-CONTROL-ALLOW-ORIGIN = "https://acceptatie.erkenningen.nl"
+    ACCESS-CONTROL-ALLOW-ORIGIN = "CORS_DOMAIN_PLACEHOLDER"
