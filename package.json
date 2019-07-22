@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@erkenningen/build": "1.0.7",
-    "@erkenningen/config": "1.0.5",
+    "@erkenningen/config": "^1.0.5",
     "@erkenningen/ui": "^1.0.43",
     "apollo-boost": "0.4.2",
     "apollo-link-schema": "1.2.3",
