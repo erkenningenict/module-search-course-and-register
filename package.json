@@ -5,7 +5,7 @@
   "dependencies": {
     "@erkenningen/build": "1.0.7",
     "@erkenningen/config": "^1.0.7",
-    "@erkenningen/ui": "^1.0.53",
+    "@erkenningen/ui": "^1.0.54",
     "apollo-boost": "0.4.2",
     "apollo-link-schema": "1.2.3",
     "classnames": "2.2.6",

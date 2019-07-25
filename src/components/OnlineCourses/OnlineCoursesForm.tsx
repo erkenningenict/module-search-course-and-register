@@ -54,123 +54,123 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
           )}
         </LinkButtonContainer>
         <h3>Zoek een online bijeenkomst</h3>
-      </PanelBody>
-      <Query<IListsQuery> query={LISTS_QUERY}>
-        {({ loading, error, data }) => {
-          if (loading) {
-            return (
-              <div>
-                <Spinner />
-              </div>
-            ) as React.ReactNode;
-          }
+        <Query<IListsQuery> query={LISTS_QUERY}>
+          {({ loading, error, data }) => {
+            if (loading) {
+              return (
+                <div>
+                  <Spinner />
+                </div>
+              ) as React.ReactNode;
+            }
 
-          if (error) {
-            return (
-              <p>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</p>
-            ) as React.ReactNode;
-          }
+            if (error) {
+              return (
+                <p>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</p>
+              ) as React.ReactNode;
+            }
 
-          const licenseId: string | null =
-            (value &&
-              value.my &&
-              value.my.Certificeringen &&
-              value.my.Certificeringen.length > 0 &&
-              value.my.Certificeringen[0].CertificeringID) ||
-            null;
+            const licenseId: string | null =
+              (value &&
+                value.my &&
+                value.my.Certificeringen &&
+                value.my.Certificeringen.length > 0 &&
+                value.my.Certificeringen[0].CertificeringID) ||
+              null;
 
-          if (!searchData) {
-            let theme = 0;
-            let competence = 0;
-            const params = parseLocationSearch(props.location.search);
-            params.forEach((param: { key: string; value: string }) => {
-              switch (param.key) {
-                case 'themaId':
-                  theme = parseInt(param.value, 10);
+            if (!searchData) {
+              let theme = 0;
+              let competence = 0;
+              const params = parseLocationSearch(props.location.search);
+              params.forEach((param: { key: string; value: string }) => {
+                switch (param.key) {
+                  case 'themaId':
+                    theme = parseInt(param.value, 10);
 
-                  break;
-                case 'competentieId':
-                  competence = parseInt(param.value, 10);
-                  break;
-                default:
-              }
-            });
-            setSearchData({
-              licenseId,
-              themeId: theme,
-              competenceId: competence,
-              isOnlineCourse: props.isOnline,
-            });
-
-            return null;
-          }
-
-          if (!data) {
-            return null;
-          }
-
-          const knowledgeAreas: IKennisgebied[] = [
-            { KennisgebiedID: '0', Naam: 'Alle' },
-            ...data.Kennisgebieden.sort((a: IKennisgebied, b: IKennisgebied) =>
-              a.Naam < b.Naam ? -1 : 1,
-            ),
-          ];
-          const themes = [
-            { ThemaID: '0', Naam: 'Alle' },
-            ...data.Themas.sort((a: IThema, b: IThema) => (a.Naam < b.Naam ? -1 : 1)),
-          ];
-          return (
-            <Formik
-              initialValues={{
+                    break;
+                  case 'competentieId':
+                    competence = parseInt(param.value, 10);
+                    break;
+                  default:
+                }
+              });
+              setSearchData({
                 licenseId,
-                knowledgeAreaId: 0,
-                themeId: (searchData && searchData.themeId) || 0,
+                themeId: theme,
+                competenceId: competence,
                 isOnlineCourse: props.isOnline,
-              }}
-              onSubmit={(values, { setSubmitting }) => {
-                setSearchData(values);
-                setSubmitting(false);
-              }}
-              render={(formProps: any) => (
-                <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
-                  <FormSelect
-                    id="knowledgeArea"
-                    label="Sector"
-                    options={knowledgeAreas.map((item: IKennisgebied) => ({
-                      value: item.KennisgebiedID,
-                      label: item.Naam,
-                    }))}
-                    name="knowledgeAreaId"
-                    loading={loading}
-                    form={formProps}
-                  />
-                  <FormSelect
-                    id="themeId"
-                    label="Thema"
-                    options={themes.map((item: IThema) => ({
-                      value: item.ThemaID,
-                      label: item.Naam,
-                    }))}
-                    loading={loading}
-                    name="themeId"
-                    form={formProps}
-                  />
-                  <div className="form-group row">
-                    <div className="col-sm-4 col-md-3 col-sm-offset-4 col-md-offset-3">
-                      <Button
-                        type="submit"
-                        label="Zoeken"
-                        icon="pi pi-search"
-                        disabled={formProps.isSubmitting}
-                      />
+              });
+
+              return null;
+            }
+
+            if (!data) {
+              return null;
+            }
+
+            const knowledgeAreas: IKennisgebied[] = [
+              { KennisgebiedID: '0', Naam: 'Alle' },
+              ...data.Kennisgebieden.sort((a: IKennisgebied, b: IKennisgebied) =>
+                a.Naam < b.Naam ? -1 : 1,
+              ),
+            ];
+            const themes = [
+              { ThemaID: '0', Naam: 'Alle' },
+              ...data.Themas.sort((a: IThema, b: IThema) => (a.Naam < b.Naam ? -1 : 1)),
+            ];
+            return (
+              <Formik
+                initialValues={{
+                  licenseId,
+                  knowledgeAreaId: 0,
+                  themeId: (searchData && searchData.themeId) || 0,
+                  isOnlineCourse: props.isOnline,
+                }}
+                onSubmit={(values, { setSubmitting }) => {
+                  setSearchData(values);
+                  setSubmitting(false);
+                }}
+                render={(formProps: any) => (
+                  <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
+                    <FormSelect
+                      id="knowledgeArea"
+                      label="Sector"
+                      options={knowledgeAreas.map((item: IKennisgebied) => ({
+                        value: item.KennisgebiedID,
+                        label: item.Naam,
+                      }))}
+                      name="knowledgeAreaId"
+                      loading={loading}
+                      form={formProps}
+                    />
+                    <FormSelect
+                      id="themeId"
+                      label="Thema"
+                      options={themes.map((item: IThema) => ({
+                        value: item.ThemaID,
+                        label: item.Naam,
+                      }))}
+                      loading={loading}
+                      name="themeId"
+                      form={formProps}
+                    />
+                    <div className="form-group row">
+                      <div className="col-sm-4 col-md-3 offset-sm-4 offset-md-3 col-sm-offset-4 col-md-offset-3">
+                        <Button
+                          type="submit"
+                          label="Zoeken"
+                          icon="pi pi-search"
+                          disabled={formProps.isSubmitting}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </form>
-              )}
-            />
-          ) as React.ReactNode;
-        }}
-      </Query>
+                  </form>
+                )}
+              />
+            ) as React.ReactNode;
+          }}
+        </Query>
+      </PanelBody>
       {searchData && <OnlineCoursesTable searchData={searchData} />}
     </>
   );

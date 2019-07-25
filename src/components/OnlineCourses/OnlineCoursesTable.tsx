@@ -81,7 +81,7 @@ export function OnlineCoursesTable(props: IOnlineCoursesTable) {
                   })}
                 {!data || data.SearchSpecialties.length === 0 ? (
                   <tr>
-                    <td>
+                    <td colSpan={3}>
                       <Alert type="info">
                         Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan.
                       </Alert>
