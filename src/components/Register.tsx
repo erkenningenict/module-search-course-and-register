@@ -1,8 +1,7 @@
 import { Alert, PanelBody, Spinner } from '@erkenningen/ui';
 import { Formik } from 'formik';
 import { Button } from 'primereact/button';
-import * as React from 'react';
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { Mutation, Query } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';

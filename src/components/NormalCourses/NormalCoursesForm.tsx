@@ -1,4 +1,5 @@
 import { LinkButtonContainer, PanelBody, Spinner } from '@erkenningen/ui';
+import { addMonths } from 'date-fns';
 import { Formik } from 'formik';
 import { Button } from 'primereact/button';
 import React, { useContext, useState } from 'react';
@@ -158,8 +159,8 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
                       value.my.Persoon.Contactgegevens.Postcode) ||
                     '',
                   distanceRadius: 0,
-                  from: '',
-                  to: '',
+                  from: new Date(),
+                  to: addMonths(new Date(), 3),
                   isOnlineCourse: props.isOnline,
                 }}
                 onSubmit={(values, { setSubmitting }) => {

@@ -1,7 +1,7 @@
 import { Datepicker } from '@erkenningen/ui';
+import { parse } from 'date-fns';
 import { FormikProps } from 'formik';
-import moment from 'moment';
-import * as React from 'react';
+import React from 'react';
 import { validateField } from '../../shared/Form';
 import FormItem from './FormItem';
 
@@ -39,7 +39,7 @@ class FormCalendar extends React.Component<IFormCalendarProps, {}> {
         if (this.props.name) {
           const value = this.getFormValue();
           // Parse date
-          const parsedDate = moment(value, 'DD-MM-YYYY').toDate();
+          const parsedDate = parse(value, 'dd-MM-yyyy', new Date());
           if (parsedDate instanceof Date && !isNaN(parsedDate as any)) {
             this.props.form.setFieldValue(this.props.name, parsedDate);
             validateField(this.props.form, this.props.name, parsedDate);

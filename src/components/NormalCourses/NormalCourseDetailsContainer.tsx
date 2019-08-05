@@ -1,5 +1,5 @@
 import { Alert, Button, Col, PanelBody, Row } from '@erkenningen/ui';
-import moment from 'moment';
+import { addHours, addMinutes } from 'date-fns';
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../shared/UserContext';
@@ -65,11 +65,13 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
       registerCourseDetails={{
         code: data.CourseCode,
         courseId: data.CourseId.toString(),
-        courseDateTime: moment(data.Date)
-          .add(data.StartTime.split(':')[0], 'hours')
-          .add(data.StartTime.split(':')[1], 'minutes')
-          .add(timezoneOffset, 'minutes')
-          .toDate(),
+        courseDateTime: addMinutes(
+          addMinutes(
+            addHours(new Date(data.Date), parseInt(data.StartTime.split(':')[0], 10)),
+            parseInt(data.StartTime.split(':')[1], 10),
+          ),
+          timezoneOffset,
+        ),
         isDigitalSpecialty: false,
         title: data.Title,
         specialtyId: data.SpecialtyId,

@@ -119,8 +119,8 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
               <thead>
                 <tr key="headerRow">
                   <th>Titel</th>
-                  <th style={{ width: '88px' }}>Datum</th>
-                  <th style={{ width: '97px' }}>Van - tot</th>
+                  <th style={{ width: '96px' }}>Datum</th>
+                  <th style={{ width: '105px' }}>Van - tot</th>
                   <th>Locatie</th>
                   {!searchData.distanceRadius ||
                     (searchData.distanceRadius !== 0 && <th>Afstand (km)</th>)}

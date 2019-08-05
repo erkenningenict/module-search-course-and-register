@@ -1,7 +1,7 @@
 import 'primeicons/primeicons.css';
 import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/themes/nova-light/theme.css';
-import * as React from 'react';
+import React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
 
 import { Alert } from '@erkenningen/ui';

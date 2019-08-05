@@ -5,8 +5,8 @@ import 'es6-shim';
 import 'react-app-polyfill/ie11';
 
 import { ERKENNINGEN_GRAPHQL_API_URL, ERKENNINGEN_SITE_TYPE } from '@erkenningen/config';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 import { ThemeContext } from '@erkenningen/ui';
 import { InMemoryCache } from 'apollo-cache-inmemory';
