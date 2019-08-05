@@ -1,3 +1,4 @@
+import { ERKENNINGEN_LOGIN_URL } from '@erkenningen/config';
 import { Alert, Button, Col, PanelBody, Row } from '@erkenningen/ui';
 import { addHours, addMinutes } from 'date-fns';
 import React, { useContext, useState } from 'react';
@@ -45,8 +46,7 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
                   label="Inloggen om aan te melden"
                   onClick={() => {
                     const { origin, href } = window.location;
-                    const loginUrl = process.env.REACT_APP_DNN_LOGIN_URL;
-                    const redirectUrl = `${loginUrl}&returnurl=${encodeURIComponent(
+                    const redirectUrl = `${ERKENNINGEN_LOGIN_URL}&returnurl=${encodeURIComponent(
                       href.replace(origin, ''),
                     )}`;
                     window.location.href = redirectUrl;
