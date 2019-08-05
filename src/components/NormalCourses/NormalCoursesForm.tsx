@@ -26,6 +26,7 @@ interface INormalCourseFormProps extends RouteComponentProps {
 
 export function NormalCoursesForm(props: INormalCourseFormProps) {
   const [searchData, setSearchData] = useState();
+  const toDate = addMonths(new Date(), 3);
 
   const distances: IIdLabel[] = [
     { Id: 0, Label: 'Alle' },
@@ -121,6 +122,8 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
                 competenceId: competence,
                 distanceRadius: 0,
                 isOnlineCourse: props.isOnline,
+                from: new Date(),
+                to: toDate,
               });
 
               return null;
@@ -160,7 +163,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
                     '',
                   distanceRadius: 0,
                   from: new Date(),
-                  to: addMonths(new Date(), 3),
+                  to: toDate,
                   isOnlineCourse: props.isOnline,
                 }}
                 onSubmit={(values, { setSubmitting }) => {
