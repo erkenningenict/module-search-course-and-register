@@ -122,8 +122,8 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
                   <th style={{ width: '96px' }}>Datum</th>
                   <th style={{ width: '105px' }}>Van - tot</th>
                   <th>Locatie</th>
-                  {/* {!searchData.distanceRadius ||
-                    (searchData.distanceRadius !== 0 && <th>Afstand (km)</th>)} */}
+                  {!searchData.distanceRadius ||
+                    (searchData.distanceRadius !== 0 && <th>Afstand (km)</th>)}
                   <th>Prijs (incl. btw)</th>
                 </tr>
               </thead>

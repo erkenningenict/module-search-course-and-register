@@ -34,6 +34,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
     { Id: 10, Label: '10' },
     { Id: 25, Label: '25' },
     { Id: 50, Label: '50' },
+    { Id: 100, Label: '100' },
   ];
   const handleZipcodesChange = (event: any, form: any) => {
     if (event.target.value !== '') {
