@@ -27,7 +27,7 @@ export function NormalCoursesRow(props: INormalCourseRow) {
           {row.StartTime} - {row.EndTime}
         </td>
         <td>{`${row.Organizer} - ${row.LocationAddress.City}`}</td>
-        {showDistance && <td>{Math.round(row.Distance / 1000)}</td>}
+        {/* {showDistance && <td>{Math.round(row.Distance / 1000)}</td>} */}
         <td>{toDutchMoney(row.Price)}</td>
       </tr>
     </>
