@@ -82,3 +82,8 @@ body .p-dropdown {
     border-color: #c1d6d5;
   }
 }
+
+// Show all items in select
+body .p-dropdown-items-wrapper {
+  max-height: 340px !important;
+}

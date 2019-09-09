@@ -199,7 +199,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
                     />
                     <FormSelect
                       id="competenceId"
-                      label="Licentietype"
+                      label="Bijeenkomsttype"
                       options={competences.map((item: ICompetentie) => ({
                         value: parseInt(item.CompetentieID, 10),
                         label: item.Naam,
