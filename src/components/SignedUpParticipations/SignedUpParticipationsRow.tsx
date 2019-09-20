@@ -1,6 +1,6 @@
+import { toDutchDate } from '@erkenningen/ui';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { toDutchDate } from '../../helpers/date-utils';
 import { ISignedUpParticipation } from '../../shared/Queries';
 
 interface ISignedUpParticipationsRowProps {

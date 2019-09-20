@@ -1,11 +1,7 @@
-import { Alert, Panel, PanelBody, Spinner } from '@erkenningen/ui';
+import { Panel } from '@erkenningen/ui';
 import React, { useState } from 'react';
-import { Query } from 'react-apollo';
-import { Link, Route, Switch } from 'react-router-dom';
-import { COURSE_SESSIONS_QUERY, SEARCH_SPECIALTIES } from '../../../shared/Queries';
+import { Route, Switch } from 'react-router-dom';
 import { SelectedLicenseContext } from '../../../shared/SelectedLicenseContext';
-import { INormalCourseDetails } from '../../../types/IFindNormalCoursesRow';
-import { IOnlineCourseDetails } from '../../../types/IFindOnlineCoursesRow';
 import { NormalCourseDetailsContainer } from '../../NormalCourses/NormalCourseDetailsContainer';
 import { NormalCoursesForm } from '../../NormalCourses/NormalCoursesForm';
 import { OnlineCourseDetailsContainer } from '../../OnlineCourses/OnlineCourseDetailsContainer';
@@ -28,55 +24,7 @@ export function SearchCourse() {
               exact={true}
               path="/bijeenkomsten-zoeken/op-locatie/informatie-en-aanmelden/:courseId"
               render={(routerProps: any) => {
-                return (
-                  <Query<
-                    { CursusSessies: INormalCourseDetails[] },
-                    { input: { currentCourseId: number; isOnlineCourse: boolean } }
-                  >
-                    query={COURSE_SESSIONS_QUERY}
-                    variables={{
-                      input: {
-                        currentCourseId: parseInt(routerProps.match.params.courseId, 10),
-                        isOnlineCourse: false,
-                      },
-                    }}
-                    fetchPolicy="network-only"
-                  >
-                    {({ loading, data, error }) => {
-                      if (loading) {
-                        return (
-                          <PanelBody>
-                            <Spinner />
-                          </PanelBody>
-                        );
-                      }
-
-                      if (error) {
-                        return <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>;
-                      }
-                      if (!data) {
-                        return null;
-                      }
-                      if (data && data.CursusSessies.length !== 1) {
-                        return (
-                          <PanelBody>
-                            <Alert>Bijeenkomst is niet gevonden.</Alert>
-                            <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
-                          </PanelBody>
-                        );
-                      }
-
-                      return (
-                        data && (
-                          <NormalCourseDetailsContainer
-                            routerProps={routerProps}
-                            details={data.CursusSessies[0]}
-                          />
-                        )
-                      );
-                    }}
-                  </Query>
-                );
+                return <NormalCourseDetailsContainer routerProps={routerProps} />;
               }}
             />
 
@@ -84,54 +32,7 @@ export function SearchCourse() {
               exact={true}
               path="/bijeenkomsten-zoeken/online/informatie-en-aanmelden/:courseId"
               render={(routerProps: any) => {
-                return (
-                  <Query<
-                    { SearchSpecialties: IOnlineCourseDetails[] },
-                    { input: { specialtyId: number; isOnlineCourse: boolean } }
-                  >
-                    query={SEARCH_SPECIALTIES}
-                    variables={{
-                      input: {
-                        specialtyId: parseInt(routerProps.match.params.courseId, 10),
-                        isOnlineCourse: true,
-                      },
-                    }}
-                  >
-                    {({ loading, data, error }) => {
-                      if (loading) {
-                        return (
-                          <PanelBody>
-                            <Spinner />
-                          </PanelBody>
-                        );
-                      }
-
-                      if (error) {
-                        return <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>;
-                      }
-                      if (!data) {
-                        return null;
-                      }
-                      if (data && data.SearchSpecialties.length !== 1) {
-                        return (
-                          <PanelBody>
-                            <Alert>Bijeenkomst is niet gevonden.</Alert>
-                            <Link to="/bijeenkomsten-zoeken/online">Terug naar de lijst</Link>
-                          </PanelBody>
-                        );
-                      }
-
-                      return (
-                        data && (
-                          <OnlineCourseDetailsContainer
-                            routerProps={routerProps}
-                            details={data.SearchSpecialties[0]}
-                          />
-                        )
-                      );
-                    }}
-                  </Query>
-                );
+                return <OnlineCourseDetailsContainer routerProps={routerProps} />;
               }}
             />
 

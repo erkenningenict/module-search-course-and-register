@@ -1,8 +1,7 @@
+import { toDutchDate, toDutchMoney } from '@erkenningen/ui';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { toDutchMoney } from '../../helpers/number-utils';
 import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
-import { toDutchDate } from './../../helpers/date-utils';
 
 interface INormalCourseRow {
   row: INormalCourseDetails;
@@ -28,7 +27,7 @@ export function NormalCoursesRow(props: INormalCourseRow) {
         </td>
         <td>{`${row.Organizer} - ${row.LocationAddress.City}`}</td>
         {showDistance && <td>{Math.round(row.Distance / 1000)}</td>}
-        <td>{toDutchMoney(row.Price)}</td>
+        <td className="text-right">{toDutchMoney(row.Price, { euroPrefix: true })}</td>
       </tr>
     </>
   );

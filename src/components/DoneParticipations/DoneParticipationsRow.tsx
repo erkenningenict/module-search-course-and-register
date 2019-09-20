@@ -1,5 +1,5 @@
+import { toDutchDate } from '@erkenningen/ui';
 import React from 'react';
-import { toDutchDate } from '../../helpers/date-utils';
 import { IGetParticipation } from '../../shared/Queries';
 
 interface IRow {

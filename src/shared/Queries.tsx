@@ -29,6 +29,7 @@ export const GET_MY_PERSON_QUERY = gql`
         CertificeringID
         Nummer
         NummerWeergave
+        BeginDatum
         EindDatum
         Status
         DatumVoldaan
@@ -175,7 +176,7 @@ export interface ICertificering {
   DatumIngetrokkenTot: any | null;
   UitstelVerleend: boolean | null;
   UitstelTot: any | null;
-  Certificaat: ICertificaat | null;
+  Certificaat: ICertificaat;
   CertificeringAantekeningen: Array<ICertificeringAantekening | null> | null;
 }
 
@@ -208,7 +209,7 @@ export interface ISignedUpParticipation {
   Status: string;
 }
 
-export const LISTS_QUERY = gql`
+export const LISTS = gql`
   query getLists {
     Themas {
       ThemaID
@@ -239,7 +240,7 @@ export interface IListsQuery {
   Landen: ILand[];
 }
 
-export const COURSE_SESSIONS_QUERY = gql`
+export const SEARCH_COURSE_SESSIONS = gql`
   query getCursusSessies($input: searchCourseSessionsInput!) {
     CursusSessies(input: $input) {
       CanUnRegister
@@ -275,6 +276,48 @@ export const COURSE_SESSIONS_QUERY = gql`
   }
 `;
 
+export const COURSE_SESSION_DETAILS = gql`
+  query getCursusSessiesDetails(
+    $input: searchCourseSessionsInput!
+    $inputCheck: isLicenseValidForSpecialtyInput!
+  ) {
+    CursusSessies(input: $input) {
+      CanUnRegister
+      CourseId
+      SpecialtyId
+      CourseCode
+      Title
+      Date
+      StartTime
+      EndTime
+      Price
+      LocationName
+      LocationAddress {
+        Street
+        HouseNr
+        HouseNrExtension
+        Zipcode
+        City
+        Email
+        Website
+      }
+      Distance
+      Competence
+      Theme
+      Organizer
+      OrganizerEmail
+      OrganizerPhone
+      OrganizerWebsite
+      PromoText
+      Registered
+      RegisteredDate
+    }
+    isLicenseValidForSpecialty(input: $inputCheck) {
+      success
+    }
+  }
+`;
+
 export const SEARCH_SPECIALTIES = gql`
   query getSearchSpecialties($input: searchSpecialtyInput!) {
     SearchSpecialties(input: $input) {
@@ -289,6 +332,30 @@ export const SEARCH_SPECIALTIES = gql`
       OrganizerPhone
       OrganizerWebsite
       PromoText
+    }
+  }
+`;
+
+export const SPECIALTY_DETAILS = gql`
+  query getSpecialtyDetails(
+    $input: searchSpecialtyInput!
+    $inputCheck: isLicenseValidForSpecialtyInput!
+  ) {
+    SearchSpecialties(input: $input) {
+      SpecialtyId
+      Code
+      Title
+      Price
+      Competence
+      Theme
+      Organizer
+      OrganizerEmail
+      OrganizerPhone
+      OrganizerWebsite
+      PromoText
+    }
+    isLicenseValidForSpecialty(input: $inputCheck) {
+      success
     }
   }
 `;
@@ -447,6 +514,53 @@ export const GET_PARTICIPATION_DETAILS = gql`
   }
 `;
 
+export interface ISearchSpecialtyInput {
+  /**
+   * Current course (to search others)
+   */
+  currentCourseId?: number | null;
+
+  /**
+   * KnowledgeAreaId to filter on
+   */
+  knowledgeAreaId?: number | null;
+
+  /**
+   * ThemeId to filter on
+   */
+  themeId?: number | null;
+
+  /**
+   * CompetenceId to filter on
+   */
+  competenceId?: number | null;
+
+  /**
+   * Date range, from
+   */
+  from?: any | null;
+
+  /**
+   * Date range, to
+   */
+  to?: any | null;
+
+  /**
+   * Is search for online courses only (default = false)
+   */
+  isOnlineCourse: boolean;
+
+  /**
+   * Zipcode, numbers only
+   */
+  zipcodeNumbers?: number | null;
+
+  /**
+   * Radius in Kilometers
+   */
+  distanceRadius?: number | null;
+}
+
 export interface IParticipationDetails {
   CursusDeelnameID: string;
   Status: string;
@@ -518,14 +632,6 @@ export interface IParticipationDetails {
     };
   };
 }
-
-export const IS_LICENSE_VALID_FOR_SPECIALTY = gql`
-  query isLicenseValidForSpecialty($input: isLicenseValidForSpecialtyInput!) {
-    isLicenseValidForSpecialty(input: $input) {
-      success
-    }
-  }
-`;
 
 export interface IIsLicenseValidForSpecialtyInput {
   licenseId: number;

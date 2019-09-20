@@ -1,7 +1,5 @@
-import { PanelBody } from '@erkenningen/ui';
+import { PanelBody, toDutchDate, toDutchMoney } from '@erkenningen/ui';
 import React from 'react';
-import { toDutchDate } from '../../helpers/date-utils';
-import { toDutchMoney } from '../../helpers/number-utils';
 import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
 import OrganizerDetails from '../ui/OrganizerDetails';
 import './NormalCourseDetails.scss';
@@ -56,7 +54,7 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
             </div>
             <div className="col-md-6">
               <div className="price">
-                <strong>{toDutchMoney(data.Price)}</strong> (incl. btw)
+                <strong>{toDutchMoney(data.Price, { euroPrefix: true })}</strong> (incl. btw)
               </div>
             </div>
           </div>

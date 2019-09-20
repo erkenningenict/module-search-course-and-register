@@ -1,7 +1,7 @@
+import { useQuery } from '@apollo/react-hooks';
 import { Alert, PanelBody, Spinner, TableResponsive } from '@erkenningen/ui';
 import React from 'react';
-import { Query } from 'react-apollo';
-import { ISearchSpecialty, SEARCH_SPECIALTIES } from '../../shared/Queries';
+import { ISearchSpecialty, ISearchSpecialtyInput, SEARCH_SPECIALTIES } from '../../shared/Queries';
 import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
 import { OnlineCoursesRow } from './OnlineCoursesRow';
 
@@ -10,19 +10,11 @@ interface IOnlineCoursesTable {
     licenseId: string;
     knowledgeAreaId: string;
     themeId: string;
-    competenceId: string;
-    zipcodeNumbers: string;
-    distanceRadius: number;
-    from: any;
-    to: any;
     isOnlineCourse: boolean;
   };
 }
 
 export function OnlineCoursesTable(props: IOnlineCoursesTable) {
-  if (!props.searchData) {
-    return null;
-  }
   const searchData = props.searchData && {
     ...props.searchData,
     licenseId: parseInt(props.searchData.licenseId, 10),
@@ -33,66 +25,62 @@ export function OnlineCoursesTable(props: IOnlineCoursesTable) {
   const searchInput = searchData;
   delete searchInput.licenseId;
 
+  const { loading, data, error } = useQuery<
+    { SearchSpecialties: ISearchSpecialty[] },
+    {
+      input: ISearchSpecialtyInput;
+    }
+  >(SEARCH_SPECIALTIES, {
+    variables: {
+      input: searchInput,
+    },
+    fetchPolicy: 'network-only',
+  });
+  if (loading) {
+    return (
+      <PanelBody>
+        <Spinner />
+      </PanelBody>
+    );
+  }
+
+  if (error) {
+    return (
+      <PanelBody>
+        <Alert>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</Alert>
+      </PanelBody>
+    );
+  }
+
+  if (!data) {
+    return null;
+  }
+
   return (
-    <Query<{ SearchSpecialties: ISearchSpecialty[] }, { input: any }>
-      query={SEARCH_SPECIALTIES}
-      variables={{
-        input: searchInput,
-      }}
-    >
-      {({ loading, error, data }) => {
-        if (loading) {
-          return (
-            <PanelBody>
-              <Spinner />
-            </PanelBody>
-          );
-        }
-
-        if (error) {
-          return (
-            <PanelBody>
-              <Alert>
-                Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}
-              </Alert>
-            </PanelBody>
-          );
-        }
-
-        if (!data) {
-          return null;
-        }
-
-        return (
-          <TableResponsive>
-            <table className="table table-striped" key="table">
-              <thead>
-                <tr key="headerRow">
-                  <th>Titel</th>
-                  <th>Organisator</th>
-                  <th>Prijs (incl. btw)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data &&
-                  data.SearchSpecialties &&
-                  data.SearchSpecialties.map((item: IOnlineCourseDetails) => {
-                    return <OnlineCoursesRow key={item.Code} row={item} />;
-                  })}
-                {!data || data.SearchSpecialties.length === 0 ? (
-                  <tr>
-                    <td colSpan={3}>
-                      <Alert type="info">
-                        Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan.
-                      </Alert>
-                    </td>
-                  </tr>
-                ) : null}
-              </tbody>
-            </table>
-          </TableResponsive>
-        );
-      }}
-    </Query>
+    <TableResponsive>
+      <table className="table table-striped" key="table">
+        <thead>
+          <tr key="headerRow">
+            <th>Titel</th>
+            <th>Organisator</th>
+            <th className="text-right">Prijs (incl. btw)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data &&
+            data.SearchSpecialties &&
+            data.SearchSpecialties.map((item: IOnlineCourseDetails) => {
+              return <OnlineCoursesRow key={item.Code} row={item} />;
+            })}
+          {!data || data.SearchSpecialties.length === 0 ? (
+            <tr>
+              <td colSpan={3}>
+                <Alert type="info">Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan.</Alert>
+              </td>
+            </tr>
+          ) : null}
+        </tbody>
+      </table>
+    </TableResponsive>
   );
 }

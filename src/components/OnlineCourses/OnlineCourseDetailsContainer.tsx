@@ -1,35 +1,93 @@
+import { useQuery } from '@apollo/react-hooks';
 import { ERKENNINGEN_LOGIN_URL } from '@erkenningen/config';
-import { Alert, Button, Col, PanelBody, Row } from '@erkenningen/ui';
+import { Alert, Button, Col, PanelBody, Row, Spinner } from '@erkenningen/ui';
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { IIsLicenseValidForSpecialty, SPECIALTY_DETAILS } from '../../shared/Queries';
+import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
 import { UserContext } from '../../shared/UserContext';
 import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
 import { Register } from '../Register';
 import { OnlineCourseDetails } from './OnlineCourseDetails';
 
 interface IOnlineCourseDetailsProps {
-  details: IOnlineCourseDetails;
   routerProps?: any;
 }
 
 export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
   const [showRegister, setShowRegister] = useState(false);
   const user = useContext(UserContext);
-  const data: IOnlineCourseDetails = props && props.details && props.details;
+  const licenseId = useContext(SelectedLicenseContext);
+  const { loading, data, error } = useQuery<
+    {
+      SearchSpecialties: IOnlineCourseDetails[];
+      isLicenseValidForSpecialty: IIsLicenseValidForSpecialty;
+    },
+    {
+      input: { specialtyId: number; isOnlineCourse: boolean };
+      inputCheck: { licenseId: number; specialtyId: number };
+    }
+  >(SPECIALTY_DETAILS, {
+    variables: {
+      input: {
+        specialtyId: parseInt(props.routerProps.match.params.courseId, 10),
+        isOnlineCourse: true,
+      },
+      inputCheck: {
+        licenseId,
+        specialtyId: parseInt(props.routerProps.match.params.courseId, 10),
+      },
+    },
+    fetchPolicy: 'network-only',
+  });
+  if (loading) {
+    return (
+      <PanelBody>
+        <Spinner />
+      </PanelBody>
+    );
+  }
 
-  return props.details && !showRegister ? (
+  if (error) {
+    return <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>;
+  }
+  if (!data) {
+    return null;
+  }
+  if (data.SearchSpecialties.length !== 1) {
+    return (
+      <PanelBody>
+        <Alert>Bijeenkomst is niet gevonden.</Alert>
+        <Link to="/bijeenkomsten-zoeken/online">Terug naar de lijst</Link>
+      </PanelBody>
+    );
+  }
+  const specialty: IOnlineCourseDetails = data.SearchSpecialties[0];
+  return specialty && !showRegister ? (
     <>
-      <OnlineCourseDetails details={data} />
+      {user && !data.isLicenseValidForSpecialty.success && (
+        <Alert type="danger">
+          <h4>
+            Door het volgen van deze online bijeenkomst kunt u uw (geselecteerde) licentie NIET
+            verlengen.
+          </h4>
+          Zoek een bijeenkomst van een ander bijeenkomsttype waarmee u uw licentie wel kunt
+          verlengen of kies een andere licentie (indien u meerdere licenties bezit).
+        </Alert>
+      )}
+      <OnlineCourseDetails details={specialty} />
       <PanelBody>
         <Row>
           <Col>
             {user ? (
               <>
-                <Button
-                  label="Aanmelden"
-                  onClick={() => setShowRegister(true)}
-                  icon="pi pi-check"
-                />
+                {data.isLicenseValidForSpecialty.success && (
+                  <Button
+                    label="Aanmelden"
+                    onClick={() => setShowRegister(true)}
+                    icon="pi pi-check"
+                  />
+                )}
                 <Link to="/bijeenkomsten-zoeken/online">Terug naar de lijst</Link>
               </>
             ) : (
@@ -61,12 +119,12 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
   ) : (
     <Register
       registerCourseDetails={{
-        code: data.Code,
-        courseId: data.SpecialtyId.toString(),
+        code: specialty.Code,
+        courseId: specialty.SpecialtyId.toString(),
         isDigitalSpecialty: true,
-        title: data.Title,
+        title: specialty.Title,
         courseDateTime: new Date(),
-        specialtyId: parseInt(data.SpecialtyId, 10),
+        specialtyId: parseInt(specialty.SpecialtyId, 10),
       }}
       onCancel={() => setShowRegister(false)}
     />

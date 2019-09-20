@@ -1,8 +1,10 @@
+import { useQuery } from '@apollo/react-hooks';
 import { ERKENNINGEN_LOGIN_URL } from '@erkenningen/config';
-import { Alert, Button, Col, PanelBody, Row } from '@erkenningen/ui';
+import { Alert, Button, Col, PanelBody, Row, Spinner } from '@erkenningen/ui';
 import { addHours, addMinutes } from 'date-fns';
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { COURSE_SESSION_DETAILS, IIsLicenseValidForSpecialty } from '../../shared/Queries';
 import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
 import { UserContext } from '../../shared/UserContext';
 import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
@@ -10,32 +12,90 @@ import { Register } from '../Register';
 import { NormalCourseDetails } from './NormalCourseDetails';
 
 interface INormalCourseDetailsProps {
-  details: INormalCourseDetails;
   routerProps?: any;
 }
 
 export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
   const [showRegister, setShowRegister] = useState(false);
-  // const {showRegister, setShowRegister} = useQuery();
   const user = useContext(UserContext);
   const licenseId = useContext(SelectedLicenseContext);
-  const data: INormalCourseDetails = props && props.details && props.details;
-  const timezoneOffset: number = new Date(data.Date).getTimezoneOffset();
-  console.log('#DH# licenseid', licenseId);
+  const { loading, data, error } = useQuery<
+    {
+      CursusSessies: INormalCourseDetails[];
+      isLicenseValidForSpecialty: IIsLicenseValidForSpecialty;
+    },
+    {
+      input: { currentCourseId: number; isOnlineCourse: boolean };
+      inputCheck: { licenseId: number; courseId: number };
+    }
+  >(COURSE_SESSION_DETAILS, {
+    variables: {
+      input: {
+        currentCourseId: parseInt(props.routerProps.match.params.courseId, 10),
+        isOnlineCourse: false,
+      },
+      inputCheck: {
+        licenseId,
+        courseId: parseInt(props.routerProps.match.params.courseId, 10),
+      },
+    },
+    fetchPolicy: 'network-only',
+  });
+  if (loading) {
+    return (
+      <PanelBody>
+        <Spinner />
+      </PanelBody>
+    );
+  }
 
-  return props.details && !showRegister ? (
+  if (error) {
+    return (
+      <>
+        <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>
+        <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
+      </>
+    );
+  }
+  if (!data) {
+    return null;
+  }
+  if (data && data.CursusSessies.length !== 1) {
+    return (
+      <PanelBody>
+        <Alert>Bijeenkomst is niet gevonden.</Alert>
+        <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
+      </PanelBody>
+    );
+  }
+
+  const course: INormalCourseDetails = data.CursusSessies[0];
+  const timezoneOffset: number = new Date(course.Date).getTimezoneOffset();
+
+  return course && !showRegister ? (
     <>
-      <NormalCourseDetails details={props.details} />
+      {user && !data.isLicenseValidForSpecialty.success && (
+        <Alert type="danger">
+          <h4>
+            Door het volgen van deze bijeenkomst kunt u uw (geselecteerde) licentie NIET verlengen.
+          </h4>
+          Zoek een bijeenkomst van een ander bijeenkomsttype waarmee u uw licentie wel kunt
+          verlengen of kies een andere licentie (indien u meerdere licenties bezit).
+        </Alert>
+      )}
+      <NormalCourseDetails details={course} />
       <PanelBody>
         <Row>
           <Col>
             {user ? (
               <>
-                <Button
-                  label="Aanmelden"
-                  onClick={() => setShowRegister(true)}
-                  icon="pi pi-check"
-                />
+                {data.isLicenseValidForSpecialty.success && (
+                  <Button
+                    label="Aanmelden"
+                    onClick={() => setShowRegister(true)}
+                    icon="pi pi-check"
+                  />
+                )}
                 <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
               </>
             ) : (
@@ -67,18 +127,18 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
   ) : (
     <Register
       registerCourseDetails={{
-        code: data.CourseCode,
-        courseId: data.CourseId.toString(),
+        code: course.CourseCode,
+        courseId: course.CourseId.toString(),
         courseDateTime: addMinutes(
           addMinutes(
-            addHours(new Date(data.Date), parseInt(data.StartTime.split(':')[0], 10)),
-            parseInt(data.StartTime.split(':')[1], 10),
+            addHours(new Date(course.Date), parseInt(course.StartTime.split(':')[0], 10)),
+            parseInt(course.StartTime.split(':')[1], 10),
           ),
           timezoneOffset,
         ),
         isDigitalSpecialty: false,
-        title: data.Title,
-        specialtyId: data.SpecialtyId,
+        title: course.Title,
+        specialtyId: course.SpecialtyId,
       }}
       onCancel={() => setShowRegister(false)}
     />

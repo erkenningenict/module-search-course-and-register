@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@apollo/react-hooks": "^3.1.1",
     "@erkenningen/config": "^1.0.7",
-    "@erkenningen/ui": "^2.0.3",
+    "@erkenningen/ui": "^2.0.4",
     "apollo-boost": "0.4.4",
     "apollo-link-schema": "1.2.4",
     "date-fns": "2.2.1",
@@ -16,7 +17,6 @@
     "primereact": "3.2.0",
     "query-string": "6.8.3",
     "react": "16.9.0",
-    "react-apollo": "^3.1.1",
     "react-app-polyfill": "1.0.3",
     "react-dom": "16.9.0",
     "react-router-dom": "5.0.1",
