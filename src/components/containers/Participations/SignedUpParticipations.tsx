@@ -60,7 +60,7 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
                               <PanelBody>
                                 <Spinner />
                               </PanelBody>
-                            ) as React.ReactNode;
+                            );
                           }
 
                           if (error || mutationError) {
@@ -68,7 +68,7 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
                               <PanelBody>
                                 <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>
                               </PanelBody>
-                            ) as React.ReactNode;
+                            );
                           }
                           if (mutationData && mutationData.unRegisterForCourse.success) {
                             return (
@@ -78,7 +78,7 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
                                 </Alert>
                                 {returnToListLink}
                               </PanelBody>
-                            ) as React.ReactNode;
+                            );
                           }
                           if (mutationData && !mutationData.unRegisterForCourse.success) {
                             return (
@@ -88,10 +88,10 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
                                 </Alert>
                                 {returnToListLink}
                               </PanelBody>
-                            ) as React.ReactNode;
+                            );
                           }
                           if (!data) {
-                            return null as React.ReactNode;
+                            return null;
                           }
 
                           if (data && data.CursusDeelnameDetails === null) {
@@ -100,7 +100,7 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
                                 <Alert>Gegevens van de bijeenkomst zijn niet gevonden.</Alert>
                                 <Link to="/waar-ben-ik-aangemeld">Terug naar de lijst</Link>
                               </PanelBody>
-                            ) as React.ReactNode;
+                            );
                           }
                           const d = data.CursusDeelnameDetails;
                           const organizerData = d.Cursus.Vak.VakgroepID
@@ -151,7 +151,7 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
                               OrganizerEmail: organizerData.Contactgegevens.Email,
                               OrganizerWebsite: organizerData.Contactgegevens.Website,
                             };
-                            return <NormalCourseDetails details={details} /> as React.ReactNode;
+                            return <NormalCourseDetails details={details} />;
                           } else {
                             const onlineDetails: IOnlineCourseDetails = {
                               Code: d.Cursus.Vak.VakID,
@@ -170,9 +170,7 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
                               OrganizerEmail: organizerData.Contactgegevens.Email,
                               OrganizerWebsite: organizerData.Contactgegevens.Website,
                             };
-                            return (
-                              <OnlineCourseDetails details={onlineDetails} />
-                            ) as React.ReactNode;
+                            return <OnlineCourseDetails details={onlineDetails} />;
                           }
                         }}
                       </Query>

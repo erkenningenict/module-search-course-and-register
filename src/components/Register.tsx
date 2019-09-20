@@ -98,17 +98,17 @@ export function Register(properties: IRegister) {
                   <div>
                     <Spinner />
                   </div>
-                ) as React.ReactNode;
+                );
               }
               if (error) {
-                return <Alert type="danger">Fout bij ophalen lijsten...</Alert> as React.ReactNode;
+                return <Alert type="danger">Fout bij ophalen lijsten...</Alert>;
               }
               if (mutationError) {
                 return (
                   <PanelBody>
                     <Alert type="danger">Fout bij opslaan gegevens...</Alert>
                   </PanelBody>
-                ) as React.ReactNode;
+                );
               }
               if (mutationData && mutationData.registerForCourse.success) {
                 return (
@@ -116,7 +116,7 @@ export function Register(properties: IRegister) {
                     <Alert type="success">Uw aanvraag is gedaan.</Alert>
                     {returnToListLink}
                   </PanelBody>
-                ) as React.ReactNode;
+                );
               }
               if (mutationData && !mutationData.registerForCourse.success) {
                 return (
@@ -124,7 +124,7 @@ export function Register(properties: IRegister) {
                     <Alert type="warning">{mutationData.registerForCourse.message}</Alert>
                     {returnToListLink}
                   </PanelBody>
-                ) as React.ReactNode;
+                );
               }
               if (!data) {
                 return null;
@@ -133,7 +133,7 @@ export function Register(properties: IRegister) {
               const contactData =
                 user && user.my && user.my.Persoon && user.my.Persoon.Contactgegevens;
               if (!userData || !contactData) {
-                return <p>Er zijn geen gegevens gevonden.</p> as React.ReactNode;
+                return <p>Er zijn geen gegevens gevonden.</p>;
               }
               return (
                 <Formik
@@ -308,7 +308,7 @@ export function Register(properties: IRegister) {
                           </div>
                         </div>
                       </form>
-                    ) as React.ReactNode;
+                    );
                   }}
                 />
               ) as React.ReactComponentElement<any>;

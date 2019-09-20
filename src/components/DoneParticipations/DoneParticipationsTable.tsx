@@ -23,13 +23,11 @@ export default function DoneParticipationsTable(props: IDoneParticipationsTableP
             <PanelBody>
               <Spinner />
             </PanelBody>
-          ) as React.ReactNode;
+          );
         }
 
         if (error) {
-          return (
-            <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>
-          ) as React.ReactNode;
+          return <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>;
         }
 
         return (
@@ -69,7 +67,7 @@ export default function DoneParticipationsTable(props: IDoneParticipationsTableP
               </p>
             </PanelBody>
           </>
-        ) as React.ReactNode;
+        );
       }}
     </Query>
   ) : null;

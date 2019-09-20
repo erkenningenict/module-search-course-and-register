@@ -518,3 +518,20 @@ export interface IParticipationDetails {
     };
   };
 }
+
+export const IS_LICENSE_VALID_FOR_SPECIALTY = gql`
+  query isLicenseValidForSpecialty($input: isLicenseValidForSpecialtyInput!) {
+    isLicenseValidForSpecialty(input: $input) {
+      success
+    }
+  }
+`;
+
+export interface IIsLicenseValidForSpecialtyInput {
+  licenseId: number;
+  specialtyId: number;
+}
+
+export interface IIsLicenseValidForSpecialty {
+  success: boolean;
+}

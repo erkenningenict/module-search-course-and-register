@@ -26,7 +26,7 @@ export default function DoneParticipationSelectLicense(
     >
       {({ loading, data, error }) => {
         if (loading) {
-          return <p>Gegevens worden geladen...</p> as React.ReactNode;
+          return <p>Gegevens worden geladen...</p>;
         }
 
         if (error) {
@@ -34,9 +34,10 @@ export default function DoneParticipationSelectLicense(
           if (error.graphQLErrors) {
             for (const err of error.graphQLErrors) {
               if (err.extensions && err.extensions.code === 'UNAUTHENTICATED') {
-                return props.history.push('/bijeenkomsten-zoeken/op-locatie') as React.ReactNode;
+                props.history.push('/bijeenkomsten-zoeken/op-locatie');
+                return null;
               } else {
-                return <p>Fout</p> as React.ReactNode;
+                return <p>Fout</p>;
               }
             }
           }
@@ -45,7 +46,7 @@ export default function DoneParticipationSelectLicense(
               Er is een fout opgetreden bij het ophalen van de accountgegevens. Probeer het nog een
               keer of neem contact op met de helpdesk.
             </Alert>
-          ) as React.ReactNode;
+          );
         }
         if (!data || !data.my || data.my.Roles === null) {
           return null;
@@ -53,6 +54,7 @@ export default function DoneParticipationSelectLicense(
         if (data.my.Roles && data.my.Roles.indexOf('Student') === -1) {
           data.my.Certificeringen = undefined;
         }
+
         if (data) {
           certificeringen = (data && data.my && data.my.Certificeringen) || [];
           if (!certs && certificeringen.length > 0) {
@@ -94,7 +96,7 @@ export default function DoneParticipationSelectLicense(
             </form>
             <hr />
           </div>
-        ) as React.ReactNode;
+        );
       }}
     </Query>
   );

@@ -61,13 +61,13 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
                 <div>
                   <Spinner />
                 </div>
-              ) as React.ReactNode;
+              );
             }
 
             if (error) {
               return (
                 <p>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</p>
-              ) as React.ReactNode;
+              );
             }
 
             const licenseId: string | null =
@@ -167,7 +167,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
                   </form>
                 )}
               />
-            ) as React.ReactNode;
+            );
           }}
         </Query>
       </PanelBody>

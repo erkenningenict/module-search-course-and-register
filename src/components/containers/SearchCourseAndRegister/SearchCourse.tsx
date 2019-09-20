@@ -48,13 +48,14 @@ export function SearchCourse() {
                           <PanelBody>
                             <Spinner />
                           </PanelBody>
-                        ) as React.ReactNode;
+                        );
                       }
 
                       if (error) {
-                        return (
-                          <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>
-                        ) as React.ReactNode;
+                        return <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>;
+                      }
+                      if (!data) {
+                        return null;
                       }
                       if (data && data.CursusSessies.length !== 1) {
                         return (
@@ -62,17 +63,16 @@ export function SearchCourse() {
                             <Alert>Bijeenkomst is niet gevonden.</Alert>
                             <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
                           </PanelBody>
-                        ) as React.ReactNode;
+                        );
                       }
 
                       return (
-                        data &&
-                        ((
+                        data && (
                           <NormalCourseDetailsContainer
                             routerProps={routerProps}
                             details={data.CursusSessies[0]}
                           />
-                        ) as React.ReactNode)
+                        )
                       );
                     }}
                   </Query>
@@ -103,13 +103,14 @@ export function SearchCourse() {
                           <PanelBody>
                             <Spinner />
                           </PanelBody>
-                        ) as React.ReactNode;
+                        );
                       }
 
                       if (error) {
-                        return (
-                          <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>
-                        ) as React.ReactNode;
+                        return <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>;
+                      }
+                      if (!data) {
+                        return null;
                       }
                       if (data && data.SearchSpecialties.length !== 1) {
                         return (
@@ -117,17 +118,16 @@ export function SearchCourse() {
                             <Alert>Bijeenkomst is niet gevonden.</Alert>
                             <Link to="/bijeenkomsten-zoeken/online">Terug naar de lijst</Link>
                           </PanelBody>
-                        ) as React.ReactNode;
+                        );
                       }
 
                       return (
-                        data &&
-                        ((
+                        data && (
                           <OnlineCourseDetailsContainer
                             routerProps={routerProps}
                             details={data.SearchSpecialties[0]}
                           />
-                        ) as React.ReactNode)
+                        )
                       );
                     }}
                   </Query>

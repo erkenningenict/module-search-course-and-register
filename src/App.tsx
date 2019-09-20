@@ -47,14 +47,14 @@ export default function App() {
                         <UserContext.Provider value={undefined}>
                           <SearchCourse />
                         </UserContext.Provider>
-                      ) as React.ReactNode;
+                      );
                     } else {
                       return (
                         <Alert type="danger">
                           Er is een fout opgetreden bij het ophalen van de accountgegevens. Probeer
                           het nog een keer of neem contact op met de helpdesk.
                         </Alert>
-                      ) as React.ReactNode;
+                      );
                     }
                   }
                 }
@@ -63,7 +63,7 @@ export default function App() {
                     Er is een fout opgetreden bij het ophalen van de accountgegevens. Probeer het
                     nog een keer of neem contact op met de helpdesk.
                   </Alert>
-                ) as React.ReactNode;
+                );
               }
               if (!data || !data.my || data.my.Roles === null) {
                 return null;

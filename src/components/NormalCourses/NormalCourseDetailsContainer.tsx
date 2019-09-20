@@ -3,6 +3,7 @@ import { Alert, Button, Col, PanelBody, Row } from '@erkenningen/ui';
 import { addHours, addMinutes } from 'date-fns';
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
 import { UserContext } from '../../shared/UserContext';
 import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
 import { Register } from '../Register';
@@ -15,9 +16,12 @@ interface INormalCourseDetailsProps {
 
 export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
   const [showRegister, setShowRegister] = useState(false);
+  // const {showRegister, setShowRegister} = useQuery();
   const user = useContext(UserContext);
+  const licenseId = useContext(SelectedLicenseContext);
   const data: INormalCourseDetails = props && props.details && props.details;
   const timezoneOffset: number = new Date(data.Date).getTimezoneOffset();
+  console.log('#DH# licenseid', licenseId);
 
   return props.details && !showRegister ? (
     <>

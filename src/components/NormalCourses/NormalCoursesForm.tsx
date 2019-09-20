@@ -84,13 +84,13 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
         <Query<IListsQuery> query={LISTS_QUERY}>
           {({ loading, data, error }) => {
             if (loading) {
-              return <Spinner /> as React.ReactNode;
+              return <Spinner />;
             }
 
             if (error) {
               return (
                 <p>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</p>
-              ) as React.ReactNode;
+              );
             }
 
             const licenseId: string | null =
@@ -254,7 +254,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
                   </form>
                 )}
               />
-            ) as React.ReactNode;
+            );
           }}
         </Query>
       </PanelBody>
