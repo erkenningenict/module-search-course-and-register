@@ -1,6 +1,6 @@
+import { toDutchMoney } from '@erkenningen/ui';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { toDutchMoney } from '../../helpers/number-utils';
 import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
 
 interface IOnlineCourseRow {
@@ -21,7 +21,7 @@ export function OnlineCoursesRow(props: IOnlineCourseRow) {
           </Link>
         </td>
         <td>{row.Organizer}</td>
-        <td>{toDutchMoney(row.Price)}</td>
+        <td className="text-right">{toDutchMoney(row.Price, { euroPrefix: true })}</td>
       </tr>
     </>
   );

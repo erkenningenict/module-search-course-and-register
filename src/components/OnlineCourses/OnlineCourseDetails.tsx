@@ -1,6 +1,5 @@
-import { PanelBody } from '@erkenningen/ui';
+import { PanelBody, toDutchMoney } from '@erkenningen/ui';
 import React from 'react';
-import { toDutchMoney } from '../../helpers/number-utils';
 import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
 
 import OrganizerDetails from '../ui/OrganizerDetails';
@@ -35,7 +34,7 @@ export function OnlineCourseDetails(props: IOnlineCourseDetailsProps) {
           <div className="row">
             <div className="col-md-12">
               <div className="price">
-                <strong>{toDutchMoney(data.Price)}</strong> (incl. btw)
+                <strong>{toDutchMoney(data.Price, { euroPrefix: true })}</strong> (incl. btw)
               </div>
             </div>
           </div>

@@ -23,7 +23,7 @@ ngApimock.watch('mocks');
   app.use((req, res) => {
     console.log('incoming request url: ', req.url);
     if (req.url.match('/DesktopModules') !== null) {
-      console.log('#DH# inside Desktopmodules');
+      console.log('inside Desktopmodules');
       // Real api endpoint
       const baseUrlProd = `https://adviseren.erkenningen.nl`;
       const redirectUrl = `${baseUrlProd}${req.url}`;
@@ -35,7 +35,7 @@ ngApimock.watch('mocks');
       res.end();
     }
     if (req.url.match('/graphql') !== null) {
-      console.log('#DH# inside graphql');
+      console.log('inside graphql');
       // Real api endpoint
       const baseUrl = `http://localhost:3010/graphql`;
       const redirectUrl = `${baseUrl}`;
