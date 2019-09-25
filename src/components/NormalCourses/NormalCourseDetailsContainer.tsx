@@ -75,13 +75,16 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
   return course && !showRegister ? (
     <>
       {user && !data.isLicenseValidForSpecialty.success && (
-        <Alert type="danger">
-          <h4>
-            Door het volgen van deze bijeenkomst kunt u uw (geselecteerde) licentie NIET verlengen.
-          </h4>
-          Zoek een bijeenkomst van een ander bijeenkomsttype waarmee u uw licentie wel kunt
-          verlengen of kies een andere licentie (indien u meerdere licenties bezit).
-        </Alert>
+        <PanelBody>
+          <Alert type="danger">
+            <h4>
+              Door het volgen van deze bijeenkomst kunt u uw (geselecteerde) licentie NIET
+              verlengen.
+            </h4>
+            Zoek een bijeenkomst van een ander bijeenkomsttype waarmee u uw licentie wel kunt
+            verlengen of kies een andere licentie (indien u meerdere licenties bezit).
+          </Alert>
+        </PanelBody>
       )}
       <NormalCourseDetails details={course} />
       <PanelBody>

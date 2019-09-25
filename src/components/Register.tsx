@@ -1,10 +1,9 @@
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { Alert, PanelBody, Spinner, toDutchDate } from '@erkenningen/ui';
+import { Alert, Button, PanelBody, Spinner, toDutchDate } from '@erkenningen/ui';
 import { Formik } from 'formik';
-import { Button } from 'primereact/button';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import * as Yup from 'yup';
+import { object, string } from 'yup';
 import { IKennisgebied, ILand } from '../shared/Model';
 import { IRegisterForCourseInput, REGISTER } from '../shared/Mutations';
 import { IListsQuery, LISTS } from '../shared/Queries';
@@ -28,40 +27,38 @@ interface IRegister {
 }
 
 const MessageRequired = 'Dit is een verplicht veld';
-const RegisterSchema = Yup.object().shape({
-  Street: Yup.string()
+const numberRegEx = /^[1-9][0-9]{0,5}$/;
+const RegisterSchema = object().shape({
+  Street: string()
     .min(2, 'Te weinig tekens')
     .max(100, 'Max 100 tekens')
     .required(MessageRequired),
-  HouseNr: Yup.number()
-    .transform((n) => (isNaN(n) ? undefined : n))
-    .integer('Huisnummer moet een getal zijn')
-    .positive('Huisnummer mag niet negatief zijn')
-    .min(1, 'Huisnummer moet groter dan 0 zijn')
-    .required(MessageRequired),
-  HouseNrAddition: Yup.string().max(10, 'Max 10 tekens'),
-  Zipcode: Yup.string()
+  HouseNr: string()
+    .required(MessageRequired)
+    .matches(numberRegEx, 'Voer een geheel getal in, groter dan 0, maximaal 5 cijfers'),
+  HouseNrAddition: string().max(10, 'Max 10 tekens'),
+  Zipcode: string()
     .required(MessageRequired)
     .when('Country', {
       is: 'Nederland',
-      then: Yup.string().matches(
+      then: string().matches(
         /^[1-9][0-9]{3}[\s][A-Z]{2}$/,
         'Nederlandse postcode moet geformatteerd zijn als "1234 AB". Buitenlandse postcode? Wijzig eerst het land.',
       ),
     }),
-  Country: Yup.string()
+  Country: string()
     .min(2, 'Te weinig tekens')
     .max(100, 'Max 100 tekens')
     .required(MessageRequired),
-  City: Yup.string()
+  City: string()
     .min(2, 'Te weinig tekens')
     .max(100, 'Max 100 tekens')
     .required(MessageRequired),
-  EmailAddress: Yup.string()
+  EmailAddress: string()
     .email('E-mailadres is incorrect')
     .max(200, 'Max 200 tekens')
     .required(MessageRequired),
-  KnowledgeArea: Yup.string()
+  KnowledgeArea: string()
     .min(2, 'Selecteer een sector')
     .required('Selecteer een sector'),
 });
@@ -291,7 +288,7 @@ export function Register(properties: IRegister) {
               <div className="form-group">
                 <div className="col-md-offset-3 col-md-6">
                   <Button
-                    type="submit"
+                    buttonType="submit"
                     label="Aanmelden"
                     icon="pi pi-check"
                     disabled={props.isSubmitting}

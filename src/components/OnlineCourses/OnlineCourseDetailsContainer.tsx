@@ -66,14 +66,16 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
   return specialty && !showRegister ? (
     <>
       {user && !data.isLicenseValidForSpecialty.success && (
-        <Alert type="danger">
-          <h4>
-            Door het volgen van deze online bijeenkomst kunt u uw (geselecteerde) licentie NIET
-            verlengen.
-          </h4>
-          Zoek een bijeenkomst van een ander bijeenkomsttype waarmee u uw licentie wel kunt
-          verlengen of kies een andere licentie (indien u meerdere licenties bezit).
-        </Alert>
+        <PanelBody>
+          <Alert type="danger">
+            <h4>
+              Door het volgen van deze online bijeenkomst kunt u uw (geselecteerde) licentie NIET
+              verlengen.
+            </h4>
+            Zoek een bijeenkomst van een ander bijeenkomsttype waarmee u uw licentie wel kunt
+            verlengen of kies een andere licentie (indien u meerdere licenties bezit).
+          </Alert>
+        </PanelBody>
       )}
       <OnlineCourseDetails details={specialty} />
       <PanelBody>

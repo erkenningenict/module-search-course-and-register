@@ -1,8 +1,13 @@
 import { useQuery } from '@apollo/react-hooks';
-import { LinkButtonContainer, PanelBody, parseLocationSearch, Spinner } from '@erkenningen/ui';
+import {
+  Button,
+  LinkButtonContainer,
+  PanelBody,
+  parseLocationSearch,
+  Spinner,
+} from '@erkenningen/ui';
 import { addMonths } from 'date-fns';
 import { Formik } from 'formik';
-import { Button } from 'primereact/button';
 import React, { useContext, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { ICompetentie, IKennisgebied, IThema } from '../../shared/Model';
@@ -39,7 +44,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
   const handleZipcodesChange = (event: any, form: any) => {
     if (event.target.value !== '') {
       if (form.values.distanceRadius === 0) {
-        form.setFieldValue('distanceRadius', 5);
+        form.setFieldValue('distanceRadius', 25);
       }
     } else {
       form.setFieldValue('distanceRadius', 0);
@@ -235,7 +240,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
               <div className="form-group row">
                 <div className="col-sm-4 col-md-3 offset-sm-4 offset-md-3 col-sm-offset-4 col-md-offset-3">
                   <Button
-                    type="submit"
+                    buttonType="submit"
                     label="Zoeken"
                     icon="pi pi-search"
                     disabled={formProps.isSubmitting}

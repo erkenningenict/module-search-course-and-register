@@ -1,10 +1,6 @@
-import React from 'react';
-
+import { Input, TextArea } from '@erkenningen/ui';
 import { FormikProps } from 'formik';
-
-import { InputMask } from 'primereact/inputmask';
-import { InputText } from 'primereact/inputtext';
-import { InputTextarea } from 'primereact/inputtextarea';
+import React from 'react';
 import { validateField } from '../../shared/Form';
 import FormItem from './FormItem';
 
@@ -53,17 +49,6 @@ class FormText extends React.Component<IFormTextProps, {}> {
       }
     };
 
-    const handleComplete = (event: any) => {
-      if (this.props.form) {
-        this.props.form.handleBlur(event.originalEvent);
-
-        // Trigger validation on blur
-        if (this.props.name) {
-          validateField(this.props.form, this.props.name, event.originalEvent.target.value);
-        }
-      }
-    };
-
     // Show nothing if readonly is true and value is empty
     if (this.props.readonly && !this.getFormValue()) {
       return null;
@@ -79,25 +64,11 @@ class FormText extends React.Component<IFormTextProps, {}> {
         formControlClassName={this.props.formControlClassName}
         helpText={this.props.helpText}
       >
-        {this.props.mask ? (
-          <InputMask
+        {this.props.isTextArea ? (
+          <TextArea
             id={this.props.id}
             name={this.props.name}
             placeholder={this.props.placeholder || this.props.label}
-            mask={this.props.mask}
-            value={this.getFormValue()}
-            readonly={this.props.readonly}
-            onChange={handleChange}
-            onComplete={handleComplete}
-            className="form-control"
-          />
-        ) : this.props.isTextArea ? (
-          <InputTextarea
-            id={this.props.id}
-            name={this.props.name}
-            placeholder={this.props.placeholder || this.props.label}
-            mask={this.props.mask}
-            keyfilter={this.props.keyfilter}
             value={this.getFormValue()}
             readOnly={this.props.readonly}
             onChange={handleChange}
@@ -105,18 +76,15 @@ class FormText extends React.Component<IFormTextProps, {}> {
             className="form-control"
           />
         ) : (
-          <InputText
+          <Input
             id={this.props.id}
             name={this.props.name}
             placeholder={this.props.placeholder || this.props.label}
-            mask={this.props.mask}
-            keyfilter={this.props.keyfilter}
             value={this.getFormValue()}
             readOnly={this.props.readonly}
             onChange={handleChange}
             onBlur={handleBlur}
             className="form-control"
-            autoComplete="off"
           />
         )}
       </FormItem>

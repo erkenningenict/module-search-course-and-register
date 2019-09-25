@@ -33,10 +33,10 @@ const ValidationSchema = Yup.object().shape({
       Adresregel1: Yup.string().required(MessageRequired),
       Huisnummer: Yup.number()
         .transform((n) => (isNaN(n) ? undefined : n))
-        .required(MessageRequired)
         .integer('Huisnummer moet een getal zijn')
         .positive('Huisnummer mag niet negatief zijn')
-        .min(1, 'Huisnummer moet groter dan 0 zijn'),
+        .min(1, 'Huisnummer moet groter dan 0 zijn')
+        .required(MessageRequired),
       Postcode: Yup.string()
         .required(MessageRequired)
         .when('Land', {
