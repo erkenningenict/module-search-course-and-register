@@ -1,11 +1,12 @@
 import { useQuery } from '@apollo/react-hooks';
 import { Alert, PanelBody, Spinner, TableResponsive } from '@erkenningen/ui';
 import React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { SEARCH_COURSE_SESSIONS } from '../../shared/Queries';
 import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
 import { NormalCoursesRow } from './NormalCoursesRow';
 
-interface INormalCoursesTable {
+interface INormalCoursesTable extends RouteComponentProps {
   searchData: {
     licenseId: string;
     knowledgeAreaId: string;
@@ -107,7 +108,7 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
   }
 
   if (error) {
-    return <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>;
+    return <Alert type="danger">Er is een fout opgetreden, probeer het later opnieuw.</Alert>;
   }
   if (!data) {
     return null;
@@ -132,6 +133,7 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
             data.CursusSessies &&
             data.CursusSessies.map((item: INormalCourseDetails) => (
               <NormalCoursesRow
+                {...props}
                 key={item.CourseCode}
                 row={item}
                 showDistance={searchData.distanceRadius !== 0}

@@ -16,7 +16,7 @@ export default function SignedUpParticipations(props: ISignedUpParticipationsPro
           exact={true}
           path="/waar-ben-ik-aangemeld"
           render={(routerProps: any) => {
-            return <SignedUpParticipationsTable />;
+            return <SignedUpParticipationsTable {...props} />;
           }}
         />
         <Route

@@ -1,7 +1,6 @@
 import { Input, TextArea } from '@erkenningen/ui';
 import { FormikProps } from 'formik';
 import React from 'react';
-import { validateField } from '../../shared/Form';
 import FormItem from './FormItem';
 
 interface IFormTextProps {
@@ -37,11 +36,6 @@ class FormText extends React.Component<IFormTextProps, {}> {
     const handleBlur = (event: any) => {
       if (this.props.form) {
         this.props.form.handleBlur(event);
-
-        // Trigger validation on blur
-        if (this.props.name) {
-          validateField(this.props.form, this.props.name);
-        }
       }
 
       if (this.props.onBlur) {

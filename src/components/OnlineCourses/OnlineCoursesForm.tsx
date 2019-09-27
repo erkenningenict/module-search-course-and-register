@@ -1,9 +1,15 @@
 import { useQuery } from '@apollo/react-hooks';
-import { LinkButtonContainer, PanelBody, parseLocationSearch, Spinner } from '@erkenningen/ui';
+import {
+  Button,
+  LinkButtonContainer,
+  PanelBody,
+  parseLocationSearch,
+  Spinner,
+} from '@erkenningen/ui';
 import { Formik } from 'formik';
-import { Button } from 'primereact/button';
 import React, { useContext, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
+import { StringParam, useQueryParam } from 'use-query-params';
 import { IKennisgebied, IThema } from '../../shared/Model';
 import { IListsQuery, LISTS } from '../../shared/Queries';
 import { UserContext } from '../../shared/UserContext';
@@ -17,6 +23,8 @@ interface IOnlineCourseFormProps extends RouteComponentProps {
 
 export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
   const [searchData, setSearchData] = useState();
+  const [themeId, setThemeId] = useQueryParam('themaId', StringParam);
+  const [knowledgeAreaId, setKnowledgeAreaId] = useQueryParam('sectorId', StringParam);
 
   const value = useContext(UserContext);
   const { loading, data, error } = useQuery<IListsQuery>(LISTS);
@@ -41,17 +49,17 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
     null;
 
   if (!searchData) {
-    let theme = 0;
-    let competence = 0;
+    let theme = '0';
+    let knowledgeArea = '0';
     const params = parseLocationSearch(props.location.search);
     params.forEach((param: { key: string; value: string }) => {
       switch (param.key) {
         case 'themaId':
-          theme = parseInt(param.value, 10);
+          theme = param.value;
 
           break;
-        case 'competentieId':
-          competence = parseInt(param.value, 10);
+        case 'sectorId':
+          knowledgeArea = param.value;
           break;
         default:
       }
@@ -59,7 +67,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
     setSearchData({
       licenseId,
       themeId: theme,
-      competenceId: competence,
+      knowledgeAreaId: knowledgeArea,
       isOnlineCourse: props.isOnline,
     });
 
@@ -116,8 +124,8 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
         <Formik
           initialValues={{
             licenseId,
-            knowledgeAreaId: 0,
-            themeId: (searchData && searchData.themeId) || 0,
+            knowledgeAreaId: (searchData && searchData.knowledgeAreaId) || '0',
+            themeId: (searchData && searchData.themeId) || '0',
             isOnlineCourse: props.isOnline,
           }}
           onSubmit={(values, { setSubmitting }) => {
@@ -134,6 +142,15 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
                   label: item.Naam,
                 }))}
                 name="knowledgeAreaId"
+                onChange={(e: any) => {
+                  setKnowledgeAreaId(e.value);
+                  setSearchData({
+                    licenseId,
+                    themeId,
+                    knowledgeAreaId: e.value,
+                    isOnlineCourse: props.isOnline,
+                  });
+                }}
                 loading={loading}
                 form={formProps}
               />
@@ -145,13 +162,22 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
                   label: item.Naam,
                 }))}
                 loading={loading}
+                onChange={(e: any) => {
+                  setThemeId(e.value);
+                  setSearchData({
+                    licenseId,
+                    knowledgeAreaId,
+                    themeId: e.value,
+                    isOnlineCourse: props.isOnline,
+                  });
+                }}
                 name="themeId"
                 form={formProps}
               />
               <div className="form-group row">
                 <div className="col-sm-4 col-md-3 offset-sm-4 offset-md-3 col-sm-offset-4 col-md-offset-3">
                   <Button
-                    type="submit"
+                    buttonType="submit"
                     label="Zoeken"
                     icon="pi pi-search"
                     disabled={formProps.isSubmitting}
@@ -162,7 +188,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
           )}
         />
       </PanelBody>
-      {searchData && <OnlineCoursesTable searchData={searchData} />}
+      {searchData && <OnlineCoursesTable {...props} searchData={searchData} />}
     </>
   );
 }

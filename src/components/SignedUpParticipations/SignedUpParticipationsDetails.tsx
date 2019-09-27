@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { Alert, Button, PanelBody, Spinner } from '@erkenningen/ui';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { UNREGISTER } from '../../shared/Mutations';
 import { GET_PARTICIPATION_DETAILS, IParticipationDetails } from '../../shared/Queries';
 import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
@@ -9,8 +9,8 @@ import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
 import { NormalCourseDetails } from '../NormalCourses/NormalCourseDetails';
 import { OnlineCourseDetails } from '../OnlineCourses/OnlineCourseDetails';
 
-export function SignedUpParticipationDetails(props: any) {
-  const returnToListLink = <Link to="/waar-ben-ik-aangemeld">Terug</Link>;
+export function SignedUpParticipationDetails(props: RouteComponentProps<any>) {
+  const returnToListLink = <Link to={`/waar-ben-ik-aangemeld${props.location.search}`}>Terug</Link>;
   const { loading, data, error } = useQuery<
     { CursusDeelnameDetails: IParticipationDetails },
     { participationId: number }
@@ -51,8 +51,8 @@ export function SignedUpParticipationDetails(props: any) {
   if (data && data.CursusDeelnameDetails === null) {
     return (
       <PanelBody>
-        <Alert>Gegevens van de bijeenkomst zijn niet gevonden.</Alert>
-        <Link to="/waar-ben-ik-aangemeld">Terug naar de lijst</Link>
+        <Alert type="warning">Gegevens van de bijeenkomst zijn niet gevonden.</Alert>
+        <Link to={`/waar-ben-ik-aangemeld${props.location.search}`}>Terug naar de lijst</Link>
       </PanelBody>
     );
   }
@@ -130,7 +130,6 @@ export function SignedUpParticipationDetails(props: any) {
       OrganizerEmail: organizerData.Contactgegevens.Email,
       OrganizerWebsite: organizerData.Contactgegevens.Website,
     };
-    // return <NormalCourseDetails details={details} />;
     return (
       <>
         <NormalCourseDetails details={details} />

@@ -2,7 +2,6 @@ import { Datepicker } from '@erkenningen/ui';
 import { parse } from 'date-fns';
 import { FormikProps } from 'formik';
 import React from 'react';
-import { validateField } from '../../shared/Form';
 import FormItem from './FormItem';
 
 interface IFormCalendarProps {
@@ -42,9 +41,6 @@ class FormCalendar extends React.Component<IFormCalendarProps, {}> {
           const parsedDate = parse(value, 'dd-MM-yyyy', new Date());
           if (parsedDate instanceof Date && !isNaN(parsedDate as any)) {
             this.props.form.setFieldValue(this.props.name, parsedDate);
-            validateField(this.props.form, this.props.name, parsedDate);
-          } else {
-            validateField(this.props.form, this.props.name, value);
           }
         }
       }
@@ -57,7 +53,6 @@ class FormCalendar extends React.Component<IFormCalendarProps, {}> {
     const handleSelect = (event: any) => {
       if (this.props.form && this.props.name) {
         this.props.form.setFieldValue(this.props.name, event.value);
-        validateField(this.props.form, this.props.name, event.value);
       }
     };
 

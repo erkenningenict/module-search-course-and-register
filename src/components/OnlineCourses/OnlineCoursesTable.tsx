@@ -1,11 +1,12 @@
 import { useQuery } from '@apollo/react-hooks';
 import { Alert, PanelBody, Spinner, TableResponsive } from '@erkenningen/ui';
 import React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { ISearchSpecialty, ISearchSpecialtyInput, SEARCH_SPECIALTIES } from '../../shared/Queries';
 import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
 import { OnlineCoursesRow } from './OnlineCoursesRow';
 
-interface IOnlineCoursesTable {
+interface IOnlineCoursesTable extends RouteComponentProps {
   searchData: {
     licenseId: string;
     knowledgeAreaId: string;
@@ -38,7 +39,7 @@ export function OnlineCoursesTable(props: IOnlineCoursesTable) {
   });
   if (loading) {
     return (
-      <PanelBody>
+      <PanelBody key="1">
         <Spinner />
       </PanelBody>
     );
@@ -46,8 +47,10 @@ export function OnlineCoursesTable(props: IOnlineCoursesTable) {
 
   if (error) {
     return (
-      <PanelBody>
-        <Alert>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</Alert>
+      <PanelBody key="2">
+        <Alert type="danger" key="1">
+          Er is een fout opgetreden, probeer het later opnieuw.
+        </Alert>
       </PanelBody>
     );
   }
@@ -70,7 +73,7 @@ export function OnlineCoursesTable(props: IOnlineCoursesTable) {
           {data &&
             data.SearchSpecialties &&
             data.SearchSpecialties.map((item: IOnlineCourseDetails) => {
-              return <OnlineCoursesRow key={item.Code} row={item} />;
+              return <OnlineCoursesRow {...props} key={item.Code} row={item} />;
             })}
           {!data || data.SearchSpecialties.length === 0 ? (
             <tr>

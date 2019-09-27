@@ -1,9 +1,6 @@
-import React from 'react';
-
-import { FormikProps } from 'formik';
-
 import { Select, Spinner } from '@erkenningen/ui';
-import { validateField } from '../../shared/Form';
+import { FormikProps } from 'formik';
+import React from 'react';
 import FormItem from './FormItem';
 
 interface IFormSelectProps {
@@ -30,8 +27,6 @@ class FormSelect extends React.Component<IFormSelectProps, {}> {
       if (this.props.form && this.props.name) {
         this.props.form.setFieldValue(this.props.name, event.value);
         this.props.form.setFieldTouched(this.props.name, true);
-
-        validateField(this.props.form, this.props.name, event.value);
       }
       if (this.props.onChange) {
         this.props.onChange(event);

@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/react-hooks';
 import { Alert, PanelBody, Spinner, TableResponsive } from '@erkenningen/ui';
 import React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import {
   GET_MY_SIGNED_UP_PARTICIPATIONS_LIST_QUERY,
   IMy,
@@ -8,7 +9,7 @@ import {
 } from '../../shared/Queries';
 import SignedUpParticipationsRow from './SignedUpParticipationsRow';
 
-export default function SignedUpParticipationsTable() {
+export default function SignedUpParticipationsTable(props: RouteComponentProps) {
   const { loading, data, error } = useQuery<
     IMy,
     {
@@ -26,7 +27,7 @@ export default function SignedUpParticipationsTable() {
   if (error) {
     return (
       <PanelBody>
-        <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>
+        <Alert type="danger">Er is een fout opgetreden, probeer het later opnieuw.</Alert>
       </PanelBody>
     );
   }
@@ -75,7 +76,7 @@ export default function SignedUpParticipationsTable() {
             {data.my &&
               data.my.AangemeldeCursusDeelnames &&
               data.my.AangemeldeCursusDeelnames.map((item: ISignedUpParticipation) => (
-                <SignedUpParticipationsRow key={item.CursusDeelnameID} row={item} />
+                <SignedUpParticipationsRow {...props} key={item.CursusDeelnameID} row={item} />
               ))}
           </tbody>
         </table>

@@ -6,7 +6,6 @@ import './NormalCourseDetails.scss';
 
 interface INormalCourseDetailsProps {
   details: INormalCourseDetails;
-  routerProps?: any;
 }
 
 export function NormalCourseDetails(props: INormalCourseDetailsProps) {

@@ -1,9 +1,9 @@
 import { toDutchDate } from '@erkenningen/ui';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { ISignedUpParticipation } from '../../shared/Queries';
 
-interface ISignedUpParticipationsRowProps {
+interface ISignedUpParticipationsRowProps extends RouteComponentProps<any> {
   row: ISignedUpParticipation;
 }
 
@@ -14,7 +14,7 @@ export default function SignedUpParticipationsRow(props: ISignedUpParticipations
       <tr key={row.CursusDeelnameID}>
         <td>
           <Link
-            to={`/waar-ben-ik-aangemeld/${row.CursusDeelnameID}`}
+            to={`/waar-ben-ik-aangemeld/${row.CursusDeelnameID}${props.location.search}`}
             title="Bekijk meer informatie en afmelden"
           >
             {row.Titel}

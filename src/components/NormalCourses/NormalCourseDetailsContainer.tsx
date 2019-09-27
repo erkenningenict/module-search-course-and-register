@@ -3,7 +3,7 @@ import { ERKENNINGEN_LOGIN_URL } from '@erkenningen/config';
 import { Alert, Button, Col, PanelBody, Row, Spinner } from '@erkenningen/ui';
 import { addHours, addMinutes } from 'date-fns';
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { COURSE_SESSION_DETAILS, IIsLicenseValidForSpecialty } from '../../shared/Queries';
 import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
 import { UserContext } from '../../shared/UserContext';
@@ -11,14 +11,19 @@ import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
 import { Register } from '../Register';
 import { NormalCourseDetails } from './NormalCourseDetails';
 
-interface INormalCourseDetailsProps {
-  routerProps?: any;
-}
+interface INormalCourseDetailsProps extends RouteComponentProps<any> {}
 
 export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
   const [showRegister, setShowRegister] = useState(false);
   const user = useContext(UserContext);
   const licenseId = useContext(SelectedLicenseContext);
+  const returnToListLink = (
+    <Link
+      to={`/bijeenkomsten-zoeken/op-locatie${props && props.location && props.location.search}`}
+    >
+      Terug naar de lijst
+    </Link>
+  );
   const { loading, data, error } = useQuery<
     {
       CursusSessies: INormalCourseDetails[];
@@ -31,12 +36,12 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
   >(COURSE_SESSION_DETAILS, {
     variables: {
       input: {
-        currentCourseId: parseInt(props.routerProps.match.params.courseId, 10),
+        currentCourseId: parseInt(props.match.params.courseId, 10),
         isOnlineCourse: false,
       },
       inputCheck: {
         licenseId,
-        courseId: parseInt(props.routerProps.match.params.courseId, 10),
+        courseId: parseInt(props.match.params.courseId, 10),
       },
     },
     fetchPolicy: 'network-only',
@@ -53,7 +58,7 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
     return (
       <>
         <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>
-        <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
+        {returnToListLink}
       </>
     );
   }
@@ -64,7 +69,7 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
     return (
       <PanelBody>
         <Alert>Bijeenkomst is niet gevonden.</Alert>
-        <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
+        {returnToListLink}
       </PanelBody>
     );
   }
@@ -99,7 +104,7 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
                     icon="pi pi-check"
                   />
                 )}
-                <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
+                {returnToListLink}
               </>
             ) : (
               <>
@@ -120,7 +125,7 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
                   }}
                   icon="pi pi-check"
                 />
-                <Link to="/bijeenkomsten-zoeken/op-locatie">Terug naar de lijst</Link>
+                {returnToListLink}
               </>
             )}
           </Col>
@@ -129,6 +134,7 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
     </>
   ) : (
     <Register
+      {...props}
       registerCourseDetails={{
         code: course.CourseCode,
         courseId: course.CourseId.toString(),

@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/react-hooks';
 import { Alert, Button, PanelBody, Spinner, toDutchDate } from '@erkenningen/ui';
 import { Formik } from 'formik';
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { object, string } from 'yup';
 import { IKennisgebied, ILand } from '../shared/Model';
 import { IRegisterForCourseInput, REGISTER } from '../shared/Mutations';
@@ -21,7 +21,7 @@ export interface IRegisterCourseDetails {
   courseDateTime: Date;
 }
 
-interface IRegister {
+interface IRegister extends RouteComponentProps {
   registerCourseDetails: IRegisterCourseDetails;
   onCancel: any;
 }
@@ -67,7 +67,8 @@ export function Register(properties: IRegister) {
   const licenseId = useContext(SelectedLicenseContext);
   const user = useContext(UserContext);
   const registerCourseDetails = properties.registerCourseDetails;
-  const returnToListLink = <Link to="/bijeenkomsten-zoeken/op-locatie">Terug</Link>;
+  const search = (properties.location && properties.location && properties.location.search) || '';
+  const returnToListLink = <Link to={`/bijeenkomsten-zoeken/op-locatie${search}`}>Terug</Link>;
 
   const { loading, data, error } = useQuery<IListsQuery>(LISTS);
   const [
@@ -164,11 +165,6 @@ export function Register(properties: IRegister) {
             email: values.EmailAddress,
           };
           registerCourse({ variables: { input } });
-          // setTimeout(() => {
-          //   alert(JSON.stringify(values, null, 2));
-          //   //   setSearchData(values);
-          //   //   setSubmitting(false);
-          // }, 400);
         }}
         render={(props: any) => {
           return (

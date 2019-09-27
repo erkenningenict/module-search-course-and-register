@@ -7,7 +7,6 @@ import './OnlineCourseDetails.scss';
 
 interface IOnlineCourseDetailsProps {
   details: IOnlineCourseDetails;
-  routerProps?: any;
 }
 
 export function OnlineCourseDetails(props: IOnlineCourseDetailsProps) {

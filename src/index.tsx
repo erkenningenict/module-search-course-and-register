@@ -13,8 +13,8 @@ import { ThemeContext } from '@erkenningen/ui';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
-
 import { HashRouter, Route } from 'react-router-dom';
+import { QueryParamProvider } from 'use-query-params';
 import App from './App';
 
 const cache = new InMemoryCache();
@@ -31,15 +31,17 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <ThemeContext.Provider value={{ mode: ERKENNINGEN_SITE_TYPE }}>
       <HashRouter>
-        <Route
-          path={'/'}
-          exact={true}
-          render={(props: any) => {
-            props.history.push('bijeenkomsten-zoeken/op-locatie');
-            return null;
-          }}
-        />
-        <App />
+        <QueryParamProvider ReactRouterRoute={Route}>
+          <Route
+            path={'/'}
+            exact={true}
+            render={(props: any) => {
+              props.history.push('bijeenkomsten-zoeken/op-locatie');
+              return null;
+            }}
+          />
+          <App />
+        </QueryParamProvider>
       </HashRouter>
     </ThemeContext.Provider>
   </ApolloProvider>,

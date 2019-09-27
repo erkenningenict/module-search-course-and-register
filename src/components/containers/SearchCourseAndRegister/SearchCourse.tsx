@@ -1,6 +1,6 @@
 import { Panel } from '@erkenningen/ui';
 import React, { useState } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { SelectedLicenseContext } from '../../../shared/SelectedLicenseContext';
 import { NormalCourseDetailsContainer } from '../../NormalCourses/NormalCourseDetailsContainer';
 import { NormalCoursesForm } from '../../NormalCourses/NormalCoursesForm';
@@ -23,23 +23,23 @@ export function SearchCourse() {
             <Route
               exact={true}
               path="/bijeenkomsten-zoeken/op-locatie/informatie-en-aanmelden/:courseId"
-              render={(routerProps: any) => {
-                return <NormalCourseDetailsContainer routerProps={routerProps} />;
+              render={(routerProps: RouteComponentProps) => {
+                return <NormalCourseDetailsContainer {...routerProps} />;
               }}
             />
 
             <Route
               exact={true}
               path="/bijeenkomsten-zoeken/online/informatie-en-aanmelden/:courseId"
-              render={(routerProps: any) => {
-                return <OnlineCourseDetailsContainer routerProps={routerProps} />;
+              render={(routerProps: RouteComponentProps) => {
+                return <OnlineCourseDetailsContainer {...routerProps} />;
               }}
             />
 
             <Route
               exact={true}
               path="/bijeenkomsten-zoeken/op-locatie"
-              render={(routerProps: any) => {
+              render={(routerProps: RouteComponentProps) => {
                 setSeenOverview(true);
                 return <NormalCoursesForm {...routerProps} isOnline={false} />;
               }}
@@ -47,7 +47,7 @@ export function SearchCourse() {
             <Route
               exact={true}
               path="/bijeenkomsten-zoeken/online"
-              render={(routerProps: any) => {
+              render={(routerProps: RouteComponentProps) => {
                 setSeenOverview(true);
                 return <OnlineCoursesForm {...routerProps} isOnline={true} />;
               }}

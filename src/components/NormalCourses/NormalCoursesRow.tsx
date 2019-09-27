@@ -1,9 +1,9 @@
 import { toDutchDate, toDutchMoney } from '@erkenningen/ui';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
 
-interface INormalCourseRow {
+interface INormalCourseRow extends RouteComponentProps {
   row: INormalCourseDetails;
   showDistance: boolean;
 }
@@ -15,7 +15,7 @@ export function NormalCoursesRow(props: INormalCourseRow) {
       <tr key={row.CourseId}>
         <td>
           <Link
-            to={`/bijeenkomsten-zoeken/op-locatie/informatie-en-aanmelden/${row.CourseId}`}
+            to={`/bijeenkomsten-zoeken/op-locatie/informatie-en-aanmelden/${row.CourseId}${props.location.search}`}
             title="Bekijk meer informatie en aanmelden"
           >
             {row.Title}

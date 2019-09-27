@@ -10,6 +10,8 @@ import { addMonths } from 'date-fns';
 import { Formik } from 'formik';
 import React, { useContext, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
+import { StringParam, useQueryParam } from 'use-query-params';
+import { date, object } from 'yup';
 import { ICompetentie, IKennisgebied, IThema } from '../../shared/Model';
 import { IListsQuery, LISTS } from '../../shared/Queries';
 import { UserContext } from '../../shared/UserContext';
@@ -28,8 +30,16 @@ interface INormalCourseFormProps extends RouteComponentProps {
   isOnline: boolean;
 }
 
+const NormalCoursesSchema = object().shape({
+  from: date().typeError('Vul een geldige datum in (dd-mm-jjjj) of kies een datum'),
+  to: date().typeError('Vul een geldige datum in (dd-mm-jjjj) of kies een datum'),
+});
+
 export function NormalCoursesForm(props: INormalCourseFormProps) {
   const [searchData, setSearchData] = useState();
+  const [themeId, setThemeId] = useQueryParam('themaId', StringParam);
+  const [competenceId, setCompetenceId] = useQueryParam('competentieId', StringParam);
+  const [knowledgeAreaId, setKnowledgeAreaId] = useQueryParam('sectorId', StringParam);
   const toDate = addMonths(new Date(), 3);
   const { loading, data, error } = useQuery<IListsQuery>(LISTS);
 
@@ -67,31 +77,32 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
       value.my.Certificeringen.length > 0 &&
       value.my.Certificeringen[0].CertificeringID) ||
     null;
-
+  let theme = '0';
+  let competence = '0';
+  let knowledgeArea = '0';
   if (!searchData) {
-    let theme = 0;
-    let competence = 0;
     const params = parseLocationSearch(props.location.search);
     params.forEach((param: { key: string; value: string }) => {
       switch (param.key) {
+        case 'sectorId':
+          knowledgeArea = param.value;
+          break;
         case 'themaId':
-          theme = parseInt(param.value, 10);
-
+          theme = param.value;
           break;
         case 'competentieId':
-          competence = parseInt(param.value, 10);
+          competence = param.value;
           break;
         default:
       }
     });
     setSearchData({
       licenseId,
-      themeId: theme,
       competenceId: competence,
+      themeId: theme,
+      knowledgeAreaId: knowledgeArea,
       distanceRadius: 0,
       isOnlineCourse: props.isOnline,
-      from: new Date(),
-      to: toDate,
     });
 
     return null;
@@ -116,30 +127,15 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
     <>
       <PanelBody>
         <LinkButtonContainer>
-          <LinkButton
-            to={{
-              pathname: `/bijeenkomsten-zoeken/online`,
-              search: props.location.search,
-            }}
-          >
+          <LinkButton to={`/bijeenkomsten-zoeken/online${props.location.search}`}>
             Online bijeenkomsten
           </LinkButton>
           {value && (
             <>
-              <LinkButton
-                to={{
-                  pathname: `/waar-ben-ik-aangemeld`,
-                  search: props.location.search,
-                }}
-              >
+              <LinkButton to={`/waar-ben-ik-aangemeld${props.location.search}`}>
                 Waar ben ik aangemeld?
               </LinkButton>
-              <LinkButton
-                to={{
-                  pathname: `/wat-heb-ik-al-gevolgd/`,
-                  search: props.location.search,
-                }}
-              >
+              <LinkButton to={`/wat-heb-ik-al-gevolgd/${props.location.search}`}>
                 Wat heb ik al gevolgd?
               </LinkButton>
             </>
@@ -149,9 +145,9 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
         <Formik
           initialValues={{
             licenseId,
-            knowledgeAreaId: 0,
-            themeId: (searchData && searchData.themeId) || 0,
-            competenceId: (searchData && searchData.competenceId) || 0,
+            knowledgeAreaId: (searchData && searchData.knowledgeAreaId) || '0',
+            themeId: (searchData && searchData.themeId) || '0',
+            competenceId: (searchData && searchData.competenceId) || '0',
             zipcodeNumbers:
               (value &&
                 value.my &&
@@ -163,6 +159,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
             to: toDate,
             isOnlineCourse: props.isOnline,
           }}
+          validationSchema={NormalCoursesSchema}
           onSubmit={(values, { setSubmitting }) => {
             setSearchData(values);
             setSubmitting(false);
@@ -174,11 +171,22 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
                 label="Sector"
                 options={knowledgeAreas.map((item: IKennisgebied) => {
                   return {
-                    value: parseInt(item.KennisgebiedID, 10),
+                    value: item.KennisgebiedID,
                     label: item.Naam,
                   };
                 })}
                 name="knowledgeAreaId"
+                onChange={(e: any) => {
+                  setKnowledgeAreaId(e.value);
+                  setSearchData({
+                    licenseId,
+                    competenceId,
+                    themeId,
+                    knowledgeAreaId: e.value,
+                    distanceRadius: 0,
+                    isOnlineCourse: props.isOnline,
+                  });
+                }}
                 loading={loading}
                 form={formProps}
               />
@@ -186,10 +194,21 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
                 id="themeId"
                 label="Thema"
                 options={themes.map((item: IThema) => ({
-                  value: parseInt(item.ThemaID, 10),
+                  value: item.ThemaID,
                   label: item.Naam,
                 }))}
                 loading={loading}
+                onChange={(e: any) => {
+                  setThemeId(e.value);
+                  setSearchData({
+                    licenseId,
+                    knowledgeAreaId,
+                    competenceId,
+                    themeId: e.value,
+                    distanceRadius: 0,
+                    isOnlineCourse: props.isOnline,
+                  });
+                }}
                 name="themeId"
                 form={formProps}
               />
@@ -197,10 +216,21 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
                 id="competenceId"
                 label="Bijeenkomsttype"
                 options={competences.map((item: ICompetentie) => ({
-                  value: parseInt(item.CompetentieID, 10),
+                  value: item.CompetentieID,
                   label: item.Naam,
                 }))}
                 loading={loading}
+                onChange={(e: any) => {
+                  setCompetenceId(e.value);
+                  setSearchData({
+                    licenseId,
+                    themeId,
+                    knowledgeAreaId,
+                    competenceId: e.value,
+                    distanceRadius: 0,
+                    isOnlineCourse: props.isOnline,
+                  });
+                }}
                 name="competenceId"
                 form={formProps}
               />
@@ -251,7 +281,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
           )}
         />
       </PanelBody>
-      {searchData && <NormalCoursesTable searchData={searchData} />}
+      {searchData && <NormalCoursesTable {...props} searchData={searchData} />}
     </>
   );
 }

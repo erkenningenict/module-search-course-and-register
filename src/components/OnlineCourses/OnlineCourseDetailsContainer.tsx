@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { ERKENNINGEN_LOGIN_URL } from '@erkenningen/config';
 import { Alert, Button, Col, PanelBody, Row, Spinner } from '@erkenningen/ui';
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { IIsLicenseValidForSpecialty, SPECIALTY_DETAILS } from '../../shared/Queries';
 import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
 import { UserContext } from '../../shared/UserContext';
@@ -10,7 +10,7 @@ import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
 import { Register } from '../Register';
 import { OnlineCourseDetails } from './OnlineCourseDetails';
 
-interface IOnlineCourseDetailsProps {
+interface IOnlineCourseDetailsProps extends RouteComponentProps<any> {
   routerProps?: any;
 }
 
@@ -18,6 +18,11 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
   const [showRegister, setShowRegister] = useState(false);
   const user = useContext(UserContext);
   const licenseId = useContext(SelectedLicenseContext);
+  const returnToListLink = (
+    <Link to={`/bijeenkomsten-zoeken/online${props && props.location && props.location.search}`}>
+      Terug naar de lijst
+    </Link>
+  );
   const { loading, data, error } = useQuery<
     {
       SearchSpecialties: IOnlineCourseDetails[];
@@ -30,12 +35,12 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
   >(SPECIALTY_DETAILS, {
     variables: {
       input: {
-        specialtyId: parseInt(props.routerProps.match.params.courseId, 10),
+        specialtyId: parseInt(props.match.params.courseId, 10),
         isOnlineCourse: true,
       },
       inputCheck: {
         licenseId,
-        specialtyId: parseInt(props.routerProps.match.params.courseId, 10),
+        specialtyId: parseInt(props.match.params.courseId, 10),
       },
     },
     fetchPolicy: 'network-only',
@@ -90,7 +95,7 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
                     icon="pi pi-check"
                   />
                 )}
-                <Link to="/bijeenkomsten-zoeken/online">Terug naar de lijst</Link>
+                {returnToListLink}
               </>
             ) : (
               <>
@@ -111,7 +116,7 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
                   }}
                   icon="pi pi-check"
                 />
-                <Link to="/bijeenkomsten-zoeken/online">Terug naar de lijst</Link>
+                {returnToListLink}
               </>
             )}
           </Col>
@@ -120,6 +125,7 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
     </>
   ) : (
     <Register
+      {...props}
       registerCourseDetails={{
         code: specialty.Code,
         courseId: specialty.SpecialtyId.toString(),
