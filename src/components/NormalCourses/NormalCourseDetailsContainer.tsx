@@ -4,7 +4,11 @@ import { Alert, Button, Col, PanelBody, Row, Spinner } from '@erkenningen/ui';
 import { addHours, addMinutes } from 'date-fns';
 import React, { useContext, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { COURSE_SESSION_DETAILS, IIsLicenseValidForSpecialty } from '../../shared/Queries';
+import {
+  COURSE_SESSION_DETAILS,
+  IIsLicenseValidForSpecialty,
+  SEARCH_COURSE_SESSIONS,
+} from '../../shared/Queries';
 import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
 import { UserContext } from '../../shared/UserContext';
 import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
@@ -12,6 +16,11 @@ import { Register } from '../Register';
 import { NormalCourseDetails } from './NormalCourseDetails';
 
 interface INormalCourseDetailsProps extends RouteComponentProps<any> {}
+
+interface IInputVariables {
+  input: { currentCourseId: number; isOnlineCourse: boolean };
+  inputCheck?: { licenseId: number; courseId: number };
+}
 
 export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
   const [showRegister, setShowRegister] = useState(false);
@@ -24,28 +33,32 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
       Terug naar de lijst
     </Link>
   );
+  let variables: IInputVariables = {
+    input: {
+      currentCourseId: parseInt(props.match.params.courseId, 10),
+      isOnlineCourse: false,
+    },
+  };
+  if (licenseId && licenseId !== 0) {
+    variables = {
+      ...variables,
+      inputCheck: {
+        licenseId,
+        courseId: parseInt(props.match.params.courseId, 10),
+      },
+    };
+  }
   const { loading, data, error } = useQuery<
     {
       CursusSessies: INormalCourseDetails[];
       isLicenseValidForSpecialty: IIsLicenseValidForSpecialty;
     },
-    {
-      input: { currentCourseId: number; isOnlineCourse: boolean };
-      inputCheck: { licenseId: number; courseId: number };
-    }
-  >(COURSE_SESSION_DETAILS, {
-    variables: {
-      input: {
-        currentCourseId: parseInt(props.match.params.courseId, 10),
-        isOnlineCourse: false,
-      },
-      inputCheck: {
-        licenseId,
-        courseId: parseInt(props.match.params.courseId, 10),
-      },
-    },
+    IInputVariables
+  >(licenseId && licenseId !== 0 ? COURSE_SESSION_DETAILS : SEARCH_COURSE_SESSIONS, {
+    variables,
     fetchPolicy: 'network-only',
   });
+
   if (loading) {
     return (
       <PanelBody>
@@ -56,10 +69,10 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
 
   if (error) {
     return (
-      <>
-        <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>
+      <PanelBody>
+        <Alert type="danger">Er is een fout opgetreden, probeer het later opnieuw.</Alert>
         {returnToListLink}
-      </>
+      </PanelBody>
     );
   }
   if (!data) {

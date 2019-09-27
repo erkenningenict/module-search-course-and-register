@@ -3,7 +3,11 @@ import { ERKENNINGEN_LOGIN_URL } from '@erkenningen/config';
 import { Alert, Button, Col, PanelBody, Row, Spinner } from '@erkenningen/ui';
 import React, { useContext, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { IIsLicenseValidForSpecialty, SPECIALTY_DETAILS } from '../../shared/Queries';
+import {
+  IIsLicenseValidForSpecialty,
+  SEARCH_SPECIALTIES,
+  SPECIALTY_DETAILS,
+} from '../../shared/Queries';
 import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
 import { UserContext } from '../../shared/UserContext';
 import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
@@ -12,6 +16,11 @@ import { OnlineCourseDetails } from './OnlineCourseDetails';
 
 interface IOnlineCourseDetailsProps extends RouteComponentProps<any> {
   routerProps?: any;
+}
+
+interface IInputVariables {
+  input: { specialtyId: number; isOnlineCourse: boolean };
+  inputCheck?: { licenseId: number; specialtyId: number };
 }
 
 export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
@@ -23,26 +32,31 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
       Terug naar de lijst
     </Link>
   );
-  const { loading, data, error } = useQuery<
-    {
-      SearchSpecialties: IOnlineCourseDetails[];
-      isLicenseValidForSpecialty: IIsLicenseValidForSpecialty;
+
+  let variables: IInputVariables = {
+    input: {
+      specialtyId: parseInt(props.match.params.courseId, 10),
+      isOnlineCourse: true,
     },
-    {
-      input: { specialtyId: number; isOnlineCourse: boolean };
-      inputCheck: { licenseId: number; specialtyId: number };
-    }
-  >(SPECIALTY_DETAILS, {
-    variables: {
-      input: {
-        specialtyId: parseInt(props.match.params.courseId, 10),
-        isOnlineCourse: true,
-      },
+  };
+
+  if (licenseId && licenseId !== 0) {
+    variables = {
+      ...variables,
       inputCheck: {
         licenseId,
         specialtyId: parseInt(props.match.params.courseId, 10),
       },
+    };
+  }
+  const { loading, data, error } = useQuery<
+    {
+      SearchSpecialties: IOnlineCourseDetails[];
+      isLicenseValidForSpecialty?: IIsLicenseValidForSpecialty;
     },
+    IInputVariables
+  >(licenseId && licenseId !== 0 ? SPECIALTY_DETAILS : SEARCH_SPECIALTIES, {
+    variables,
     fetchPolicy: 'network-only',
   });
   if (loading) {
@@ -54,7 +68,12 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
   }
 
   if (error) {
-    return <Alert>Er is een fout opgetreden, probeer het later opnieuw.</Alert>;
+    return (
+      <PanelBody>
+        <Alert type="danger">Er is een fout opgetreden, probeer het later opnieuw.</Alert>
+        {returnToListLink}
+      </PanelBody>
+    );
   }
   if (!data) {
     return null;
@@ -63,14 +82,14 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
     return (
       <PanelBody>
         <Alert>Bijeenkomst is niet gevonden.</Alert>
-        <Link to="/bijeenkomsten-zoeken/online">Terug naar de lijst</Link>
+        {returnToListLink}
       </PanelBody>
     );
   }
   const specialty: IOnlineCourseDetails = data.SearchSpecialties[0];
   return specialty && !showRegister ? (
     <>
-      {user && !data.isLicenseValidForSpecialty.success && (
+      {user && data.isLicenseValidForSpecialty && !data.isLicenseValidForSpecialty.success && (
         <PanelBody>
           <Alert type="danger">
             <h4>
@@ -88,7 +107,7 @@ export function OnlineCourseDetailsContainer(props: IOnlineCourseDetailsProps) {
           <Col>
             {user ? (
               <>
-                {data.isLicenseValidForSpecialty.success && (
+                {data.isLicenseValidForSpecialty && data.isLicenseValidForSpecialty.success && (
                   <Button
                     label="Aanmelden"
                     onClick={() => setShowRegister(true)}
