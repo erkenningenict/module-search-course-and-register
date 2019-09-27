@@ -53,7 +53,7 @@ export function NormalCourseDetails(props: INormalCourseDetailsProps) {
             </div>
             <div className="col-md-6">
               <div className="price">
-                <strong>{toDutchMoney(data.Price, { euroPrefix: true })}</strong> (incl. btw)
+                <strong>{toDutchMoney(data.Price, { euroPrefix: true })}</strong> (excl. btw)
               </div>
             </div>
           </div>

@@ -66,7 +66,7 @@ export function OnlineCoursesTable(props: IOnlineCoursesTable) {
           <tr key="headerRow">
             <th>Titel</th>
             <th>Organisator</th>
-            <th className="text-right">Prijs (incl. btw)</th>
+            <th className="text-right">Prijs (excl. btw)</th>
           </tr>
         </thead>
         <tbody>

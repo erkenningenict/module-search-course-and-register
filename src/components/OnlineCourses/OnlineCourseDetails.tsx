@@ -33,7 +33,7 @@ export function OnlineCourseDetails(props: IOnlineCourseDetailsProps) {
           <div className="row">
             <div className="col-md-12">
               <div className="price">
-                <strong>{toDutchMoney(data.Price, { euroPrefix: true })}</strong> (incl. btw)
+                <strong>{toDutchMoney(data.Price, { euroPrefix: true })}</strong> (excl. btw)
               </div>
             </div>
           </div>

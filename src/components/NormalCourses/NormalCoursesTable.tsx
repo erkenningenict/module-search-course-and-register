@@ -125,7 +125,7 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
             <th>Locatie</th>
             {!searchData.distanceRadius ||
               (searchData.distanceRadius !== 0 && <th>Afstand (km)</th>)}
-            <th className="text-right">Prijs (incl. btw)</th>
+            <th className="text-right">Prijs (excl. btw)</th>
           </tr>
         </thead>
         <tbody>
