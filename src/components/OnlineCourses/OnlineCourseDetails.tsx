@@ -45,7 +45,7 @@ export function OnlineCourseDetails(props: IOnlineCourseDetailsProps) {
             </div>
             <div className="col-md-6">
               <p className="characteristics">
-                Licentie: <strong>{data.Competence}</strong>
+                Bijeenkomsttype: <strong>{data.Competence}</strong>
               </p>
             </div>
           </div>
