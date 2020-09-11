@@ -92,7 +92,7 @@ export function SignedUpParticipationDetails(props: RouteComponentProps<any>) {
   const d = data.CursusDeelnameDetails;
   const organizerData = d.Cursus.Vak.VakgroepID
     ? d.Cursus.Vak.Vakgroep
-    : d.Cursus.Vak.Exameninstelling;
+    : d.Cursus.Vak.ExamenInstelling;
 
   if (!data.CursusDeelnameDetails.Cursus.Vak.DigitaalAanbod) {
     const details: INormalCourseDetails = {

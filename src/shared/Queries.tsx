@@ -494,8 +494,8 @@ export const GET_PARTICIPATION_DETAILS = gql`
               Website
             }
           }
-          ExameninstellingID
-          Exameninstelling {
+          ExamenInstellingID
+          ExamenInstelling {
             Naam
             Contactgegevens {
               Adresregel1
@@ -615,8 +615,8 @@ export interface IParticipationDetails {
           Website: string;
         };
       };
-      ExameninstellingID: number;
-      Exameninstelling: {
+      ExamenInstellingID: number;
+      ExamenInstelling: {
         Naam: string;
         Contactgegevens: {
           Adresregel1: string;
