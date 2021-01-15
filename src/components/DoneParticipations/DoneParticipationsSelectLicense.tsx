@@ -1,8 +1,10 @@
-import { useQuery } from '@apollo/react-hooks';
-import { Alert, PanelBody, toDutchDate } from '@erkenningen/ui';
-import React, { useState } from 'react';
+import { Alert } from '@erkenningen/ui/components/alert';
+import { PanelBody } from '@erkenningen/ui/layout/panel';
+import { toDutchDate } from '@erkenningen/ui/utils';
+
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { GET_MY_PERSON_QUERY, ICertificering, IMy } from '../../shared/Queries';
+import { Certificering, useGetMyQuery } from '../../generated/graphql';
 import FormSelect from '../ui/FormSelect';
 
 interface IDoneParticipationSelectLicenseProps {
@@ -13,19 +15,21 @@ interface IDoneParticipationSelectLicenseProps {
 export default function DoneParticipationSelectLicense(
   props: IDoneParticipationSelectLicenseProps & RouteComponentProps<any>,
 ) {
-  const { loading, data, error } = useQuery<
-    IMy,
-    {
-      input: boolean;
+  const [certs, setCerts] = useState<Certificering[]>();
+
+  useEffect(() => {
+    if (props.licenseId === 0 && certs && certs.length > 0) {
+      props.setLicenseId(certs[certs.length - 1].CertificeringID);
     }
-  >(GET_MY_PERSON_QUERY, {
+  });
+
+  const { loading, data, error } = useGetMyQuery({
     variables: {
       input: false,
     },
     fetchPolicy: 'network-only',
   });
-  const [certs, setCerts] = useState();
-  let certificeringen: ICertificering[] = [];
+  let certificeringen: Certificering[] = [];
   if (loading) {
     return <p>Gegevens worden geladen...</p>;
   }
@@ -46,6 +50,7 @@ export default function DoneParticipationSelectLicense(
       </Alert>
     );
   }
+
   if (!data || !data.my || data.my.Roles === null) {
     return null;
   }
@@ -57,10 +62,6 @@ export default function DoneParticipationSelectLicense(
     certificeringen = (data && data.my && data.my.Certificeringen) || [];
     if (!certs && certificeringen.length > 0) {
       setCerts(certificeringen);
-    }
-
-    if (props.licenseId === 0 && certs && certs.length > 0) {
-      props.setLicenseId(parseInt(certs[certs.length - 1].CertificeringID, 10));
     }
   }
 
@@ -74,14 +75,14 @@ export default function DoneParticipationSelectLicense(
           <FormSelect
             id="license"
             label="Kies licentie"
-            value={props.licenseId.toString()}
-            options={certificeringen.map((item: ICertificering) => ({
-              value: item.CertificeringID.toString(),
-              label: `${item.NummerWeergave} - ${item.Certificaat.Naam} (geldig ${toDutchDate(
+            value={props.licenseId}
+            options={certificeringen.map((item) => ({
+              value: item.CertificeringID,
+              label: `${item.NummerWeergave} - ${item?.Certificaat?.Naam} (geldig ${toDutchDate(
                 item.BeginDatum,
               )} - ${toDutchDate(item.EindDatum)})`,
             }))}
-            onChange={(event: any) => props.setLicenseId(parseInt(event.value, 10))}
+            onChange={(event: any) => props.setLicenseId(event.value)}
             name="licenseId"
             loading={false}
           />

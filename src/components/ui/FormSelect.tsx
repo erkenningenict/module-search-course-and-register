@@ -1,4 +1,5 @@
-import { Select, Spinner } from '@erkenningen/ui';
+import { Select } from '@erkenningen/ui/components/select';
+import {  Spinner } from '@erkenningen/ui/components/spinner';
 import { FormikProps } from 'formik';
 import React from 'react';
 import FormItem from './FormItem';
@@ -21,7 +22,7 @@ interface IFormSelectProps {
   helpText?: string;
 }
 
-class FormSelect extends React.Component<IFormSelectProps, {}> {
+class FormSelect extends React.Component<IFormSelectProps, unknown> {
   public render() {
     const handleChange = (event: any) => {
       if (this.props.form && this.props.name) {

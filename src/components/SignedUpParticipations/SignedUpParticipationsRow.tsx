@@ -1,10 +1,10 @@
-import { toDutchDate } from '@erkenningen/ui';
+import { toDutchDate } from '@erkenningen/ui/utils';
 import React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { ISignedUpParticipation } from '../../shared/Queries';
+import { AangemeldeCursusDeelname } from '../../generated/graphql';
 
 interface ISignedUpParticipationsRowProps extends RouteComponentProps<any> {
-  row: ISignedUpParticipation;
+  row: Pick<AangemeldeCursusDeelname, 'CursusDeelnameID' | 'CursusID' | 'Titel' | 'Prijs' | 'Status' | 'Datum' | 'Begintijd' | 'Eindtijd' | 'Locatie'>;
 }
 
 export default function SignedUpParticipationsRow(props: ISignedUpParticipationsRowProps) {

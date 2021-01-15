@@ -1,9 +1,10 @@
-import { useQuery } from '@apollo/react-hooks';
-import { Alert, PanelBody, Spinner, TableResponsive } from '@erkenningen/ui';
+import {Alert} from '@erkenningen/ui/components/alert';
+import {Spinner} from '@erkenningen/ui/components/spinner';
+import {PanelBody} from '@erkenningen/ui/layout/panel';
+import {TableResponsive} from '@erkenningen/ui/layout/table';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { SEARCH_COURSE_SESSIONS } from '../../shared/Queries';
-import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
+import { useGetCursusSessiesQuery } from '../../generated/graphql';
 import { NormalCoursesRow } from './NormalCoursesRow';
 
 interface INormalCoursesTable extends RouteComponentProps {
@@ -20,51 +21,6 @@ interface INormalCoursesTable extends RouteComponentProps {
   };
 }
 
-interface ICourseSessionsQueryData {
-  CursusSessies: Array<{
-    CanUnRegister: boolean;
-    CourseId: number;
-    SpecialtyId: number;
-    CourseCode: string;
-    Title: string;
-    Date: number;
-    StartTime: string;
-    EndTime: string;
-    Price: number;
-    LocationName: string;
-    LocationAddress: {
-      Street: string;
-      HouseNr: string;
-      HouseNrExtension: string;
-      Zipcode: string;
-      City: string;
-      Email: string;
-      Website: string;
-    };
-    Distance: number;
-    Competence: string;
-    Theme: string;
-    Organizer: string;
-    OrganizerEmail: string;
-    OrganizerPhone: string;
-    OrganizerWebsite: string;
-    PromoText: string;
-    Registered: boolean | null;
-    RegisteredDate: number | null;
-    Remarks: string | null;
-  }>;
-}
-
-interface ISearchData {
-  knowledgeAreaId: number | null;
-  competenceId: number | null;
-  themeId: number | null;
-  zipcodeNumbers: number | null;
-  to: number | null;
-  from: number | null;
-  isOnlineCourse: boolean;
-}
-
 export function NormalCoursesTable(props: INormalCoursesTable) {
   const searchData = props.searchData && {
     ...props.searchData,
@@ -72,7 +28,7 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
     knowledgeAreaId: parseInt(props.searchData.knowledgeAreaId, 10),
     competenceId: parseInt(props.searchData.competenceId, 10),
     themeId: parseInt(props.searchData.themeId, 10),
-    zipcodeNumbers: parseInt(props.searchData.zipcodeNumbers, 10) || null,
+    zipcodeNumbers: parseInt(props.searchData.zipcodeNumbers, 10) || undefined,
     to: props.searchData.to
       ? props.searchData.to === ''
         ? null
@@ -85,15 +41,10 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
       : null,
     isOnlineCourse: props.searchData.isOnlineCourse,
   };
-  const searchInput = searchData;
-  delete searchInput.licenseId;
+  // eslint-disable-next-line
+  const {licenseId, ...searchInput} = searchData;
 
-  const { loading, data, error } = useQuery<
-    ICourseSessionsQueryData,
-    {
-      input: ISearchData;
-    }
-  >(SEARCH_COURSE_SESSIONS, {
+  const { loading, data, error } = useGetCursusSessiesQuery({
     variables: {
       input: searchInput,
     },
@@ -131,7 +82,7 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
         <tbody>
           {data &&
             data.CursusSessies &&
-            data.CursusSessies.map((item: INormalCourseDetails) => (
+            data.CursusSessies.map((item) => (
               <NormalCoursesRow
                 {...props}
                 key={item.CourseCode}
@@ -139,7 +90,7 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
                 showDistance={searchData.distanceRadius !== 0}
               />
             ))}
-          {!data || data.CursusSessies.length === 0 ? (
+          {!data || data?.CursusSessies?.length === 0 ? (
             <tr>
               <td colSpan={searchData.distanceRadius !== 0 ? 6 : 5}>
                 <Alert type="info">Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan.</Alert>

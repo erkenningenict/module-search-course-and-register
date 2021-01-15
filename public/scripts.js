@@ -68,16 +68,16 @@ $(function() {
   });
 
   /* Prevent "Overscroll" on iOS devices */
-  var touchStartEvent;
+  let touchStartEvent;
   $(".sidr").on({
     touchstart: function(e) {
       touchStartEvent = e;
     },
     touchmove: function(e) {
-      var touchStart =
+      const touchStart =
         touchStartEvent.originalEvent ||
         touchStartEvent.originalEvent.touches[0];
-      var touchMove = e.originalEvent || e.originalEvent.touches[0];
+      const touchMove = e.originalEvent || e.originalEvent.touches[0];
 
       // Cancel event if menu is already on top or bottom
       if (

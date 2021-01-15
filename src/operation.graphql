@@ -1,0 +1,341 @@
+query getMy($input: Boolean!) {
+    my {
+      Roles
+      Persoon {
+        PersoonID
+        BSN
+        Voorletters
+        Tussenvoegsel
+        Achternaam
+        Geboortedatum
+        IsGbaGeregistreerd
+        Contactgegevens {
+          Adresregel1
+          Adresregel2
+          Huisnummer
+          HuisnummerToevoeging
+          Postcode
+          Woonplaats
+          Land
+          Email
+          Telefoon
+        }
+      }
+      Certificeringen(alleenGeldig: $input ) {
+        CertificeringID
+        Nummer
+        NummerWeergave
+        BeginDatum
+        EindDatum
+        Opmerkingen
+        Status
+        DatumVoldaan
+        Certificaat {
+          CertificaatID
+          Code
+          Naam
+        }
+      }
+    }
+  }
+
+  query getMySignedUpParticipationsList {
+    my {
+      Roles
+      AangemeldeCursusDeelnames {
+        CursusDeelnameID
+        CursusID
+        Titel
+        Prijs
+        Status
+        Datum
+        Begintijd
+        Eindtijd
+        Locatie
+      }
+    }
+  }
+
+  query getMySignedUpParticipationsDetails($input: Boolean!) {
+    my {
+      Roles
+      AangemeldeCursusDeelnames {
+        CursusDeelnameID
+        CursusID
+        # CursusCode
+        # Thema
+        # Competentie
+        # PromotieTekst
+        # Opmerkingen
+        Titel
+        Prijs
+        Status
+        Datum
+        Begintijd
+        Eindtijd
+        Locatie
+        # LocationAddress {
+        #   Street
+        #   HouseNr
+        #   HouseNrExtension
+        #   Zipcode
+        #   City
+        # }
+        # Organizer
+        # OrganizerEmail
+        # OrganizerPhone
+      }
+    }
+  }
+
+  query getLists {
+    Themas {
+      ThemaID
+      Naam
+    }
+    Competenties {
+      CompetentieID
+      Naam
+    }
+    Kennisgebieden {
+      KennisgebiedID
+      Naam
+    }
+    Landen {
+      Value
+      Text
+    }
+  }
+
+  query getCursusSessies($input: searchCourseSessionsInput!) {
+    CursusSessies(input: $input) {
+      CanUnRegister
+      CourseId
+      SpecialtyId
+      CourseCode
+      Title
+      Date
+      StartTime
+      EndTime
+      Price
+      LocationName
+      LocationAddress {
+        Street
+        HouseNr
+        HouseNrExtension
+        Zipcode
+        City
+        Email
+        Website
+      }
+      Distance
+      Competence
+      Theme
+      Organizer
+      OrganizerEmail
+      OrganizerPhone
+      OrganizerWebsite
+      PromoText
+      Registered
+      RegisteredDate
+    }
+  }
+
+   query getCursusSessiesDetails(
+    $input: searchCourseSessionsInput!
+    $inputCheck: isLicenseValidForSpecialtyInput!
+  ) {
+    CursusSessies(input: $input) {
+      CanUnRegister
+      CourseId
+      SpecialtyId
+      CourseCode
+      Title
+      Date
+      StartTime
+      EndTime
+      Price
+      LocationName
+      LocationAddress {
+        Street
+        HouseNr
+        HouseNrExtension
+        Zipcode
+        City
+        Email
+        Website
+      }
+      Distance
+      Competence
+      Theme
+      Organizer
+      OrganizerEmail
+      OrganizerPhone
+      OrganizerWebsite
+      PromoText
+      Registered
+      RegisteredDate
+    }
+    isLicenseValidForSpecialty(input: $inputCheck) {
+      success
+    }
+  }
+
+  query getSearchSpecialties($input: searchSpecialtyInput!) {
+    SearchSpecialties(input: $input) {
+      SpecialtyId
+      Code
+      Title
+      Price
+      Competence
+      Theme
+      Organizer
+      OrganizerEmail
+      OrganizerPhone
+      OrganizerWebsite
+      PromoText
+    }
+  }
+
+  query getSpecialtyDetails(
+    $input: searchSpecialtyInput!
+    $inputCheck: isLicenseValidForSpecialtyInput!
+  ) {
+    SearchSpecialties(input: $input) {
+      SpecialtyId
+      Code
+      Title
+      Price
+      Competence
+      Theme
+      Organizer
+      OrganizerEmail
+      OrganizerPhone
+      OrganizerWebsite
+      PromoText
+    }
+    isLicenseValidForSpecialty(input: $inputCheck) {
+      success
+    }
+  }
+
+  query getCursusDeelnames($licenseId: Int) {
+    CursusDeelnames(certificeringId: $licenseId) {
+      CursusDeelnameID
+      Status
+      Certificering {
+        CertificeringID
+        NummerWeergave
+      }
+      Cursus {
+        CursusID
+        Titel
+        Sessies {
+          Datum
+          Begintijd
+          Eindtijd
+        }
+        Prijs
+        Promotietekst
+        Vak {
+          Titel
+          Kosten
+          Themas {
+            Naam
+          }
+          Competenties {
+            Naam
+          }
+        }
+      }
+    }
+  }
+
+  query getCursusDeelnameDetails($participationId: Int!) {
+    CursusDeelnameDetails(cursusDeelnameId: $participationId) {
+      CursusDeelnameID
+      Status
+      Certificering {
+        CertificeringID
+        NummerWeergave
+      }
+      Cursus {
+        CursusID
+        Titel
+        Promotietekst
+        Prijs
+        CursusCode
+        Sessies {
+          Datum
+          Begintijd
+          Eindtijd
+          Lokatie {
+            Naam
+            Contactgegevens {
+              Adresregel1
+              Huisnummer
+              HuisnummerToevoeging
+              Postcode
+              Woonplaats
+            }
+          }
+        }
+        Vak {
+          VakID
+          Titel
+          Kosten
+          Promotietekst
+          DigitaalAanbod
+          Themas {
+            Naam
+          }
+          Competenties {
+            Naam
+          }
+          VakgroepID
+          Vakgroep {
+            Naam
+            Contactgegevens {
+              Adresregel1
+              Huisnummer
+              HuisnummerToevoeging
+              Postcode
+              Woonplaats
+              Telefoon
+              Email
+              Website
+            }
+          }
+          ExamenInstellingID
+          ExamenInstelling {
+            Naam
+            Contactgegevens {
+              Adresregel1
+              Huisnummer
+              HuisnummerToevoeging
+              Postcode
+              Woonplaats
+              Telefoon
+              Email
+              Website
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  mutation registerForCourse($input: registerForCourseInput!) {
+    registerForCourse(input: $input) {
+      success
+      message
+    }
+  }
+
+  mutation unRegisterForCourse($CursusDeelnameID: Int!) {
+    unRegisterForCourse(CursusDeelnameID: $CursusDeelnameID) {
+      success
+      message
+    }
+  }

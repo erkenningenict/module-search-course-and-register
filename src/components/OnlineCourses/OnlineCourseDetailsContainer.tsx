@@ -1,15 +1,20 @@
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/client';
 import { ERKENNINGEN_LOGIN_URL } from '@erkenningen/config';
-import { Alert, Button, Col, PanelBody, Row, Spinner } from '@erkenningen/ui';
+import {Alert} from '@erkenningen/ui/components/alert';
+import {Button} from '@erkenningen/ui/components/button';
+import {Spinner} from '@erkenningen/ui/components/spinner';
+import {PanelBody} from '@erkenningen/ui/layout/panel';
+import {Row} from '@erkenningen/ui/layout/row';
+import {Col} from '@erkenningen/ui/layout/col';
 import React, { useContext, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
+import { UserContext } from '../../shared/Auth';
 import {
   IIsLicenseValidForSpecialty,
   SEARCH_SPECIALTIES,
   SPECIALTY_DETAILS,
 } from '../../shared/Queries';
 import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
-import { UserContext } from '../../shared/UserContext';
 import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
 import { Register } from '../Register';
 import { OnlineCourseDetails } from './OnlineCourseDetails';

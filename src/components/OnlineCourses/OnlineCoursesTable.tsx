@@ -1,9 +1,10 @@
-import { useQuery } from '@apollo/react-hooks';
-import { Alert, PanelBody, Spinner, TableResponsive } from '@erkenningen/ui';
+import {Alert} from '@erkenningen/ui/components/alert';
+import {Spinner} from '@erkenningen/ui/components/spinner';
+import {PanelBody} from '@erkenningen/ui/layout/panel';
+import {TableResponsive} from '@erkenningen/ui/layout/table';
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { ISearchSpecialty, ISearchSpecialtyInput, SEARCH_SPECIALTIES } from '../../shared/Queries';
-import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
+import { useGetSearchSpecialtiesQuery } from '../../generated/graphql';
 import { OnlineCoursesRow } from './OnlineCoursesRow';
 
 interface IOnlineCoursesTable extends RouteComponentProps {
@@ -23,15 +24,10 @@ export function OnlineCoursesTable(props: IOnlineCoursesTable) {
     themeId: parseInt(props.searchData.themeId, 10),
     isOnlineCourse: props.searchData.isOnlineCourse,
   };
-  const searchInput = searchData;
-  delete searchInput.licenseId;
+  // eslint-disable-next-line
+  const {licenseId, ...searchInput} = searchData;
 
-  const { loading, data, error } = useQuery<
-    { SearchSpecialties: ISearchSpecialty[] },
-    {
-      input: ISearchSpecialtyInput;
-    }
-  >(SEARCH_SPECIALTIES, {
+  const { loading, data, error } = useGetSearchSpecialtiesQuery({
     variables: {
       input: searchInput,
     },
@@ -72,10 +68,10 @@ export function OnlineCoursesTable(props: IOnlineCoursesTable) {
         <tbody>
           {data &&
             data.SearchSpecialties &&
-            data.SearchSpecialties.map((item: IOnlineCourseDetails) => {
+            data?.SearchSpecialties?.map((item) => {
               return <OnlineCoursesRow {...props} key={item.Code} row={item} />;
             })}
-          {!data || data.SearchSpecialties.length === 0 ? (
+          {!data || data?.SearchSpecialties?.length === 0 ? (
             <tr>
               <td colSpan={3}>
                 <Alert type="info">Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan.</Alert>

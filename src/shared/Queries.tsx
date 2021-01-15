@@ -46,7 +46,6 @@ export const GET_MY_PERSON_QUERY = gql`
 export const GET_MY_SIGNED_UP_PARTICIPATIONS_LIST_QUERY = gql`
   query getMySignedUpParticipationsList {
     my {
-      Roles
       AangemeldeCursusDeelnames {
         CursusDeelnameID
         CursusID

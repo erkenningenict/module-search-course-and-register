@@ -1,6 +1,6 @@
 (function ($) {
     $.fn.dnnTabs = function (options) {
-        var opts = $.extend({}, $.fn.dnnTabs.defaultOptions, options),
+        const opts = $.extend({}, $.fn.dnnTabs.defaultOptions, options),
         $wrap = this;
 
         // patch for period in selector - http://jsfiddle.net/9Mst9/2/
@@ -9,11 +9,11 @@
         };
 
         $wrap.each(function () {
-            var showEvent, cookieId;
+            let showEvent, cookieId;
             if (this.id) {
                 cookieId = 'dnnTabs-' + this.id;
                 if (opts.selected === -1) {
-                    var cookieValue = dnn.dom.getCookie(cookieId);
+                    const cookieValue = dnn.dom.getCookie(cookieId);
                     if (cookieValue) {
                         opts.selected = cookieValue;
                     }
@@ -42,7 +42,7 @@
             });
 
             if (window.location.hash && window.location.hash != '#') {
-                var substr = window.location.hash.substr(0, 50);
+                const substr = window.location.hash.substr(0, 50);
                 $('a[href="' + encodeURI(substr) + '"]', $wrap).trigger('click');
             }
 
@@ -50,10 +50,10 @@
             if (typeof window.Page_ClientValidate != "undefined" && $.isFunction(window.Page_ClientValidate)) {
                 $wrap.find(opts.validationTriggerSelector).click(function () {
                     if (!window.Page_ClientValidate(opts.validationGroup)) {
-                        var invalidControl = $wrap.find(opts.invalidItemSelector).eq(0);
-                        var $parent = invalidControl.closest(".ui-tabs-panel");
+                        const invalidControl = $wrap.find(opts.invalidItemSelector).eq(0);
+                        const $parent = invalidControl.closest(".ui-tabs-panel");
                         if ($parent.length > 0) {
-                            var tabId = $parent.attr("id");
+                            const tabId = $parent.attr("id");
                             $parent.parent().find("a[href='#" + tabId + "']").click();
                         }
                     }
@@ -80,10 +80,10 @@
 
 (function ($) {
     $.fn.dnnConfirm = function (options) {
-        var opts = $.extend({}, $.fn.dnnConfirm.defaultOptions, options),
+        const opts = $.extend({}, $.fn.dnnConfirm.defaultOptions, options),
         $wrap = this;
         $wrap.each(function () {
-            var $this = $(this),
+            let $this = $(this),
                 defaultAction = $this.attr('href'),
                 $dnnDialog;
 
@@ -166,15 +166,15 @@
     if ($.dnnConfirm) return;
 
     $.dnnConfirm = function (opts) {
-        var defaultAction = opts.actionUrl ? opts.actionUrl : 'javascript:void(0);';
-        var shadowLink = $('<a href="' + defaultAction + '" />');
+        const defaultAction = opts.actionUrl ? opts.actionUrl : 'javascript:void(0);';
+        const shadowLink = $('<a href="' + defaultAction + '" />');
         shadowLink.dnnConfirm(opts).click();
     };
 })(jQuery);
 
 (function ($) {
     $.dnnAlert = function (options) {
-        var opts = $.extend({}, $.dnnAlert.defaultOptions, options),
+        const opts = $.extend({}, $.dnnAlert.defaultOptions, options),
         $dnnDialog = $("<div class='dnnDialog'></div>").html(opts.text).dialog(opts);
 
         $dnnDialog.dialog({
@@ -208,11 +208,11 @@
 
 (function ($) {
     $.fn.dnnPanels = function (options) {
-        var opts = $.extend({}, $.fn.dnnPanels.defaultOptions, options),
+        const opts = $.extend({}, $.fn.dnnPanels.defaultOptions, options),
         $wrap = this;
 
         $wrap.each(function () {
-            var $this = $(this);
+            const $this = $(this);
             if (typeof (opts.onExpand) === "function") {
                 $this.bind('onExpand', opts.onExpand);
             }
@@ -222,10 +222,10 @@
             // wire up click event to perform slide toggle
             $this.find(opts.clickToToggleSelector).click(function (e) {
                 var toggle = $(this).toggleClass(opts.toggleClass).parent().next(opts.regionToToggleSelector).slideToggle(function () {
-                    var visible = $(this).is(':visible');
+                    const visible = $(this).is(':visible');
                     if (opts.saveState) {
-                        var id = $(toggle.context.parentNode).attr("id");
-                        var cookieId = id ? id.replace(/[^a-zA-Z0-9\-]+/g, "") : '';
+                        const id = $(toggle.context.parentNode).attr("id");
+                        const cookieId = id ? id.replace(/[^a-zA-Z0-9\-]+/g, "") : '';
                         if (cookieId) {
                             dnn.dom.setCookie(cookieId, visible, opts.cookieDays, '/', '', false, opts.cookieMilleseconds);
                         }
@@ -257,7 +257,7 @@
 
             // walk over each selector and expand or collapse as necessary
             $this.find(opts.sectionHeadSelector).each(function (indexInArray, valueOfElement) {
-                var $self = $(valueOfElement),
+                const $self = $(valueOfElement),
                     elementId = $self.attr("id"),
                     cookieId = elementId ? elementId.replace(/[^a-zA-Z0-9\-]+/g, "") : '',
                     cookieValue = cookieId ? dnn.dom.getCookie(cookieId) : '',
@@ -267,7 +267,7 @@
                     groupPanelIndex = $parentSeparator.find(opts.sectionHeadSelector).index($self);
 
                 // default value
-                var isOpen = false;
+                let isOpen = false;
                 if ((indexInArray === 0 && opts.defaultState == "first") || // cookie set to true OR first panel
                     ($parentSeparator.size() > 0 && groupPanelIndex === 0 && opts.defaultState == "first") || // grouping is used & its the first panel in its group
                     (opts.defaultState == "open"))  // default open
@@ -296,7 +296,7 @@
                 if (typeof window.Page_ClientValidate != "undefined" && $.isFunction(window.Page_ClientValidate)) {
                     if (!window.Page_ClientValidate(opts.validationGroup)) {
                         $this.find(opts.invalidItemSelector).each(function () {
-                            var $parent = $(this).closest(opts.regionToToggleSelector);
+                            const $parent = $(this).closest(opts.regionToToggleSelector);
                             if ($parent.is(':hidden')) {
                                 $parent.prev(opts.sectionHeadSelector).find(opts.clickToToggleIsolatedSelector).click();
                             }
@@ -328,19 +328,19 @@
 
 (function ($) {
     $.fn.dnnPreview = function (options) {
-        var opts = $.extend({}, $.fn.dnnPreview.defaultOptions, options),
+        const opts = $.extend({}, $.fn.dnnPreview.defaultOptions, options),
         $wrap = this;
 
         $wrap.each(function () {
-            var $this = $(this);
+            const $this = $(this);
             $this.find(opts.linkSelector).click(function (e) {
                 e.preventDefault();
-                var params = "?";
-                var skin, container;
+                let params = "?";
+                let skin, container;
 
                 if (opts.useComboBox) {
-                    var skinComboBox = $('#' + opts.skinSelector);
-                    var containerComboBox = $('#' + opts.containerSelector);;
+                    const skinComboBox = $('#' + opts.skinSelector);
+                    const containerComboBox = $('#' + opts.containerSelector);;
 
                     skin = skinComboBox.length ? skinComboBox[0].selectize.getValue() : '';
                     container = containerComboBox.length ? containerComboBox[0].selectize.getValue() : '';
@@ -392,7 +392,7 @@
 
 (function ($) {
     $.fn.dnnExpandAll = function (options) {
-        var opts = $.extend({}, $.fn.dnnExpandAll.defaultOptions, options),
+        const opts = $.extend({}, $.fn.dnnExpandAll.defaultOptions, options),
         $elem = this;
 
         if (($(opts.targetArea).find(opts.targetSelector + ':visible').length ===
@@ -403,7 +403,7 @@
 
         $elem.click(function (e) {
             e.preventDefault();
-            var $this = $(this);
+            const $this = $(this);
             if ($this.hasClass('expanded')) {
                 $this.removeClass('expanded').text(opts.expandText);
                 $(opts.targetArea).find(opts.targetSelector + opts.targetExpandedSelector + ':visible').click();
@@ -430,26 +430,26 @@
 
 (function ($) {
     $.fn.dnnTooltip = function (options) {
-        var opts = $.extend({}, $.fn.dnnTooltip.defaultOptions, options),
+        const opts = $.extend({}, $.fn.dnnTooltip.defaultOptions, options),
         $wrap = this;
 
         $wrap.each(function () {
-            var $this = $(this),
+            const $this = $(this),
                 dnnFormHelp = $this.prev();
             if ($this.data('initialized')) return;
             dnnFormHelp.on('click', function (e) {
                 e.preventDefault();
             });
-            var helpSelector = $this.find(opts.helpSelector);
+            const helpSelector = $this.find(opts.helpSelector);
             $this.parent().css({ position: 'relative' });
             $this.css({ position: 'absolute', right: '-29%' });
-            var hoverOnToolTip = false, hoverOnPd = false;
+            let hoverOnToolTip = false, hoverOnPd = false;
 
             dnnFormHelp.hoverIntent({
                 over: function () {
                     hoverOnPd = true;
-                    var tooltipHeight = helpSelector.height();
-                    var top = -(tooltipHeight + 30);
+                    const tooltipHeight = helpSelector.height();
+                    const top = -(tooltipHeight + 30);
                     if ((tooltipHeight + 30) <= $this.parent().offset().top) {
                         helpSelector.parent().css({ top: top + 'px' });
                         $this.find("div.dnnFormHelpContent span").addClass("bottomArrow");
@@ -479,7 +479,7 @@
                 }
             });
 
-            var pinHelper = helpSelector.find(opts.pinSelector);
+            const pinHelper = helpSelector.find(opts.pinSelector);
 
             pinHelper.on('click', function (e) {
                 e.preventDefault();
@@ -513,7 +513,7 @@
 })(jQuery);
 
 (function ($) {
-    var cb = function (e) {
+    const cb = function (e) {
         if (!e) e = window.event;
         e.cancelBubble = true;
         if (e.stopPropagation) e.stopPropagation();
@@ -521,14 +521,14 @@
 
     /* DNN customized checkbox/radiobox */
     $.fn.dnnCheckbox = function (options) {
-        var settings = {
+        let settings = {
             cls: 'dnnCheckbox'  /* checkbox  */
             , labelClass: 'dnnBoxLabel'
         };
         settings = $.extend(settings, options || {});
 
-        var addEvents = function (object) {
-            var checked = object.checked,
+        const addEvents = function (object) {
+            let checked = object.checked,
                 disabled = object.disabled,
                 $object = $(object);
 
@@ -548,7 +548,7 @@
         };
 
         return this.each(function () {
-            var ch = this;
+            const ch = this;
 
             if ($(ch).data("checkBoxWrapped")) {
                 return;
@@ -556,10 +556,10 @@
             $(ch).data("checkBoxWrapped", true);
 
             if ($(this).hasClass('normalCheckBox') || $(this).hasClass('normalRadioButton')) return;
-            var parentCheckBoxHolder = $(this).closest('.normalCheckBox');
-            var parentRadioButtonHolder = $(this).closest('.normalRadioButton');
+            const parentCheckBoxHolder = $(this).closest('.normalCheckBox');
+            const parentRadioButtonHolder = $(this).closest('.normalRadioButton');
             if (parentCheckBoxHolder.length || parentRadioButtonHolder.length) return;
-            var $ch = addEvents(ch);
+            const $ch = addEvents(ch);
             if (ch.wrapper) ch.wrapper.remove();
             ch.wrapper = $('<span class="' + settings.cls + '"><span class="mark"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAMAAAAoyzS7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFAAAAAAAApWe5zwAAAAF0Uk5TAEDm2GYAAAAMSURBVHjaYmAACDAAAAIAAU9tWeEAAAAASUVORK5CYII=" alt="checkbox" /></span></span>');
             ch.wrapperInner = ch.wrapper.children('span:eq(0)');
@@ -570,7 +570,7 @@
 
             $ch.css({ position: 'absolute', zIndex: -1, opacity: 0 }).after(ch.wrapper);
 
-            var label, parentLabel = false;
+            let label, parentLabel = false;
             label = $ch.closest('label');
             if (!label.length)
                 label = false;
@@ -592,7 +592,7 @@
                 }
                 else {
                     label.children().each(function () {
-                        var $this = $(this);
+                        const $this = $(this);
                         if ($this.is('input')) return;
 
                         $this.click(function (e) {
@@ -615,7 +615,7 @@
                     return;
                 }
                 $ch.triggerHandler('focus');
-                var previousChecked = ch.checked;
+                const previousChecked = ch.checked;
                 ch.click();
                 if (ch.checked == previousChecked && ch.type == 'checkbox') {
                     ch.checked = !ch.checked;  //Fix for Firefox browser
@@ -639,7 +639,7 @@
 
     $.fn.dnnHelperTipDestroy = function () {
         return this.each(function () {
-            var pd = this;
+            const pd = this;
             if (pd.id) {
                 $('div[data-tipholder="' + pd.id + '"]').remove();
             }
@@ -647,7 +647,7 @@
     };
 
     $.fn.dnnHelperTip = function (options) {
-        var settings = {
+        let settings = {
             cls: 'dnnHelperTip',
             helpContent: "This is hover helper tooltip",
             holderId: '',
@@ -655,7 +655,7 @@
         };
         settings = $.extend(settings, options || {});
         return this.each(function () {
-            var pd = this,
+            const pd = this,
                 $pd = $(this);
             if (pd.tooltipWrapper) pd.tooltipWrapper.remove();
 
@@ -664,9 +664,9 @@
             pd.tooltipWrapper.css({ position: 'absolute' });
             pd.tooltipWrapperInner = $('.dnnFormHelpContent', pd.tooltipWrapper);
 
-            var tooltipHeight = pd.tooltipWrapperInner.height();
+            const tooltipHeight = pd.tooltipWrapperInner.height();
             pd.tooltipWrapperInner.css({ left: '-10px', top: -(tooltipHeight + 30) + 'px' });
-            var hoverOnPd = false;
+            let hoverOnPd = false;
             $pd.hover(
                 function () {
                     hoverOnPd = true;
@@ -692,8 +692,8 @@
             }
 
             $pd.bind('mousemove', function (e) {
-                var x = e.pageX; var y = e.pageY;
-                var pos = $('body').css('position');
+                const x = e.pageX; let y = e.pageY;
+                const pos = $('body').css('position');
                 if (pos == 'relative') y -= 38;
                 pd.tooltipWrapper.css({ left: x + 'px', top: y + 'px', 'z-index': '99999' });
             });
@@ -701,7 +701,7 @@
     };
 
     $.fn.dnnProgressbar = function () {
-        var $pd = $(this),
+        const $pd = $(this),
             pd = this;
 
         if (pd.tooltipWrapper) pd.tooltipWrapper.remove();
@@ -710,11 +710,11 @@
         pd.tooltipWrapperInner.css({ width: '32px', padding: '7px' });
         $pd.parent().css({ position: 'relative' });
 
-        var hoverOnToolTip = false, hoverOnPd = false;
+        let hoverOnToolTip = false, hoverOnPd = false;
         $pd.hoverIntent({
             over: function () {
                 hoverOnPd = true;
-                var val = $(this).children(':first').progressbar('value');
+                const val = $(this).children(':first').progressbar('value');
                 pd.update(val);
                 pd.tooltipWrapperInner.css('visibility', 'visible');
 
@@ -738,11 +738,11 @@
 
         pd.update = function (value) {
             pd.tooltipWrapperInner.find('span').html(value + ' %');
-            var pdTop = $pd.position().top,
+            let pdTop = $pd.position().top,
 			    tooltipHeight = pd.tooltipWrapperInner.height();
 
             pdTop -= (tooltipHeight + 10);
-            var pdLeft = value > 50 ? (value - 4) + '%' : value > 0 ? (value - 2) + '%' : '10px';
+            const pdLeft = value > 50 ? (value - 4) + '%' : value > 0 ? (value - 2) + '%' : '10px';
             pd.tooltipWrapper.css({ position: 'absolute', left: pdLeft, top: pdTop + 'px' });
         };
 
@@ -750,14 +750,14 @@
     };
 
     $.fn.dnnSpinner = function (options) {
-        var opt = $.extend({
+        const opt = $.extend({
             type: 'range',
             typedata: '',
             width: '150px',
             looping: false
         }, options);
 
-        var otypedata;
+        let otypedata;
 
         if (options != null && options.typedata != null) {
             otypedata = $.extend({
@@ -777,7 +777,7 @@
         }
         opt.typedata = otypedata;
 
-        var inputControl = this;
+        const inputControl = this;
         if (!inputControl.is(':text'))
             return inputControl;
 
@@ -788,25 +788,25 @@
             inputControl.addClass('dnnSpinnerInput');
         }
 
-        var strContainerDiv = '';
+        let strContainerDiv = '';
         strContainerDiv += '<div class="dnnSpinner">';
         strContainerDiv += '<div class="dnnSpinnerDisplay"></div>';
         strContainerDiv += '<div class="dnnSpinnerCtrl">';
         strContainerDiv += '<a class="dnnSpinnerTopButton"></a>';
         strContainerDiv += '<a class="dnnSpinnerBotButton"></a>';
         strContainerDiv += '</div></div>';
-        var objContainerDiv = $(strContainerDiv).insertAfter(inputControl);
+        const objContainerDiv = $(strContainerDiv).insertAfter(inputControl);
         inputControl.insertAfter($("div.dnnSpinnerDisplay", objContainerDiv));
         $("div.dnnSpinnerDisplay", objContainerDiv).click(function () {
             if (opt.type == 'range') {
-                var displayCtrl = $(this);
-                var innerInput = $('input[type="text"]', displayCtrl);
+                const displayCtrl = $(this);
+                let innerInput = $('input[type="text"]', displayCtrl);
                 if (innerInput.length < 1) {
-                    var originalVal = displayCtrl.html();
+                    const originalVal = displayCtrl.html();
                     innerInput = $('<input type="text" />').val(originalVal);
                     displayCtrl.html(innerInput);
                     innerInput.blur(function () {
-                        var newVal = $(this).val();
+                        let newVal = $(this).val();
                         if (newVal > opt.typedata.max) {
                             newVal = opt.typedata.max;
                         }
@@ -818,8 +818,8 @@
                         inputControl.val(newVal);
                         displayCtrl.html(newVal);
                     }).keypress(function (e) {
-                        var regex = new RegExp("^[0-9]+$");
-                        var key = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+                        const regex = new RegExp("^[0-9]+$");
+                        const key = String.fromCharCode(!e.charCode ? e.which : e.charCode);
                         if (!regex.test(key)) {
                             event.preventDefault();
                             return false;
@@ -852,7 +852,7 @@
                             if ((selectedValue + opt.typedata.interval) > opt.typedata.max) {
                                 selectedValue = opt.typedata.min - opt.typedata.interval;
                             }
-                            var valueData = (selectedValue + opt.typedata.interval).toFixed(opt.typedata.decimalplaces);
+                            const valueData = (selectedValue + opt.typedata.interval).toFixed(opt.typedata.decimalplaces);
                             selectedValue += opt.typedata.interval;
                             ($("div.dnnSpinnerDisplay", objContainerDiv)).html(valueData);
                             inputControl.val(valueData);
@@ -866,7 +866,7 @@
                             if ((selectedValue - opt.typedata.interval) < opt.typedata.min) {
                                 selectedValue = opt.typedata.max + opt.typedata.interval;
                             }
-                            var valueData = (selectedValue - opt.typedata.interval).toFixed(opt.typedata.decimalplaces);
+                            const valueData = (selectedValue - opt.typedata.interval).toFixed(opt.typedata.decimalplaces);
                             selectedValue -= opt.typedata.interval;
                             ($("div.dnnSpinnerDisplay", objContainerDiv)).html(valueData);
                             inputControl.val(valueData);
@@ -900,7 +900,7 @@
                                 selectedIndex = -1;
                             }
                             selectedIndex++;
-                            var valueData = listItems[selectedIndex];
+                            const valueData = listItems[selectedIndex];
                             ($("div.dnnSpinnerDisplay", objContainerDiv)).html(valueData);
                             inputControl.val(valueData);
                         }
@@ -914,7 +914,7 @@
                                 selectedIndex = listItems.length;
                             }
                             selectedIndex--;
-                            var valueData = listItems[selectedIndex];
+                            const valueData = listItems[selectedIndex];
                             ($("div.dnnSpinnerDisplay", objContainerDiv)).html(valueData);
                             inputControl.val(valueData);
                         }
@@ -931,7 +931,7 @@
 
 (function ($) {
     $.fn.dnnAutocomplete = function (options) {
-        var url;
+        let url;
         if (arguments.length > 1) {
             url = options;
             options = arguments[1];
@@ -940,9 +940,9 @@
             url = options;
             options = { url: url };
         }
-        var opts = $.extend({}, $.fn.dnnAutocomplete.defaults, options);
+        const opts = $.extend({}, $.fn.dnnAutocomplete.defaults, options);
         return this.each(function () {
-            var $this = $(this);
+            const $this = $(this);
             $this.data('autocompleter', new $.dnnAutocompleter(
                 $this,
                 $.meta ? $.extend({}, opts, $this.data()) : opts
@@ -993,9 +993,9 @@
         moduleId: null // dnn Module Id context if needed
     };
 
-    var sanitizeResult = function (result) {
-        var value, data;
-        var type = typeof result;
+    const sanitizeResult = function (result) {
+        let value, data;
+        const type = typeof result;
         if (type === 'string') {
             value = result;
             data = {};
@@ -1016,8 +1016,8 @@
         };
     };
 
-    var sanitizeInteger = function (value, stdValue, options) {
-        var num = parseInt(value, 10);
+    const sanitizeInteger = function (value, stdValue, options) {
+        let num = parseInt(value, 10);
         options = options || {};
         if (isNaN(num) || (options.min && num < options.min)) {
             num = stdValue;
@@ -1025,12 +1025,12 @@
         return num;
     };
 
-    var makeUrlParam = function (name, value) {
+    const makeUrlParam = function (name, value) {
         return [name, encodeURIComponent(value)].join('=');
     };
 
-    var makeUrl = function (url, params) {
-        var urlAppend = [];
+    const makeUrl = function (url, params) {
+        const urlAppend = [];
         $.each(params, function (index, value) {
             urlAppend.push(makeUrlParam(index, value));
         });
@@ -1041,7 +1041,7 @@
         return url;
     };
 
-    var sortValueAlpha = function (a, b, matchCase) {
+    const sortValueAlpha = function (a, b, matchCase) {
         a = String(a.value);
         b = String(b.value);
         if (!matchCase) {
@@ -1063,7 +1063,7 @@
             throw new Error('Invalid parameter for dnnAutocompleter, jQuery object with one element with INPUT tag expected.');
         }
 
-        var self = this;
+        const self = this;
         this.options = options;
         this.cacheData_ = {};
         this.cacheLength_ = 0;
@@ -1174,7 +1174,7 @@
             return true;
         });
 
-        var onBlurFunction = function () {
+        const onBlurFunction = function () {
             self.deactivate(true);
         };
         $elem.blur(function () {
@@ -1188,16 +1188,16 @@
     };
 
     $.dnnAutocompleter.prototype.position = function () {
-        var offset = this.dom.$elem.offset();
-        var height = this.dom.$results.outerHeight();
-        var totalHeight = window.outerHeight;
-        var inputBottom = offset.top + this.dom.$elem.outerHeight();
-        var bottomIfDown = inputBottom + height;
+        const offset = this.dom.$elem.offset();
+        const height = this.dom.$results.outerHeight();
+        const totalHeight = window.outerHeight;
+        const inputBottom = offset.top + this.dom.$elem.outerHeight();
+        const bottomIfDown = inputBottom + height;
         // Set autocomplete results at the bottom of input
-        var position = { top: inputBottom, left: offset.left };
+        const position = { top: inputBottom, left: offset.left };
         if (bottomIfDown > totalHeight) {
             // Try to set autocomplete results at the top of input
-            var topIfUp = offset.top - height;
+            const topIfUp = offset.top - height;
             if (topIfUp >= 0) {
                 position.top = topIfUp;
             }
@@ -1206,7 +1206,7 @@
     };
 
     $.dnnAutocompleter.prototype.cacheRead = function (filter) {
-        var filterLength, searchLength, search, maxPos, pos;
+        let filterLength, searchLength, search, maxPos, pos;
         if (this.options.useCache) {
             filter = String(filter);
             filterLength = filter.length;
@@ -1256,7 +1256,7 @@
     };
 
     $.dnnAutocompleter.prototype.callHook = function (hook, data) {
-        var f = this.options[hook];
+        const f = this.options[hook];
         if (f && $.isFunction(f)) {
             return f(data, this);
         }
@@ -1264,7 +1264,7 @@
     };
 
     $.dnnAutocompleter.prototype.activate = function () {
-        var self = this;
+        const self = this;
         if (this.keyTimeout_) {
             clearTimeout(this.keyTimeout_);
         }
@@ -1274,15 +1274,15 @@
     };
 
     $.dnnAutocompleter.prototype.activateNow = function () {
-        var value = this.beforeUseConverter(this.dom.$elem.val());
+        const value = this.beforeUseConverter(this.dom.$elem.val());
         if (value !== this.lastProcessedValue_ && value !== this.lastSelectedValue_) {
             this.fetchData(value);
         }
     };
 
     $.dnnAutocompleter.prototype.fetchData = function (value) {
-        var self = this;
-        var processResults = function (results, filter) {
+        const self = this;
+        const processResults = function (results, filter) {
             if (self.options.processData) {
                 results = self.options.processData(results);
             }
@@ -1301,13 +1301,13 @@
     };
 
     $.dnnAutocompleter.prototype.fetchRemoteData = function (filter, callback) {
-        var data = this.cacheRead(filter);
+        const data = this.cacheRead(filter);
         if (data) {
             callback(data);
         } else {
-            var self = this;
-            var ajaxCallback = function (d) {
-                var parsed = false;
+            const self = this;
+            const ajaxCallback = function (d) {
+                let parsed = false;
                 if (d !== false) {
                     parsed = self.parseRemoteData(d);
                     self.cacheWrite(filter, parsed);
@@ -1318,7 +1318,7 @@
 
             this.dom.$elem.addClass(this.options.loadingClass);
             // DNN service framework attached if needed
-            var services = self.options.moduleId ? ($.dnnSF ? $.dnnSF(self.options.moduleId) : null) : null;
+            const services = self.options.moduleId ? ($.dnnSF ? $.dnnSF(self.options.moduleId) : null) : null;
             $.ajax({
                 url: this.makeUrl(filter),
                 beforeSend: services ? services.setModuleHeaders : null,
@@ -1338,7 +1338,7 @@
     };
 
     $.dnnAutocompleter.prototype.setExtraParam = function (name, value) {
-        var index = $.trim(String(name));
+        const index = $.trim(String(name));
         if (index) {
             if (!this.options.extraParams) {
                 this.options.extraParams = {};
@@ -1351,14 +1351,14 @@
     };
 
     $.dnnAutocompleter.prototype.makeUrl = function (param) {
-        var url = this.options.url;
-        var params = {};
+        const url = this.options.url;
+        const params = {};
         params[this.options.queryParamName] = param;
         return makeUrl(url, params);
     };
 
     $.dnnAutocompleter.prototype.parseRemoteData = function (remoteData) {
-        var data = remoteData;
+        let data = remoteData;
         if (typeof data['d'] != 'undefined') {
             data = $.parseJSON(data['d']);
         }
@@ -1370,13 +1370,13 @@
             return false;
         }
         if (this.options.filterResults) {
-            var pattern = this.matchStringConverter(filter);
-            var testValue = this.matchStringConverter(result.value);
+            let pattern = this.matchStringConverter(filter);
+            let testValue = this.matchStringConverter(result.value);
             if (!this.options.matchCase) {
                 pattern = pattern.toLowerCase();
                 testValue = testValue.toLowerCase();
             }
-            var patternIndex = testValue.indexOf(pattern);
+            const patternIndex = testValue.indexOf(pattern);
             if (this.options.matchInside) {
                 return patternIndex > -1;
             } else {
@@ -1387,8 +1387,8 @@
     };
 
     $.dnnAutocompleter.prototype.filterResults = function (results, filter) {
-        var filtered = [];
-        var i, result;
+        let filtered = [];
+        let i, result;
 
         for (i = 0; i < results.length; i++) {
             result = sanitizeResult(results[i]);
@@ -1406,8 +1406,8 @@
     };
 
     $.dnnAutocompleter.prototype.sortResults = function (results, filter) {
-        var self = this;
-        var sortFunction = this.options.sortFunction;
+        const self = this;
+        let sortFunction = this.options.sortFunction;
         if (!$.isFunction(sortFunction)) {
             sortFunction = function (a, b) {
                 return sortValueAlpha(a, b, self.options.matchCase);
@@ -1420,7 +1420,7 @@
     };
 
     $.dnnAutocompleter.prototype.matchStringConverter = function (s, a, b) {
-        var converter = this.options.matchStringConverter;
+        const converter = this.options.matchStringConverter;
         if ($.isFunction(converter)) {
             s = converter(s, a, b);
         }
@@ -1429,7 +1429,7 @@
 
     $.dnnAutocompleter.prototype.beforeUseConverter = function (s, a, b) {
         s = this.getValue();
-        var converter = this.options.beforeUseConverter;
+        const converter = this.options.beforeUseConverter;
         if ($.isFunction(converter)) {
             s = converter(s, a, b);
         }
@@ -1445,8 +1445,8 @@
     };
 
     $.dnnAutocompleter.prototype.createItemFromResult = function (result, filter) {
-        var self = this;
-        var $li = $('<li>' + this.showResult(result.value, result.data, filter) + '</li>');
+        const self = this;
+        const $li = $('<li>' + this.showResult(result.value, result.data, filter) + '</li>');
         $li.data({ value: result.value, data: result.data })
             .click(function () {
                 self.selectItem($li);
@@ -1462,10 +1462,10 @@
     };
 
     $.dnnAutocompleter.prototype.showResults = function (results, filter) {
-        var numResults = results.length;
-        var self = this;
-        var $ul = $('<ul></ul>');
-        var i, result, $li, autoWidth, first = false, $first = false;
+        const numResults = results.length;
+        const self = this;
+        const $ul = $('<ul></ul>');
+        let i, result, $li, autoWidth, first = false, $first = false;
 
         if (numResults) {
             for (i = 0; i < numResults; i++) {
@@ -1514,7 +1514,7 @@
             return this.options.showResult(value, data);
         } else {
             // add highlight keywords
-            var regex = new RegExp('(' + filter + ')', 'gi');
+            const regex = new RegExp('(' + filter + ')', 'gi');
             return value.replace(regex, function ($0, $1) {
                 return ('<b>' + $1 + '</b>');
             });
@@ -1522,18 +1522,18 @@
     };
 
     $.dnnAutocompleter.prototype.autoFill = function (value, filter) {
-        var lcValue, lcFilter, valueLength, filterLength;
+        let lcValue, lcFilter, valueLength, filterLength;
         if (this.options.autoFill && this.lastKeyPressed_ !== 8) {
             lcValue = String(value).toLowerCase();
             lcFilter = String(filter).toLowerCase();
             valueLength = value.length;
             filterLength = filter.length;
             if (lcValue.substr(0, filterLength) === lcFilter) {
-                var d = this.getDelimiterOffsets();
-                var pad = d.start ? ' ' : ''; // if there is a preceding delimiter
+                const d = this.getDelimiterOffsets();
+                const pad = d.start ? ' ' : ''; // if there is a preceding delimiter
                 this.setValue(pad + value);
-                var start = filterLength + d.start + pad.length;
-                var end = valueLength + d.start + pad.length;
+                const start = filterLength + d.start + pad.length;
+                const end = valueLength + d.start + pad.length;
                 this.selectRange(start, end);
                 return true;
             }
@@ -1550,10 +1550,10 @@
     };
 
     $.dnnAutocompleter.prototype.focusMove = function (modifier) {
-        var $items = this.getItems();
+        const $items = this.getItems();
         modifier = sanitizeInteger(modifier, 0);
         if (modifier) {
-            for (var i = 0; i < $items.length; i++) {
+            for (let i = 0; i < $items.length; i++) {
                 if ($($items[i]).hasClass(this.selectClass_)) {
                     this.focusItem(i + modifier);
                     return;
@@ -1564,7 +1564,7 @@
     };
 
     $.dnnAutocompleter.prototype.focusItem = function (item) {
-        var $item, $items = this.getItems();
+        let $item, $items = this.getItems();
         if ($items.length) {
             $items.removeClass(this.selectClass_).removeClass(this.options.selectClass);
             if (typeof item === 'number') {
@@ -1584,7 +1584,7 @@
     };
 
     $.dnnAutocompleter.prototype.selectCurrent = function () {
-        var $item = $('li.' + this.selectClass_, this.dom.$results);
+        const $item = $('li.' + this.selectClass_, this.dom.$results);
         if ($item.length === 1) {
             this.selectItem($item);
         } else {
@@ -1593,16 +1593,16 @@
     };
 
     $.dnnAutocompleter.prototype.selectItem = function ($li) {
-        var value = $li.data('value');
-        var data = $li.data('data');
-        var displayValue = this.displayValue(value, data);
-        var processedDisplayValue = this.beforeUseConverter(displayValue);
+        const value = $li.data('value');
+        const data = $li.data('data');
+        let displayValue = this.displayValue(value, data);
+        const processedDisplayValue = this.beforeUseConverter(displayValue);
         this.lastProcessedValue_ = processedDisplayValue;
         this.lastSelectedValue_ = processedDisplayValue;
-        var d = this.getDelimiterOffsets();
-        var delimiter = this.options.delimiterChar;
-        var elem = this.dom.$elem;
-        var extraCaretPos = 0;
+        const d = this.getDelimiterOffsets();
+        const delimiter = this.options.delimiterChar;
+        const elem = this.dom.$elem;
+        let extraCaretPos = 0;
         if (this.options.useDelimiter) {
             // if there is a preceding delimiter, add a space after the delimiter
             if (elem.val().substring(d.start - 1, d.start) == delimiter && delimiter != ' ') {
@@ -1660,12 +1660,12 @@
     };
 
     $.dnnAutocompleter.prototype.selectRange = function (start, end) {
-        var input = this.dom.$elem.get(0);
+        const input = this.dom.$elem.get(0);
         if (input.setSelectionRange) {
             input.focus();
             input.setSelectionRange(start, end);
         } else if (input.createTextRange) {
-            var range = input.createTextRange();
+            const range = input.createTextRange();
             range.collapse(true);
             range.moveEnd('character', end);
             range.moveStart('character', start);
@@ -1678,12 +1678,12 @@
     };
 
     $.dnnAutocompleter.prototype.getCaret = function () {
-        var elem = this.dom.$elem, s, e, range;
+        let elem = this.dom.$elem, s, e, range;
         if (!$.support.cssFloat) {
             // ie
-            var selection = document.selection;
+            const selection = document.selection;
             if (elem[0].tagName.toLowerCase() != 'textarea') {
-                var val = elem.val();
+                const val = elem.val();
                 range = selection.createRange().duplicate();
                 range.moveEnd('character', val.length);
                 s = (range.text == '' ? val.length : val.lastIndexOf(range.text));
@@ -1692,7 +1692,7 @@
                 e = range.text.length;
             } else {
                 range = selection.createRange();
-                var storedRange = range.duplicate();
+                const storedRange = range.duplicate();
                 storedRange.moveToElementText(elem[0]);
                 storedRange.setEndPoint('EndToEnd', range);
                 s = storedRange.text.length - range.text.length;
@@ -1712,19 +1712,19 @@
     $.dnnAutocompleter.prototype.setValue = function (value) {
         if (this.options.useDelimiter) {
             // set the substring between the current delimiters
-            var val = this.dom.$elem.val();
-            var d = this.getDelimiterOffsets();
-            var preVal = val.substring(0, d.start);
-            var postVal = val.substring(d.end);
+            const val = this.dom.$elem.val();
+            const d = this.getDelimiterOffsets();
+            const preVal = val.substring(0, d.start);
+            const postVal = val.substring(d.end);
             value = preVal + value + postVal;
         }
         this.dom.$elem.val(value).blur();
     };
 
     $.dnnAutocompleter.prototype.getValue = function () {
-        var val = this.dom.$elem.val();
+        const val = this.dom.$elem.val();
         if (this.options.useDelimiter) {
-            var d = this.getDelimiterOffsets();
+            const d = this.getDelimiterOffsets();
             return val.substring(d.start, d.end).trim();
         } else {
             return val;
@@ -1732,11 +1732,11 @@
     };
 
     $.dnnAutocompleter.prototype.getDelimiterOffsets = function () {
-        var val = this.dom.$elem.val();
+        const val = this.dom.$elem.val();
         if (this.options.useDelimiter) {
-            var preCaretVal = val.substring(0, this.getCaret().start);
+            const preCaretVal = val.substring(0, this.getCaret().start);
             var start = preCaretVal.lastIndexOf(this.options.delimiterChar) + 1;
-            var postCaretVal = val.substring(this.getCaret().start);
+            const postCaretVal = val.substring(this.getCaret().start);
             var end = postCaretVal.indexOf(this.options.delimiterChar);
             if (end == -1) end = val.length;
             end += this.getCaret().start;
@@ -1753,10 +1753,10 @@
 
 (function ($) {
     // dnn customized tags
-    var delimiter = new Array();
-    var tagsCallbacks = new Array();
+    const delimiter = [];
+    const tagsCallbacks = [];
     $.fn.dnnDoAutosize = function (o) {
-        var minWidth = $(this).data('minwidth'),
+        let minWidth = $(this).data('minwidth'),
             maxWidth = $(this).data('maxwidth'),
             val = '',
             input = $(this),
@@ -1765,10 +1765,10 @@
         if (val === (val = input.val())) { return; }
 
         // Enter new content into testSubject
-        var escaped = val.replace(/&/g, '&amp;').replace(/\s/g, ' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const escaped = val.replace(/&/g, '&amp;').replace(/\s/g, ' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         testSubject.html(escaped);
         // Calculate new width + whether to change
-        var testerWidth = testSubject.width(),
+        const testerWidth = testSubject.width(),
             newWidth = (testerWidth + o.comfortZone) >= minWidth ? testerWidth + o.comfortZone : minWidth,
             currentWidth = input.width(),
             isValidWidthChange = (newWidth < currentWidth && newWidth >= minWidth)
@@ -1781,16 +1781,16 @@
     };
 
     $.fn.dnnResetAutosize = function (options) {
-	    var minWidth = $(this).data('minwidth') || options.minInputWidth || $(this).width(),
+	    const minWidth = $(this).data('minwidth') || options.minInputWidth || $(this).width(),
 	        maxWidth = $(this).data('maxwidth') || options.maxInputWidth || ($(this).closest('.dnnTagsInput').width() - options.inputPadding),
 	        $input = $(this);
 
-		var left = 0;
-		var $lastSpan = $(this).closest('.dnnTagsInput').find('> span').last();
+		let left = 0;
+		const $lastSpan = $(this).closest('.dnnTagsInput').find('> span').last();
 		if ($lastSpan.length > 0) {
 			left = $lastSpan.offset().left - $lastSpan.parent().offset().left + $lastSpan.outerWidth();
 		}
-		var availableWidth = maxWidth - left;
+		let availableWidth = maxWidth - left;
 	    if (availableWidth < parseInt(minWidth)) {
 		    availableWidth = maxWidth;
 	    }
@@ -1801,14 +1801,14 @@
     $.fn.dnnAddTag = function (value, options) {
         options = jQuery.extend({ focus: false, callback: true }, options);
         this.each(function () {
-            var id = $(this).attr('id');
-            var tagslist = $(this).val().split(delimiter[id]);
+            const id = $(this).attr('id');
+            let tagslist = $(this).val().split(delimiter[id]);
             if (tagslist[0] == '') {
-                tagslist = new Array();
+                tagslist = [];
             }
 			value = value.replace(/<.*?>/g, '');
             value = jQuery.trim(value);
-            var skipTag;
+            let skipTag;
             if (options.unique) {
                 skipTag = $(this).dnnTagExist(value);
                 if (skipTag == true) {
@@ -1843,13 +1843,13 @@
                 }
 
                 $.fn.dnnTagsInput.updateTagsField(this, tagslist);
-                var f;
+                let f;
                 if (options.callback && tagsCallbacks[id] && tagsCallbacks[id]['onAddTag']) {
                     f = tagsCallbacks[id]['onAddTag'];
                     f.call(this, value);
                 }
                 if (tagsCallbacks[id] && tagsCallbacks[id]['onChange']) {
-                    var i = tagslist.length;
+                    const i = tagslist.length;
                     f = tagsCallbacks[id]['onChange'];
                     f.call(this, $(this), tagslist[i - 1]);
                 }
@@ -1861,18 +1861,18 @@
     $.fn.dnnRemoveTag = function (value) {
         value = unescape(value);
         this.each(function () {
-            var id = $(this).attr('id');
-            var old = $(this).val().split(delimiter[id]);
+            const id = $(this).attr('id');
+            const old = $(this).val().split(delimiter[id]);
             $('#' + id + '_tagsinput .tag').remove();
-            var str = '';
-            for (var i = 0; i < old.length; i++) {
+            let str = '';
+            for (let i = 0; i < old.length; i++) {
                 if (old[i] != value) {
                     str = str + delimiter[id] + old[i];
                 }
             }
             $.fn.dnnTagsInput.importTags(this, str);
             if (tagsCallbacks[id] && tagsCallbacks[id]['onRemoveTag']) {
-                var f = tagsCallbacks[id]['onRemoveTag'];
+                const f = tagsCallbacks[id]['onRemoveTag'];
                 f.call(this, value);
             }
         });
@@ -1881,20 +1881,20 @@
     };
 
     $.fn.dnnTagExist = function (val) {
-        var id = $(this).attr('id'),
+        const id = $(this).attr('id'),
             tagslist = $(this).val().split(delimiter[id]);
         return (jQuery.inArray(val, tagslist) >= 0);
     };
 
     $.fn.dnnImportTags = function (str) {
-        var id = $(this).attr('id');
+        const id = $(this).attr('id');
         $('#' + id + '_tagsinput .tag').remove();
         $.fn.dnnTagsInput.importTags(this, str);
     };
 
     $.fn.dnnTagsInput = function (options) {
-        var onError = null;
-        var triggerOnError = function (handler) {
+        let onError = null;
+        const triggerOnError = function (handler) {
             if (!onError) {
                 onError = setTimeout(function () {
                     onError = null;
@@ -1939,16 +1939,16 @@
         }, options);
 
         this.each(function () {
-            var instance = $(this).data('dnnTagInput');
+            const instance = $(this).data('dnnTagInput');
             if (instance) return this;
             if (settings.hide) {
                 $(this).hide();
             }
-            var id = $(this).attr('id');
+            let id = $(this).attr('id');
             if (!id || delimiter[$(this).attr('id')]) {
                 id = $(this).attr('id', 'tags' + new Date().getTime()).attr('id');
             }
-            var data = jQuery.extend({
+            const data = jQuery.extend({
                 pid: id,
                 real_input: '#' + id,
                 holder: '#' + id + '_tagsinput',
@@ -1961,13 +1961,13 @@
             delimiter[id] = data.delimiter;
 
             if (settings.onAddTag || settings.onRemoveTag || settings.onChange) {
-                tagsCallbacks[id] = new Array();
+                tagsCallbacks[id] = [];
                 tagsCallbacks[id]['onAddTag'] = settings.onAddTag;
                 tagsCallbacks[id]['onRemoveTag'] = settings.onRemoveTag;
                 tagsCallbacks[id]['onChange'] = settings.onChange;
             }
 
-            var markup = '<div id="' + id + '_tagsinput" class="dnnTagsInput">';
+            let markup = '<div id="' + id + '_tagsinput" class="dnnTagsInput">';
             markup += '<div id="' + id + '_addTag">';
 
             if (settings.interactive) {
@@ -2010,9 +2010,9 @@
                         $(data.fake_input).dnnAutocomplete(settings.autocomplete_url, settings.autocomplete);
                         $(data.fake_input).bind('result', data, function (event, tag) {
                             if (tag) {
-                                var tagslist = $(event.data.real_input).val().split(delimiter[id]);
+                                let tagslist = $(event.data.real_input).val().split(delimiter[id]);
                                 if (tagslist[0] == '') {
-                                    tagslist = new Array();
+                                    tagslist = [];
                                 }
                                 if (event.data.maxTags <= tagslist.length) {
                                     if (event.data.onErrorMoreThanMaxTags)
@@ -2028,10 +2028,10 @@
                     // if a user tabs out of the field, create a new tag
                     // this is only available if autocomplete is not used.
                     $(data.fake_input).bind('blur', data, function (event) {
-                        var d = $(this).attr('data-default');
-                        var tagslist = $(event.data.real_input).val().split(delimiter[id]);
+                        const d = $(this).attr('data-default');
+                        let tagslist = $(event.data.real_input).val().split(delimiter[id]);
                         if (tagslist[0] == '') {
-                            tagslist = new Array();
+                            tagslist = [];
                         }
                         if ($(event.data.fake_input).val() != '' && $(event.data.fake_input).val() != d) {
                             if (event.data.minChars > $(event.data.fake_input).val().length) {
@@ -2050,8 +2050,8 @@
                                 $(data.fake_input).val('');
                             }
                             else{
-								var tags = $(event.data.fake_input).val().split(delimiter[id]);
-								for(var i = 0; i < tags.length; i++){
+								const tags = $(event.data.fake_input).val().split(delimiter[id]);
+								for(let i = 0; i < tags.length; i++){
 									$(event.data.real_input).dnnAddTag(tags[i], { focus: true, unique: (settings.unique) });
 								}
                             }
@@ -2064,9 +2064,9 @@
                 }
 
                 function tagItems(data, event) {
-                        var tagslist = $(event.data.real_input).val().split(delimiter[id]);
+                        let tagslist = $(event.data.real_input).val().split(delimiter[id]);
                         if (tagslist[0] == '') {
-                            tagslist = new Array();
+                            tagslist = [];
                         }
                         if (event.data.minChars > $(event.data.fake_input).val().length) {
                             if (event.data.onErrorLessThanMinChars)
@@ -2084,8 +2084,8 @@
                             $(data.fake_input).val('');
                         }
                         else {
-                            var tags = $(event.data.fake_input).val().split(delimiter[id]);
-                            for (var i = 0; i < tags.length; i++) {
+                            const tags = $(event.data.fake_input).val().split(delimiter[id]);
+                            for (let i = 0; i < tags.length; i++) {
                                 $(event.data.real_input).dnnAddTag(tags[i], { focus: true, unique: (settings.unique) });
                             }
                         }
@@ -2094,7 +2094,7 @@
                         return false;
                 }
 
-                var clickedOnAutoComplete = false;
+                let clickedOnAutoComplete = false;
 
                 $(document).mousedown(function (e) {
                     if ($(e.target).hasClass("dnn_acSelect") || $(e.target).parent().hasClass('dnn_acSelect')) {
@@ -2102,13 +2102,13 @@
                     }
                 });
 
-                var tagTooLongErrMsg = $('<span class="dnnFormError dnnFormMessage">' + String.format(settings.moreThanMaxCharsErrorText, settings.maxChars) + '</span>');
+                const tagTooLongErrMsg = $('<span class="dnnFormError dnnFormMessage">' + String.format(settings.moreThanMaxCharsErrorText, settings.maxChars) + '</span>');
                 // if user types a comma, create a new tag
                 $(data.fake_input).bind('keypress keydown blur', data, function (event) {
                     if ($(this).val() === "" || clickedOnAutoComplete) {
                         return;
                     }
-                    var currValLength = $(this).val().length;
+                    const currValLength = $(this).val().length;
                     if ((currValLength >= settings.maxChars) && !(event.which == event.data.delimiter.charCodeAt(0) || event.which == 13 || event.which == 9)) {
                         tagTooLongErrMsg.insertAfter($(this)).show().delay(1500).fadeOut(1000);
                     }
@@ -2127,8 +2127,8 @@
                 data.removeWithBackspace && $(data.fake_input).bind('keydown', function (event) {
                     if (event.keyCode == 8 && $(this).val() == '') {
                         event.preventDefault();
-                        var lastTag = $(this).closest('.dnnTagsInput').find('.tag:last').text();
-                        var lastTagId = $(this).attr('id').replace(/_tag$/, '');
+                        let lastTag = $(this).closest('.dnnTagsInput').find('.tag:last').text();
+                        const lastTagId = $(this).attr('id').replace(/_tag$/, '');
                         lastTag = lastTag.replace(/[\s]+$/, '');
                         $('#' + lastTagId).dnnRemoveTag(escape(lastTag));
                         $(this).trigger('focus');
@@ -2152,19 +2152,19 @@
     };
 
     $.fn.dnnTagsInput.updateTagsField = function (obj, tagslist) {
-        var id = $(obj).attr('id');
+        const id = $(obj).attr('id');
         $(obj).val(tagslist.join(delimiter[id]));
     };
 
     $.fn.dnnTagsInput.importTags = function (obj, val) {
         $(obj).val('');
-        var id = $(obj).attr('id');
-        var tags = val.split(delimiter[id]);
+        const id = $(obj).attr('id');
+        const tags = val.split(delimiter[id]);
         for (var i = 0; i < tags.length; i++) {
             $(obj).dnnAddTag(tags[i], { focus: false, callback: false });
         }
         if (tagsCallbacks[id] && tagsCallbacks[id]['onChange']) {
-            var f = tagsCallbacks[id]['onChange'];
+            const f = tagsCallbacks[id]['onChange'];
             f.call(obj, obj, tags[i]);
         }
     };
@@ -2176,16 +2176,16 @@
 	    }, options);
 
 	    this.each(function () {
-		    var $this = $(this);
-			var instance = $this.data('dnnPlaceHolder');
+		    const $this = $(this);
+			const instance = $this.data('dnnPlaceHolder');
 			if (instance) return true;
 			$this.data('dnnPlaceHolder', true);
 
-			var placeholderSupported = ('placeholder' in $this[0]);
+			const placeholderSupported = ('placeholder' in $this[0]);
             if (placeholderSupported)
                 $this.attr('placeholder', $this.attr('data-default'));
             else {
-            	var $fakeInput = $('<input type="text" />')
+            	const $fakeInput = $('<input type="text" />')
 					.attr('class', $this.attr('class'))
 					.attr('style', $this.attr('style'))
 					.val($this.attr('data-default'));
@@ -2205,15 +2205,15 @@
 	            });
 
 				$this.on('blur', function (event) {
-					var d = $this.attr('data-default');
+					const d = $this.attr('data-default');
 					if ($this.val() === '') {
 						$this.hide();
 						$fakeInput.show();
 					}
 				});
 
-				var events = $._data(this, 'events')['blur'];
-				var first = events.pop();
+				const events = $._data(this, 'events')['blur'];
+				const first = events.pop();
 				events.splice(0, 0, first);
             }
 
@@ -2227,7 +2227,7 @@
 (function ($) {
     // dnnForm customised client side validation
     $.fn.toggleErrorMessage = function (options) {
-        var defaultOptions = {
+        const defaultOptions = {
             errorMessage: "Error message",
             errorCls: "dnnFormError",
             show: true,
@@ -2237,9 +2237,9 @@
         options = $.extend(defaultOptions, options);
 
         return this.each(function () {
-            var dnnFormItem = $(this).closest('.dnnFormItem');
+            const dnnFormItem = $(this).closest('.dnnFormItem');
             if (options.show) {
-                var errorSpan = dnnFormItem.find('span.dnnFormMessage.' + options.errorCls);
+                let errorSpan = dnnFormItem.find('span.dnnFormMessage.' + options.errorCls);
                 if (errorSpan.length) {
                     errorSpan.html(options.errorMessage);
                 } else {
@@ -2297,7 +2297,7 @@
         });
     };
     $.fn.dnnFormSubmit = function (options) {
-        var defaultOptions = {
+        const defaultOptions = {
             validates: []
         };
 
@@ -2305,13 +2305,13 @@
 
         return this.each(function () {
             $(this).click(function () {
-                var formValidate = true;
-                for (var i = 0; i < options.validates.length; i++) {
-                    var ele = $('#' + options.validates[i].ele);
-                    var func = options.validates[i].func;
+                let formValidate = true;
+                for (let i = 0; i < options.validates.length; i++) {
+                    const ele = $('#' + options.validates[i].ele);
+                    const func = options.validates[i].func;
                     if (ele.length) {
-                        var eleVal = ele.val();
-                        var eleError = func.call(ele.get(0), eleVal);
+                        const eleVal = ele.val();
+                        const eleError = func.call(ele.get(0), eleVal);
                         if (eleError) {
                             ele.toggleErrorMessage({ errorMessage: eleError, show: true });
                             formValidate = false;
@@ -2321,7 +2321,7 @@
                         }
 
                         //ele focus then remove error info
-                        var hideErrorInfo = function () {
+                        const hideErrorInfo = function () {
                             $(this).toggleErrorMessage({ show: false });
                         };
 
@@ -2337,21 +2337,21 @@
     // fix telerik custom datepicker popup arrow position       
     $.dnnRadPickerHack = function () {
         //when click this icon, hide error info
-        var hideErrorInfo = function () {
+        const hideErrorInfo = function () {
             $(this).toggleErrorMessage({ show: false, removeErrorMessage: false });
         };
-        var dnnRadPickerPopupFix = function () {
+        const dnnRadPickerPopupFix = function () {
             if ($.support.cssFloat) {
-                var id = $(this).attr('id');
-                var popupId = id.replace('popupButton', 'calendar_wrapper');
-                var popupElement = $('#' + popupId);
-                var wrapperId = id.replace('popupButton', 'wrapper');
-                var wrapperElement = $('#' + wrapperId);
+                const id = $(this).attr('id');
+                const popupId = id.replace('popupButton', 'calendar_wrapper');
+                const popupElement = $('#' + popupId);
+                const wrapperId = id.replace('popupButton', 'wrapper');
+                const wrapperElement = $('#' + wrapperId);
 
-                var popupElementTop = popupElement.parent().position().top;
-                var wrapperElementTop = wrapperElement.offset().top;
-                var popupTbl = popupElement.find('.RadCalendar_Default');
-                var nextEle = popupTbl.next();
+                const popupElementTop = popupElement.parent().position().top;
+                const wrapperElementTop = wrapperElement.offset().top;
+                const popupTbl = popupElement.find('.RadCalendar_Default');
+                const nextEle = popupTbl.next();
                 if (nextEle.hasClass('RadCalendar_Default_PopupArrow_Down') || nextEle.hasClass('RadCalendar_Default_PopupArrow_Up'))
                     nextEle.remove();
 
@@ -2384,7 +2384,7 @@
     //fix combobox scroll
     $.dnnComboBoxScroll = function (sender) {
         if ($.support.cssFloat) {
-            var container = $(('#' + sender._clientStateFieldID + ' .rcbScroll').replace('ClientState', 'DropDown'));
+            const container = $(('#' + sender._clientStateFieldID + ' .rcbScroll').replace('ClientState', 'DropDown'));
             if (container.data('scrollPane')) {
                 container.data('scrollPane').data('jsp').reinitialise();
             } else {
@@ -2395,7 +2395,7 @@
 
     $.dnnComboBoxItemRequested = function (sender) {
         setTimeout(function() {
-            var container = $(('#' + sender._clientStateFieldID + ' .rcbScroll').replace('ClientState', 'DropDown'));
+            const container = $(('#' + sender._clientStateFieldID + ' .rcbScroll').replace('ClientState', 'DropDown'));
             if (container.data('scrollPane')) {
                 container.data('scrollPane').data('jsp').reinitialise();
             }
@@ -2404,10 +2404,10 @@
 
     // fix grid issues 
     $.dnnGridCreated = function (sender) {
-        var clientId = sender.ClientID;
-        var $grid = $('#' + clientId);
+        const clientId = sender.ClientID;
+        const $grid = $('#' + clientId);
         $('input.rgSortDesc, input.rgSortAsc', $grid).click(function () {
-            var href = $(this).parent().find('a').get(0).href;
+            const href = $(this).parent().find('a').get(0).href;
             window.location = href;
             return false;
         });
@@ -2415,28 +2415,28 @@
         if ($grid.hasClass('dnnTooltipGrid')) {
             $grid.dnnHelperTipDestroy();
             $('.rgRow, .rgAltRow', $grid).each(function () {
-                var info = "Here is some text will show up and explian more about this information";
+                const info = "Here is some text will show up and explian more about this information";
                 $(this).dnnHelperTip({ helpContent: info, holderId: clientId });
             });
         }
 
-        var grid = $find(clientId);
+        const grid = $find(clientId);
 
         // while using customised checkbox - remove onclick event then attach onchange
-        var headerCheck = $('.rgCheck', $grid);
+        const headerCheck = $('.rgCheck', $grid);
         if (headerCheck.length) {
             headerCheck.each(function () {
-                var checkbox = $(this).find('input[type="checkbox"]').get(0);
-                var onclick = checkbox.onclick;
+                const checkbox = $(this).find('input[type="checkbox"]').get(0);
+                const onclick = checkbox.onclick;
                 checkbox.onchange = onclick;
                 checkbox.onclick = null;
             });
 
             // when use customised scrollbar and customised checkbox, the row cannot be correctly selected
             $('.rgDataDiv input[type="checkbox"]', $grid).change(function () {
-                var masterTable = grid.get_masterTableView();
-                var rowIndex = $(this).closest('tr').get(0).rowIndex;
-                var checked = this.checked;
+                const masterTable = grid.get_masterTableView();
+                const rowIndex = $(this).closest('tr').get(0).rowIndex;
+                const checked = this.checked;
                 if (checked)
                     masterTable.selectItem(rowIndex);
                 else
@@ -2446,11 +2446,11 @@
 
         // initialize dnnGrid customised scrollbar
         $('.rgDataDiv').each(function () {
-            var $this = $(this);
-            var ele = $this.get(0);
+            const $this = $(this);
+            const ele = $this.get(0);
             ele.scrollPane = $this.jScrollPane();
-            var api = ele.scrollPane.data('jsp');
-            var throttleTimeout;
+            const api = ele.scrollPane.data('jsp');
+            let throttleTimeout;
             $(window).bind(
                 'resize',
                 function () {
@@ -2472,7 +2472,7 @@
                 }
             );
             if (window.__rgDataDivScrollTopPersistArray && window.__rgDataDivScrollTopPersistArray.length) {
-                var y = window.__rgDataDivScrollTopPersistArray.pop();
+                const y = window.__rgDataDivScrollTopPersistArray.pop();
                 api.scrollToY(y);
             }
         });
@@ -2480,16 +2480,16 @@
 })(jQuery);
 
 (function ($) {
-    var types = ['DOMMouseScroll', 'mousewheel'];
+    const types = ['DOMMouseScroll', 'mousewheel'];
     if ($.event.fixHooks) {
-        for (var i = types.length; i;) {
+        for (let i = types.length; i;) {
             $.event.fixHooks[types[--i]] = $.event.mouseHooks;
         }
     }
     $.event.special.mousewheel = {
         setup: function () {
             if (this.addEventListener) {
-                for (var i = types.length; i;) {
+                for (let i = types.length; i;) {
                     this.addEventListener(types[--i], handler, false);
                 }
             } else {
@@ -2499,7 +2499,7 @@
 
         teardown: function () {
             if (this.removeEventListener) {
-                for (var i = types.length; i;) {
+                for (let i = types.length; i;) {
                     this.removeEventListener(types[--i], handler, false);
                 }
             } else {
@@ -2519,7 +2519,7 @@
     });
 
     function handler(event) {
-        var orgEvent = event || window.event,
+        let orgEvent = event || window.event,
             args = [].slice.call(arguments, 1),
             delta = 0,
             deltaX = 0,
@@ -2553,10 +2553,10 @@
 
 (function ($) {
     $.fn.dnnFileInput = function (options) {
-        var opts = $.extend({}, $.fn.dnnFileInput.defaultOptions, options);
+        const opts = $.extend({}, $.fn.dnnFileInput.defaultOptions, options);
 
         return this.each(function () {
-            var $ctrl = $(this);
+            const $ctrl = $(this);
             if ($ctrl.hasClass('normalFileUpload')) return;
 
             if (this.wrapper)
@@ -2572,7 +2572,7 @@
             }
 
             this.wrapper = $("<span class='dnnInputFileWrapper " + opts.buttonClass + "'></span>");
-            var text = $ctrl.data('text');
+            let text = $ctrl.data('text');
             text = text || 'Choose File';
             this.wrapper.text(text);
             $ctrl.wrap(this.wrapper);
@@ -2580,9 +2580,9 @@
 
             if (opts.showSelectedFileNameAsButtonText) {
                 $ctrl.change(function () {
-                    var val = $(this).val();
+                    let val = $(this).val();
                     if (val != '') {
-                        var lastIdx = val.lastIndexOf('\\') + 1;
+                        const lastIdx = val.lastIndexOf('\\') + 1;
                         val = val.substring(lastIdx, val.length);
                     } else {
                         val = text;
@@ -2600,21 +2600,21 @@
 })(jQuery);
 
 (function ($) {
-    var supportAjaxUpload = function () {
-        var xhr = new XMLHttpRequest;
+    const supportAjaxUpload = function () {
+        const xhr = new XMLHttpRequest;
         return !!(xhr && ('upload' in xhr) && ('onprogress' in xhr.upload));
     };
     $.fn.dnnFileUpload = function (settings) {
         return this.each(function () {
             // set scope and settings, service
-            var scope = $(this).attr('id');
+            const scope = $(this).attr('id');
             window.dnn.dnnFileUpload.setSettings(scope, settings);
-            var service = $.dnnSF();
+            const service = $.dnnSF();
 
             // hide progress
             $('#' + settings.progressBarId).parent().hide();
             // detect draggable support or not
-            var droppableSpan = $('#' + settings.dropZoneId + '>span');
+            const droppableSpan = $('#' + settings.dropZoneId + '>span');
             if ('draggable' in document.createElement('span')) {
                 droppableSpan.show();
             }
@@ -2623,9 +2623,9 @@
             }
 
             // set file upload
-            var url = service.getServiceRoot('internalservices') + 'fileupload/postfile';
+            let url = service.getServiceRoot('internalservices') + 'fileupload/postfile';
             if (!supportAjaxUpload()) {
-                var antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
+                const antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
                 url += '?__RequestVerificationToken=' + antiForgeryToken;
             }
 
@@ -2640,7 +2640,7 @@
                     return true;
                 },
                 progressall: function (e, data) {
-                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    const progress = parseInt(data.loaded / data.total * 100, 10);
                     if (progress < 100) {
                         $('#' + settings.progressBarId).parent().show();
                         $('#' + settings.progressBarId + '>div').css('width', progress + '%');
@@ -2650,18 +2650,18 @@
                 },
                 done: function (e, data) {
                     $('#' + settings.progressBarId).parent().hide();
-                    var img = new Image();
+                    const img = new Image();
                     $(img).load(function () {
                         $('#' + settings.dropZoneId + ' img').remove();
                         $(img).css({ 'max-width': 180, 'max-height': 150 }).insertBefore($('#' + settings.dropZoneId + ' span'));
                     });
-                    var src;
+                    let src;
                     if (data.dataType && typeof(data.result) == "object" && data.result.length) {
                         data.result = JSON.parse(data.result.text());
                     } else {
                         data.result = JSON.parse(data.result);
                     }
-                    var testContent = $('<pre>' + data.result.FilePath + '</pre>');
+                    const testContent = $('<pre>' + data.result.FilePath + '</pre>');
                     if (testContent.length) {
                         src = testContent.text();
                     }
@@ -2670,7 +2670,7 @@
 
                     if (src && $.trim(src)) {
                         img.src = src;
-                        var fileName = data.result.FilePath.replace('\\', '/');
+                        let fileName = data.result.FilePath.replace('\\', '/');
                         if (fileName.indexOf('/') > -1) {
                             fileName = fileName.split('/')[fileName.split('/').length - 1];
                         }
@@ -2681,15 +2681,15 @@
                 },
                 fail: function (e, data) {
                     $('#' + settings.progressBarId).parent().hide();
-                    var resp = JSON.parse(data.jqXHR.responseText);
+                    const resp = JSON.parse(data.jqXHR.responseText);
                     alert(resp.Message);
                 }
             });
 
             $('#' + scope + ' input[name=uploadFileButton]').click(function() {
-                var instance = dnn[settings.fileUploadId];
+                const instance = dnn[settings.fileUploadId];
                 
-                var options = instance.options;
+                const options = instance.options;
                 if (dnn[settings.foldersComboId].selectedItem() != null) {
                     instance.options.folderPicker.initialState.selectedItem = dnn[settings.foldersComboId].selectedItem();
                     instance.options.folderPath = window.dnn.dnnFileUpload.getSelectedPath(dnn[settings.foldersComboId]);
@@ -2705,11 +2705,11 @@
                         data = JSON.parse(data);
                     }else{
 						// for IE8-9						
-						var b = data[0];
+						const b = data[0];
 						data = JSON.parse(b.body.innerText);
 					}
                     if (data && data.fileId) {
-                        var folderPicker = instance._panel._folderPicker;
+                        const folderPicker = instance._panel._folderPicker;
                         dnn[settings.foldersComboId].selectedItem(folderPicker.selectedItem());
                         window.dnn.dnnFileUpload.Folders_Changed(dnn[settings.foldersComboId].selectedItem(), dnn[settings.foldersComboId].$element);
                         window.dnn.dnnFileUpload.updateExpandPath(folderPicker, settings.foldersComboId);
@@ -2724,17 +2724,17 @@
             // set initial thumb image
             setTimeout(function () {
                 dnn[settings.filesComboId].options.services.parameters.parentId = settings.selectedFolderId;
-                var filesCombo = dnn[settings.filesComboId];
-                var selectedFileId = filesCombo.selectedItem() ? filesCombo.selectedItem().key : null;
+                const filesCombo = dnn[settings.filesComboId];
+                const selectedFileId = filesCombo.selectedItem() ? filesCombo.selectedItem().key : null;
                 url = service.getServiceRoot('internalservices') + 'fileupload/loadimage';
-             	var fileId  = selectedFileId ? parseInt(selectedFileId) : 0;
+             	const fileId  = selectedFileId ? parseInt(selectedFileId) : 0;
                 if (fileId > 0) {
                     $.ajax({
                         url: url,
                         type: 'GET',
                         data: { fileId: selectedFileId },
                         success: function (d) {
-                            var img = new Image();
+                            const img = new Image();
                             $(img).load(function () {
                                 $('#' + settings.dropZoneId + ' img').remove();
                                 $(img).css({ 'max-width': 180, 'max-height': 150 }).insertBefore($('#' + settings.dropZoneId + ' span'));
@@ -2756,22 +2756,22 @@
         window.dnn.dnnFileUpload.settings[scope] = settings;
     };
     window.dnn.dnnFileUpload.getSettings = function (sender) {
-        var scope = sender.closest('.dnnFileUploadScope').attr('id');
+        const scope = sender.closest('.dnnFileUploadScope').attr('id');
         return window.dnn.dnnFileUpload.settings[scope];
     };
     window.dnn.dnnFileUpload.Folders_Changed = function (node, sender) {
-        var settings = window.dnn.dnnFileUpload.getSettings(sender);
+        const settings = window.dnn.dnnFileUpload.getSettings(sender);
         if (!settings) return false;
 
         if (node) {
             //get the selected folder path
-            var selectedPathArray = dnn[settings.foldersComboId].selectedPath();
+            const selectedPathArray = dnn[settings.foldersComboId].selectedPath();
             if (selectedPathArray.length === 0 && settings.folder) {
                 return settings.folder;
             }
-            var selectedPath = "";
+            let selectedPath = "";
             if (selectedPathArray.length > 1) {
-                for (var i = 1, size = selectedPathArray.length; i < size; i++) {
+                for (let i = 1, size = selectedPathArray.length; i < size; i++) {
                     selectedPath += selectedPathArray[i].name + "/";
                 }
             } 
@@ -2783,20 +2783,20 @@
         }
     };
     window.dnn.dnnFileUpload.Files_Changed = function (node, sender) {
-        var settings = window.dnn.dnnFileUpload.getSettings(sender);
+        const settings = window.dnn.dnnFileUpload.getSettings(sender);
         if (!settings) return;
 
         if (node) {
-            var fileId = node.key;
-            var service = $.dnnSF();
-            var url = service.getServiceRoot('internalservices') + 'fileupload/loadimage';
+            const fileId = node.key;
+            const service = $.dnnSF();
+            const url = service.getServiceRoot('internalservices') + 'fileupload/loadimage';
             if (fileId) {
                 $.ajax({
                     url: url,
                     type: 'GET',
                     data: { fileId: fileId },
                     success: function (d) {
-                        var img = new Image();
+                        const img = new Image();
                         $(img).load(function () {
                             $('#' + settings.dropZoneId + ' img').remove();
                             $(img).css({ 'max-width': 180, 'max-height': 150 }).insertBefore($('#' + settings.dropZoneId + ' span'));
@@ -2813,13 +2813,13 @@
     };
     window.dnn.dnnFileUpload.updateExpandPath = function(dropDownList, targetId) {
         //set expand path
-        var selectedPaths = dropDownList.selectedPath();
-        var expandPath = "";
+        const selectedPaths = dropDownList.selectedPath();
+        let expandPath = "";
         if (selectedPaths.length == 0) { //which means the tree view hasn't opened.
             expandPath = dnn.getVar(dropDownList.id() + '_expandPath');
         }
         else if (selectedPaths.length > 1) {
-            for (var i = 0; i < selectedPaths.length - 1; i++) {
+            for (let i = 0; i < selectedPaths.length - 1; i++) {
                 if (expandPath == "") {
                     expandPath = selectedPaths[i].id;
                 } else {
@@ -2833,14 +2833,14 @@
         }
     };
     window.dnn.dnnFileUpload.getSelectedPath = function(dropDownList) {
-        var selectedPathArray = dropDownList.selectedPath();
-        var settings = window.dnn.dnnFileUpload.getSettings(dropDownList.$element);
+        const selectedPathArray = dropDownList.selectedPath();
+        const settings = window.dnn.dnnFileUpload.getSettings(dropDownList.$element);
         if (selectedPathArray.length === 0 && settings.folder) {
             return settings.folder;
         }
-        var selectedPath = "";
+        let selectedPath = "";
         if (selectedPathArray.length > 1) {
-            for (var i = 1, size = selectedPathArray.length; i < size; i++) {
+            for (let i = 1, size = selectedPathArray.length; i < size; i++) {
                 selectedPath += selectedPathArray[i].name + "/";
             }
         }
@@ -2853,7 +2853,7 @@
     $.fn.jScrollPane = function (settings) {
         // JScrollPane "class" - public methods are available through $('selector').data('jsp')
         function JScrollPane(elem, s) {
-            var settings, jsp = this, pane, paneWidth, paneHeight, container, contentWidth, contentHeight,
+            let settings, jsp = this, pane, paneWidth, paneHeight, container, contentWidth, contentHeight,
 				percentInViewH, percentInViewV, isScrollableV, isScrollableH, verticalDrag, dragMaxY,
 				verticalDragPosition, horizontalDrag, dragMaxX, horizontalDragPosition,
 				verticalBar, verticalTrack, scrollbarWidth, verticalTrackHeight, verticalDragHeight, arrowUp, arrowDown,
@@ -2872,7 +2872,7 @@
 
             function initialise(s) {
 
-                var /*firstChild, lastChild, */isMaintainingPositon, lastContentX, lastContentY,
+                let /*firstChild, lastChild, */isMaintainingPositon, lastContentX, lastContentY,
 						hasContainingSpaceChanged, originalScrollTop, originalScrollLeft,
 						maintainAtBottom = false, maintainAtRight = false;
 
@@ -3082,7 +3082,7 @@
 
 						    verticalDrag.addClass('jspActive');
 
-						    var startY = e.pageY - verticalDrag.position().top;
+						    const startY = e.pageY - verticalDrag.position().top;
 
 						    $('html').bind(
 								'mousemove.jsp',
@@ -3164,7 +3164,7 @@
 
 						    horizontalDrag.addClass('jspActive');
 
-						    var startX = e.pageX - horizontalDrag.position().left;
+						    const startX = e.pageX - horizontalDrag.position().left;
 
 						    $('html').bind(
 								'mousemove.jsp',
@@ -3193,7 +3193,7 @@
 
             function resizeScrollbars() {
                 if (isScrollableH && isScrollableV) {
-                    var horizontalTrackHeight = horizontalTrack.outerHeight(),
+                    const horizontalTrackHeight = horizontalTrack.outerHeight(),
 						verticalTrackWidth = verticalTrack.outerWidth();
                     verticalTrackHeight -= horizontalTrackHeight;
                     $(horizontalBar).find('>.jspCap:visible,>.jspArrow').each(
@@ -3242,7 +3242,7 @@
             }
 
             function appendArrows(ele, p, a1, a2) {
-                var p1 = "before", p2 = "after", aTemp;
+                let p1 = "before", p2 = "after", aTemp;
 
                 // Sniff for mac... Is there a better way to determine whether the arrows would naturally appear
                 // at the top or the bottom of the bar?
@@ -3314,7 +3314,7 @@
 									scrollTimeout,
 									isFirst = true,
 									doScroll = function () {
-									    var offset = clickedTrack.offset(),
+									    const offset = clickedTrack.offset(),
 											pos = e.pageY - offset.top - verticalDragHeight / 2,
 											contentDragY = paneHeight * settings.scrollPagePercent,
 											dragY = dragMaxY * contentDragY / (contentHeight - paneHeight);
@@ -3361,7 +3361,7 @@
 									scrollTimeout,
 									isFirst = true,
 									doScroll = function () {
-									    var offset = clickedTrack.offset(),
+									    const offset = clickedTrack.offset(),
 											pos = e.pageX - offset.left - horizontalDragWidth / 2,
 											contentDragX = paneWidth * settings.scrollPagePercent,
 											dragX = dragMaxX * contentDragX / (contentWidth - paneWidth);
@@ -3449,7 +3449,7 @@
                 container.scrollTop(0);
                 verticalDragPosition = destY;
 
-                var isAtTop = verticalDragPosition === 0,
+                const isAtTop = verticalDragPosition === 0,
 					isAtBottom = verticalDragPosition == dragMaxY,
 					percentScrolled = destY / dragMaxY,
 					destTop = -percentScrolled * (contentHeight - paneHeight);
@@ -3494,7 +3494,7 @@
                 container.scrollTop(0);
                 horizontalDragPosition = destX;
 
-                var isAtLeft = horizontalDragPosition === 0,
+                const isAtLeft = horizontalDragPosition === 0,
 					isAtRight = horizontalDragPosition == dragMaxX,
 					percentScrolled = destX / dragMaxX,
 					destLeft = -percentScrolled * (contentWidth - paneWidth);
@@ -3525,17 +3525,17 @@
             }
 
             function scrollToY(destY, animate) {
-                var percentScrolled = destY / (contentHeight - paneHeight);
+                const percentScrolled = destY / (contentHeight - paneHeight);
                 positionDragY(percentScrolled * dragMaxY, animate);
             }
 
             function scrollToX(destX, animate) {
-                var percentScrolled = destX / (contentWidth - paneWidth);
+                const percentScrolled = destX / (contentWidth - paneWidth);
                 positionDragX(percentScrolled * dragMaxX, animate);
             }
 
             function scrollToElement(ele, stickToTop, animate) {
-                var e, eleHeight, eleWidth, eleTop = 0, eleLeft = 0, viewportTop, viewportLeft, maxVisibleEleTop, maxVisibleEleLeft, destY, destX;
+                let e, eleHeight, eleWidth, eleTop = 0, eleLeft = 0, viewportTop, viewportLeft, maxVisibleEleTop, maxVisibleEleLeft, destY, destX;
 
                 // Legal hash values aren't necessarily legal jQuery selectors so we need to catch any
                 // errors from the lookup...
@@ -3596,12 +3596,12 @@
             }
 
             function isCloseToBottom() {
-                var scrollableHeight = contentHeight - paneHeight;
+                const scrollableHeight = contentHeight - paneHeight;
                 return (scrollableHeight > 20) && (scrollableHeight - contentPositionY() < 10);
             }
 
             function isCloseToRight() {
-                var scrollableWidth = contentWidth - paneWidth;
+                const scrollableWidth = contentWidth - paneWidth;
                 return (scrollableWidth > 20) && (scrollableWidth - contentPositionX() < 10);
             }
 
@@ -3609,7 +3609,7 @@
                 container.unbind(mwEvent).bind(
 					mwEvent,
 					function (event, delta, deltaX, deltaY) {
-					    var dX = horizontalDragPosition, dY = verticalDragPosition;
+					    const dX = horizontalDragPosition, dY = verticalDragPosition;
 					    jsp.scrollBy(deltaX * settings.mouseWheelSpeed, -deltaY * settings.mouseWheelSpeed, false);
 					    // return true if there was no movement so rest of screen can scroll
 					    return dX == horizontalDragPosition && dY == verticalDragPosition;
@@ -3639,7 +3639,7 @@
             }
 
             function initKeyboardNav() {
-                var keyDown, elementHasScrolled, validParents = [];
+                let keyDown, elementHasScrolled, validParents = [];
                 isScrollableH && validParents.push(horizontalBar[0]);
                 isScrollableV && validParents.push(verticalBar[0]);
 
@@ -3658,7 +3658,7 @@
 						    if (e.target !== this && !(validParents.length && $(e.target).closest(validParents).length)) {
 						        return;
 						    }
-						    var dX = horizontalDragPosition, dY = verticalDragPosition;
+						    const dX = horizontalDragPosition, dY = verticalDragPosition;
 						    switch (e.keyCode) {
 						        case 40: // down
 						        case 38: // up
@@ -3706,7 +3706,7 @@
                 }
 
                 function keyDownHandler() {
-                    var dX = horizontalDragPosition, dY = verticalDragPosition;
+                    const dX = horizontalDragPosition, dY = verticalDragPosition;
                     switch (keyDown) {
                         case 40: // down
                             jsp.scrollByY(settings.keyboardSpeed, false);
@@ -3742,7 +3742,7 @@
 
             function observeHash() {
                 if (location.hash && location.hash.length > 1) {
-                    var e,
+                    let e,
 						retryInt,
 						hash = escape(location.hash.substr(1)) // hash must be escaped to prevent XSS
                     ;
@@ -3788,7 +3788,7 @@
                     // does the link point to the same page?
                     // this also takes care of cases with a <base>-Tag or Links not starting with the hash #
                     // e.g. <a href="index.html#test"> when the current url already is index.html
-                    var href = this.href.substr(0, this.href.indexOf('#')),
+                    let href = this.href.substr(0, this.href.indexOf('#')),
 						locationHref = location.href,
 						hash,
 						element,
@@ -3844,7 +3844,7 @@
 
             // Init touch on iPad, iPhone, iPod, Android
             function initTouch() {
-                var startX,
+                let startX,
 					startY,
 					touchStartX,
 					touchStartY,
@@ -3854,7 +3854,7 @@
                 container.unbind('touchstart.jsp touchmove.jsp touchend.jsp click.jsp-touchclick').bind(
 					'touchstart.jsp',
 					function (e) {
-					    var touch = e.originalEvent.touches[0];
+					    const touch = e.originalEvent.touches[0];
 					    startX = contentPositionX();
 					    startY = contentPositionY();
 					    touchStartX = touch.pageX;
@@ -3869,7 +3869,7 @@
 					        return;
 					    }
 
-					    var touchPos = ev.originalEvent.touches[0],
+					    const touchPos = ev.originalEvent.touches[0],
 							dX = horizontalDragPosition, dY = verticalDragPosition;
 
 					    jsp.scrollTo(startX + touchStartX - touchPos.pageX, startY + touchStartY - touchPos.pageY);
@@ -3899,7 +3899,7 @@
             }
 
             function destroy() {
-                var currentY = contentPositionY(),
+                const currentY = contentPositionY(),
 					currentX = contentPositionX();
                 elem.removeClass('jspScrollable').unbind('.jsp');
                 elem.replaceWith(originalElement.append(pane.children()));
@@ -3972,14 +3972,14 @@
 				    // Scrolls the pane by the specified amount of pixels. animate is optional and if not passed then
 				    // the value of animateScroll from the settings object this jScrollPane was initialised with is used.
 				    scrollByX: function (deltaX, animate) {
-				        var destX = contentPositionX() + Math[deltaX < 0 ? 'floor' : 'ceil'](deltaX),
+				        const destX = contentPositionX() + Math[deltaX < 0 ? 'floor' : 'ceil'](deltaX),
 							percentScrolled = destX / (contentWidth - paneWidth);
 				        positionDragX(percentScrolled * dragMaxX, animate);
 				    },
 				    // Scrolls the pane by the specified amount of pixels. animate is optional and if not passed then
 				    // the value of animateScroll from the settings object this jScrollPane was initialised with is used.
 				    scrollByY: function (deltaY, animate) {
-				        var destY = contentPositionY() + Math[deltaY < 0 ? 'floor' : 'ceil'](deltaY),
+				        const destY = contentPositionY() + Math[deltaY < 0 ? 'floor' : 'ceil'](deltaY),
 							percentScrolled = destY / (contentHeight - paneHeight);
 				        positionDragY(percentScrolled * dragMaxY, animate);
 				    },
@@ -4003,7 +4003,7 @@
 				    //  * stepCallback - a function that you must execute each time you update the value of the property
 				    // You can use the default implementation (below) as a starting point for your own implementation.
 				    animate: function (ele, prop, value, stepCallback) {
-				        var params = {};
+				        const params = {};
 				        params[prop] = value;
 				        ele.animate(
 							params,
@@ -4084,7 +4084,7 @@
 
         return this.each(
 			function () {
-			    var elem = $(this), jspApi = elem.data('jsp');
+			    let elem = $(this), jspApi = elem.data('jsp');
 			    if (jspApi) {
 			        jspApi.reinitialise(settings);
 			    } else {
@@ -4135,22 +4135,22 @@
 
 (function ($) {
     $.fn.dnnSettingDropdown = function () {
-        var clicked = function () {
+        const clicked = function () {
             if ($(this).hasClass('dnnButtonDropdown')) {
                 $(this).removeClass('dnnButtonDropdown').addClass('dnnButtonDropdown-clicked');
                 $(this).next().show();
             }
         };
 
-        var hideDropdown = function () {
-            var btn = $(this).children(':first');
+        const hideDropdown = function () {
+            const btn = $(this).children(':first');
             if (btn.hasClass('dnnButtonDropdown-clicked')) {
                 btn.removeClass('dnnButtonDropdown-clicked').addClass('dnnButtonDropdown');
                 btn.next().fadeOut();
             }
         };
 
-        var hoverConfig = {
+        const hoverConfig = {
             over: function () {
             },
             out: hideDropdown,
@@ -4167,7 +4167,7 @@
 (function ($) {
     $.fn.onEnter = function (fn) {
         return this.each(function () {
-            var $this = $(this);
+            const $this = $(this);
             $this.bind('onEnter', fn);
             $this.keydown(function (e) {
                 if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
@@ -4183,7 +4183,7 @@
 (function ($) {
     $.extend({
         onAjaxError: function (jqXhr, textStatus, errorThrown) {
-            var title, text;
+            let title, text;
             if (jqXhr && jqXhr.status === 401) {
                 dnnModal.show('../Login.aspx' + '?popUp=true', true, 300, 650, true, '');
                 return;
@@ -4204,21 +4204,21 @@
 
 (function ($) {
 	$.fn.dnnSliderInput = function (options) {
-		var sliderOptions = $.extend({}, $.fn.dnnSliderInput.defaults, options);
+		const sliderOptions = $.extend({}, $.fn.dnnSliderInput.defaults, options);
     	return $(this).each(function () {
-    		var $this = $(this);
-		    var value = $this.val();
-		    var $slider = $('<div class="dnnSliderInput"></div>');
+    		const $this = $(this);
+		    const value = $this.val();
+		    const $slider = $('<div class="dnnSliderInput"></div>');
 		    $this.hide().after($slider);
 
 		    $slider.slider(sliderOptions);
 		    $slider.slider('value', value);
 
-		    var $tooltip = $('<span class="dnnTooltip"><span class="dnnFormHelpContent dnnClear"><span class="dnnHelpText bottomArrow"></span></span></span>');
+		    const $tooltip = $('<span class="dnnTooltip"><span class="dnnFormHelpContent dnnClear"><span class="dnnHelpText bottomArrow"></span></span></span>');
 
-		    var calcTooltipPosition = function () {
+		    const calcTooltipPosition = function () {
 			    setTimeout(function() {
-				    var left = $slider.find('.ui-slider-handle')[0].style.left;
+				    const left = $slider.find('.ui-slider-handle')[0].style.left;
 				    $tooltip.css('left', left);
 			    }, 0);
 		    };
@@ -4246,13 +4246,13 @@
 // please keep this func at last of this file, thanks
 (function ($) {
     /* Start customised controls */
-    var inputFocusFix = function () {
-        var errorMsg = $(this).next();
+    const inputFocusFix = function () {
+        const errorMsg = $(this).next();
         if (errorMsg.hasClass('dnnFormError'))
             errorMsg.hide();
     };
-    var throttle = null;
-    var dnnInitCustomisedCtrls = function () {
+    let throttle = null;
+    const dnnInitCustomisedCtrls = function () {
         if (throttle != null) {
             clearTimeout(throttle);
             throttle = null;
@@ -4267,11 +4267,11 @@
         }, 200);
         //change the window confirm style to DNN style
         $("*[onclick*='return confirm']").each(function () {
-            var instance = $(this);
-            var isButton = this.nodeName.toLowerCase() == "img" || this.nodeName.toLowerCase() == "input";
-            var script = /return confirm\((['"])([\s\S]*?)\1\)/g.exec(instance.attr("onclick"));
+            const instance = $(this);
+            const isButton = this.nodeName.toLowerCase() == "img" || this.nodeName.toLowerCase() == "input";
+            const script = /return confirm\((['"])([\s\S]*?)\1\)/g.exec(instance.attr("onclick"));
             if (script != null) {
-                var confirmContent = script[2].split("\\" + script[1]).join(script[1]);
+                let confirmContent = script[2].split("\\" + script[1]).join(script[1]);
                 //restore unicode chars.
                 confirmContent = confirmContent.replace(/\\u([\d\w]{4})/gi, function(match, charCode) {
                     return String.fromCharCode(parseInt(charCode, 16));
@@ -4283,14 +4283,14 @@
             }
         });
     };
-    var saveRgDataDivScrollTop = function () {
+    const saveRgDataDivScrollTop = function () {
         window.__rgDataDivScrollTopPersistArray = [];
         $('.rgDataDiv').each(function () {
-            var $this = $(this);
-            var ele = $this.get(0);
+            const $this = $(this);
+            const ele = $this.get(0);
             if (ele.scrollPane) {
-                var api = ele.scrollPane.data('jsp');
-                var y = api.getContentPositionY();
+                const api = ele.scrollPane.data('jsp');
+                const y = api.getContentPositionY();
                 window.__rgDataDivScrollTopPersistArray.push(y);
             }
         });

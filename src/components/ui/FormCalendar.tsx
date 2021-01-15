@@ -1,4 +1,4 @@
-import { Datepicker } from '@erkenningen/ui';
+import { Datepicker } from '@erkenningen/ui/components/datepicker';
 import { parse } from 'date-fns';
 import { FormikProps } from 'formik';
 import React from 'react';
@@ -18,7 +18,7 @@ interface IFormCalendarProps {
   formControlClassName?: string;
 }
 
-class FormCalendar extends React.Component<IFormCalendarProps, {}> {
+class FormCalendar extends React.Component<IFormCalendarProps, unknown> {
   public render() {
     const handleChange = (event: any) => {
       if (this.props.form && this.props.name) {

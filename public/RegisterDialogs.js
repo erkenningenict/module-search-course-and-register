@@ -1,13 +1,13 @@
-var initToolCommands = function() {
+const initToolCommands = function() {
 	if (typeof Telerik !== "undefined" && typeof Telerik.Web.UI.Editor !== "undefined") {
 		Telerik.Web.UI.Editor.CommandList["SaveTemplate"] = function(commandName, editor, args) {
-			var htmlText = editor.get_html();
+			const htmlText = editor.get_html();
 
 			var args;
 			args[0] = htmlText;
 			argument = args;
 
-			var myCallbackFunction = function(sender, args) { };
+			const myCallbackFunction = function(sender, args) { };
 
 			editor.showExternalDialog(
 				__textEditorSaveTemplateDialog,
@@ -25,7 +25,7 @@ var initToolCommands = function() {
 	}
 };
 
-var createToolCommands = function () {
+const createToolCommands = function () {
     initToolCommands();
     if(typeof Sys !== "undefined") {
 	Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function () {

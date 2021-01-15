@@ -1,4 +1,5 @@
-import { PanelBody, toDutchMoney } from '@erkenningen/ui';
+import { toDutchMoney } from '@erkenningen/ui/utils';
+import { PanelBody } from '@erkenningen/ui/layout/panel';
 import React from 'react';
 import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
 

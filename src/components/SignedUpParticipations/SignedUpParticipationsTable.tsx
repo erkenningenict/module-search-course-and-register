@@ -1,21 +1,18 @@
-import { useQuery } from '@apollo/react-hooks';
-import { Alert, PanelBody, Spinner, TableResponsive } from '@erkenningen/ui';
-import React from 'react';
+import { Alert } from '@erkenningen/ui/components/alert';
+import { Spinner } from '@erkenningen/ui/components/spinner';
+import { PanelBody } from '@erkenningen/ui/layout/panel';
+import { TableResponsive } from '@erkenningen/ui/layout/table';
+import React, { useContext } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import {
-  GET_MY_SIGNED_UP_PARTICIPATIONS_LIST_QUERY,
-  IMy,
-  ISignedUpParticipation,
-} from '../../shared/Queries';
+import { useGetMySignedUpParticipationsListQuery } from '../../generated/graphql';
+import { UserContext } from '../../shared/Auth';
 import SignedUpParticipationsRow from './SignedUpParticipationsRow';
 
 export default function SignedUpParticipationsTable(props: RouteComponentProps) {
-  const { loading, data, error } = useQuery<
-    IMy,
-    {
-      input: boolean;
-    }
-  >(GET_MY_SIGNED_UP_PARTICIPATIONS_LIST_QUERY, { fetchPolicy: 'network-only' });
+  const user = useContext(UserContext);
+  const { loading, data, error } = useGetMySignedUpParticipationsListQuery({
+    fetchPolicy: 'no-cache',
+  });
   if (loading) {
     return (
       <PanelBody>
@@ -34,7 +31,7 @@ export default function SignedUpParticipationsTable(props: RouteComponentProps) 
   if (!data || !data.my) {
     return null;
   }
-  if (data.my.Roles && data.my.Roles.indexOf('Student') === -1) {
+  if (user?.Roles && user?.Roles.indexOf('Student') === -1) {
     return (
       <PanelBody>
         <Alert type="warning">
@@ -75,7 +72,7 @@ export default function SignedUpParticipationsTable(props: RouteComponentProps) 
               )}
             {data.my &&
               data.my.AangemeldeCursusDeelnames &&
-              data.my.AangemeldeCursusDeelnames.map((item: ISignedUpParticipation) => (
+              data.my.AangemeldeCursusDeelnames.map((item) => (
                 <SignedUpParticipationsRow {...props} key={item.CursusDeelnameID} row={item} />
               ))}
           </tbody>

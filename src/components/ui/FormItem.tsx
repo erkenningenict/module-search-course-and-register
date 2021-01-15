@@ -11,7 +11,7 @@ interface IFormItemProps {
   helpText?: string;
 }
 
-class FormItem extends React.Component<IFormItemProps, {}> {
+class FormItem extends React.Component<IFormItemProps, unknown> {
   public render() {
     let labelClasses = this.props.labelClassNames || 'col-sm-4 col-md-3';
     labelClasses += ' control-label';

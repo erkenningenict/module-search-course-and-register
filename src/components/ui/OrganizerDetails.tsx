@@ -1,4 +1,4 @@
-import { Row } from '@erkenningen/ui';
+import { Row } from '@erkenningen/ui/layout/row';
 import React from 'react';
 import './OrganizerDetails.scss';
 

@@ -1,21 +1,19 @@
-import { PanelBody } from '@erkenningen/ui';
-import { LinkButtonContainer, Panel } from '@erkenningen/ui';
+import { PanelBody, Panel} from '@erkenningen/ui/layout/panel';
+import { LinkButtonContainer } from '@erkenningen/ui/components/link-button';
 import React from 'react';
-import { Route, RouteComponentProps, Switch } from 'react-router';
+import { Route, Switch } from 'react-router';
 import { SignedUpParticipationDetails } from '../../SignedUpParticipations/SignedUpParticipationsDetails';
 import SignedUpParticipationsTable from '../../SignedUpParticipations/SignedUpParticipationsTable';
 import LinkButton from '../../ui/LinkButton';
 
-interface ISignedUpParticipationsProps extends RouteComponentProps<any> {}
-
-export default function SignedUpParticipations(props: ISignedUpParticipationsProps) {
+export default function SignedUpParticipations(props) {
   return (
     <Panel title="Waar ben ik aangemeld" doNotIncludeBody={true}>
       <Switch>
         <Route
           exact={true}
           path="/waar-ben-ik-aangemeld"
-          render={(routerProps: any) => {
+          render={() => {
             return <SignedUpParticipationsTable {...props} />;
           }}
         />

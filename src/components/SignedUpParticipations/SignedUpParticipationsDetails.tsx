@@ -1,5 +1,8 @@
-import { useMutation, useQuery } from '@apollo/react-hooks';
-import { Alert, Button, PanelBody, Spinner } from '@erkenningen/ui';
+import { useMutation, useQuery } from '@apollo/client';
+import { Alert } from '@erkenningen/ui/components/alert';
+import { Button } from '@erkenningen/ui/components/button';
+import { Spinner } from '@erkenningen/ui/components/spinner';
+import { PanelBody } from '@erkenningen/ui/layout/panel';
 import React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { UNREGISTER } from '../../shared/Mutations';
@@ -59,17 +62,19 @@ export function SignedUpParticipationDetails(props: RouteComponentProps<any>) {
 
   const unregisterFragment = (
     <PanelBody>
-      <Button
-        label="Afmelden"
-        icon="pi pi-check"
-        onClick={() => {
-          const participationId: number = parseInt(props.match.params.participationId, 10);
-          unRegisterCourse({
-            variables: { CursusDeelnameID: participationId },
-          });
-        }}
-      />
-      {returnToListLink}
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Button
+          label="Afmelden"
+          icon="pi pi-check"
+          onClick={() => {
+            const participationId: number = parseInt(props.match.params.participationId, 10);
+            unRegisterCourse({
+              variables: { CursusDeelnameID: participationId },
+            });
+          }}
+        />
+        {returnToListLink}
+      </div>
     </PanelBody>
   );
 
@@ -77,7 +82,7 @@ export function SignedUpParticipationDetails(props: RouteComponentProps<any>) {
     return (
       <PanelBody>
         <Alert type="success">{mutationData.unRegisterForCourse.message}</Alert>
-        {returnToListLink}
+        <div style={{ display: 'flex', alignItems: 'center' }}>{returnToListLink}</div>
       </PanelBody>
     );
   }
@@ -85,7 +90,7 @@ export function SignedUpParticipationDetails(props: RouteComponentProps<any>) {
     return (
       <PanelBody>
         <Alert type="warning">{mutationData.unRegisterForCourse.message}</Alert>
-        {returnToListLink}
+        <div style={{ display: 'flex', alignItems: 'center' }}>{returnToListLink}</div>
       </PanelBody>
     );
   }

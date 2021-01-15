@@ -1,4 +1,5 @@
-import { PanelBody, toDutchDate, toDutchMoney } from '@erkenningen/ui';
+import {  toDutchDate, toDutchMoney } from '@erkenningen/ui/utils';
+import {PanelBody} from '@erkenningen/ui/layout/panel';
 import React from 'react';
 import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
 import OrganizerDetails from '../ui/OrganizerDetails';

@@ -55,11 +55,11 @@ $.extend( $.ui, {
 // plugins
 $.fn.extend({
 	scrollParent: function( includeHidden ) {
-		var position = this.css( "position" ),
+		const position = this.css( "position" ),
 			excludeStaticParent = position === "absolute",
 			overflowRegex = includeHidden ? /(auto|scroll|hidden)/ : /(auto|scroll)/,
 			scrollParent = this.parents().filter( function() {
-				var parent = $( this );
+				const parent = $( this );
 				if ( excludeStaticParent && parent.css( "position" ) === "static" ) {
 					return false;
 				}
@@ -70,7 +70,7 @@ $.fn.extend({
 	},
 
 	uniqueId: (function() {
-		var uuid = 0;
+		let uuid = 0;
 
 		return function() {
 			return this.each(function() {
@@ -92,7 +92,7 @@ $.fn.extend({
 
 // selectors
 function focusable( element, isTabIndexNotNaN ) {
-	var map, mapName, img,
+	let map, mapName, img,
 		nodeName = element.nodeName.toLowerCase();
 	if ( "area" === nodeName ) {
 		map = element.parentNode;
@@ -136,7 +136,7 @@ $.extend( $.expr[ ":" ], {
 	},
 
 	tabbable: function( element ) {
-		var tabIndex = $.attr( element, "tabindex" ),
+		const tabIndex = $.attr( element, "tabindex" ),
 			isTabIndexNaN = isNaN( tabIndex );
 		return ( isTabIndexNaN || tabIndex >= 0 ) && focusable( element, !isTabIndexNaN );
 	}
@@ -145,7 +145,7 @@ $.extend( $.expr[ ":" ], {
 // support: jQuery <1.8
 if ( !$( "<a>" ).outerWidth( 1 ).jquery ) {
 	$.each( [ "Width", "Height" ], function( i, name ) {
-		var side = name === "Width" ? [ "Left", "Right" ] : [ "Top", "Bottom" ],
+		const side = name === "Width" ? [ "Left", "Right" ] : [ "Top", "Bottom" ],
 			type = name.toLowerCase(),
 			orig = {
 				innerWidth: $.fn.innerWidth,
@@ -219,7 +219,7 @@ $.fn.extend({
 		return function( delay, fn ) {
 			return typeof delay === "number" ?
 				this.each(function() {
-					var elem = this;
+					const elem = this;
 					setTimeout(function() {
 						$( elem ).focus();
 						if ( fn ) {
@@ -232,7 +232,7 @@ $.fn.extend({
 	})( $.fn.focus ),
 
 	disableSelection: (function() {
-		var eventType = "onselectstart" in document.createElement( "div" ) ?
+		const eventType = "onselectstart" in document.createElement( "div" ) ?
 			"selectstart" :
 			"mousedown";
 
@@ -253,7 +253,7 @@ $.fn.extend({
 		}
 
 		if ( this.length ) {
-			var elem = $( this[ 0 ] ), position, value;
+			let elem = $( this[ 0 ] ), position, value;
 			while ( elem.length && elem[ 0 ] !== document ) {
 				// Ignore z-index if position is set to a value where z-index is ignored by the browser
 				// This makes behavior of this function consistent across browsers
@@ -280,7 +280,7 @@ $.fn.extend({
 // $.ui.plugin is deprecated. Use $.widget() extensions instead.
 $.ui.plugin = {
 	add: function( module, option, set ) {
-		var i,
+		let i,
 			proto = $.ui[ module ].prototype;
 		for ( i in set ) {
 			proto.plugins[ i ] = proto.plugins[ i ] || [];
@@ -288,7 +288,7 @@ $.ui.plugin = {
 		}
 	},
 	call: function( instance, name, args, allowDisconnected ) {
-		var i,
+		let i,
 			set = instance.plugins[ name ];
 
 		if ( !set ) {
@@ -320,12 +320,12 @@ $.ui.plugin = {
  */
 
 
-var widget_uuid = 0,
+let widget_uuid = 0,
 	widget_slice = Array.prototype.slice;
 
 $.cleanData = (function( orig ) {
 	return function( elems ) {
-		var events, elem, i;
+		let events, elem, i;
 		for ( i = 0; (elem = elems[i]) != null; i++ ) {
 			try {
 
@@ -343,7 +343,7 @@ $.cleanData = (function( orig ) {
 })( $.cleanData );
 
 $.widget = function( name, base, prototype ) {
-	var fullName, existingConstructor, constructor, basePrototype,
+	let fullName, existingConstructor, constructor, basePrototype,
 		// proxiedPrototype allows the provided prototype to remain unmodified
 		// so that it can be used as a mixin for multiple widgets (#8876)
 		proxiedPrototype = {},
@@ -398,14 +398,14 @@ $.widget = function( name, base, prototype ) {
 			return;
 		}
 		proxiedPrototype[ prop ] = (function() {
-			var _super = function() {
+			const _super = function() {
 					return base.prototype[ prop ].apply( this, arguments );
 				},
 				_superApply = function( args ) {
 					return base.prototype[ prop ].apply( this, args );
 				};
 			return function() {
-				var __super = this._super,
+				let __super = this._super,
 					__superApply = this._superApply,
 					returnValue;
 
@@ -439,7 +439,7 @@ $.widget = function( name, base, prototype ) {
 	// level in the prototype chain.
 	if ( existingConstructor ) {
 		$.each( existingConstructor._childConstructors, function( i, child ) {
-			var childPrototype = child.prototype;
+			const childPrototype = child.prototype;
 
 			// redefine the child widget using the same prototype that was
 			// originally used, but inherit from the new version of the base
@@ -458,7 +458,7 @@ $.widget = function( name, base, prototype ) {
 };
 
 $.widget.extend = function( target ) {
-	var input = widget_slice.call( arguments, 1 ),
+	let input = widget_slice.call( arguments, 1 ),
 		inputIndex = 0,
 		inputLength = input.length,
 		key,
@@ -484,15 +484,15 @@ $.widget.extend = function( target ) {
 };
 
 $.widget.bridge = function( name, object ) {
-	var fullName = object.prototype.widgetFullName || name;
+	const fullName = object.prototype.widgetFullName || name;
 	$.fn[ name ] = function( options ) {
-		var isMethodCall = typeof options === "string",
+		let isMethodCall = typeof options === "string",
 			args = widget_slice.call( arguments, 1 ),
 			returnValue = this;
 
 		if ( isMethodCall ) {
 			this.each(function() {
-				var methodValue,
+				let methodValue,
 					instance = $.data( this, fullName );
 				if ( options === "instance" ) {
 					returnValue = instance;
@@ -521,7 +521,7 @@ $.widget.bridge = function( name, object ) {
 			}
 
 			this.each(function() {
-				var instance = $.data( this, fullName );
+				const instance = $.data( this, fullName );
 				if ( instance ) {
 					instance.option( options || {} );
 					if ( instance._init ) {
@@ -620,7 +620,7 @@ $.Widget.prototype = {
 	},
 
 	option: function( key, value ) {
-		var options = key,
+		let options = key,
 			parts,
 			curOption,
 			i;
@@ -659,7 +659,7 @@ $.Widget.prototype = {
 		return this;
 	},
 	_setOptions: function( options ) {
-		var key;
+		let key;
 
 		for ( key in options ) {
 			this._setOption( key, options[ key ] );
@@ -692,7 +692,7 @@ $.Widget.prototype = {
 	},
 
 	_on: function( suppressDisabledCheck, element, handlers ) {
-		var delegateElement,
+		let delegateElement,
 			instance = this;
 
 		// no suppressDisabledCheck flag, shuffle arguments
@@ -732,7 +732,7 @@ $.Widget.prototype = {
 					handler.guid || handlerProxy.guid || $.guid++;
 			}
 
-			var match = event.match( /^([\w:-]*)\s*(.*)$/ ),
+			const match = event.match( /^([\w:-]*)\s*(.*)$/ ),
 				eventName = match[1] + instance.eventNamespace,
 				selector = match[2];
 			if ( selector ) {
@@ -788,7 +788,7 @@ $.Widget.prototype = {
 	},
 
 	_trigger: function( type, event, data ) {
-		var prop, orig,
+		let prop, orig,
 			callback = this.options[ type ];
 
 		data = data || {};
@@ -822,7 +822,7 @@ $.each( { show: "fadeIn", hide: "fadeOut" }, function( method, defaultEffect ) {
 		if ( typeof options === "string" ) {
 			options = { effect: options };
 		}
-		var hasOptions,
+		let hasOptions,
 			effectName = !options ?
 				method :
 				options === true || typeof options === "number" ?
@@ -853,7 +853,7 @@ $.each( { show: "fadeIn", hide: "fadeOut" }, function( method, defaultEffect ) {
 	};
 });
 
-var widget = $.widget;
+const widget = $.widget;
 
 
 /*!
@@ -868,12 +868,12 @@ var widget = $.widget;
  */
 
 
-var mouseHandled = false;
+let mouseHandled = false;
 $( document ).mouseup( function() {
 	mouseHandled = false;
 });
 
-var mouse = $.widget("ui.mouse", {
+const mouse = $.widget("ui.mouse", {
 	version: "1.11.3",
 	options: {
 		cancel: "input,textarea,button,select,option",
@@ -881,7 +881,7 @@ var mouse = $.widget("ui.mouse", {
 		delay: 0
 	},
 	_mouseInit: function() {
-		var that = this;
+		const that = this;
 
 		this.element
 			.bind("mousedown." + this.widgetName, function(event) {
@@ -922,7 +922,7 @@ var mouse = $.widget("ui.mouse", {
 
 		this._mouseDownEvent = event;
 
-		var that = this,
+		const that = this,
 			btnIsLeft = (event.which === 1),
 			// event.target.nodeName works around a bug in IE 8 with
 			// disabled inputs (#7620)
@@ -1057,7 +1057,7 @@ var mouse = $.widget("ui.mouse", {
 
 $.ui = $.ui || {};
 
-var cachedScrollbarWidth, supportsOffsetFractions,
+let cachedScrollbarWidth, supportsOffsetFractions,
 	max = Math.max,
 	abs = Math.abs,
 	round = Math.round,
@@ -1080,7 +1080,7 @@ function parseCss( element, property ) {
 }
 
 function getDimensions( elem ) {
-	var raw = elem[0];
+	const raw = elem[0];
 	if ( raw.nodeType === 9 ) {
 		return {
 			width: elem.width(),
@@ -1114,7 +1114,7 @@ $.position = {
 		if ( cachedScrollbarWidth !== undefined ) {
 			return cachedScrollbarWidth;
 		}
-		var w1, w2,
+		let w1, w2,
 			div = $( "<div style='display:block;position:absolute;width:50px;height:50px;overflow:hidden;'><div style='height:100px;width:auto;'></div></div>" ),
 			innerDiv = div.children()[0];
 
@@ -1133,7 +1133,7 @@ $.position = {
 		return (cachedScrollbarWidth = w1 - w2);
 	},
 	getScrollInfo: function( within ) {
-		var overflowX = within.isWindow || within.isDocument ? "" :
+		const overflowX = within.isWindow || within.isDocument ? "" :
 				within.element.css( "overflow-x" ),
 			overflowY = within.isWindow || within.isDocument ? "" :
 				within.element.css( "overflow-y" ),
@@ -1147,7 +1147,7 @@ $.position = {
 		};
 	},
 	getWithinInfo: function( element ) {
-		var withinElement = $( element || window ),
+		const withinElement = $( element || window ),
 			isWindow = $.isWindow( withinElement[0] ),
 			isDocument = !!withinElement[ 0 ] && withinElement[ 0 ].nodeType === 9;
 		return {
@@ -1174,7 +1174,7 @@ $.fn.position = function( options ) {
 	// make a copy, we don't want to modify arguments
 	options = $.extend( {}, options );
 
-	var atOffset, targetWidth, targetHeight, targetOffset, basePosition, dimensions,
+	let atOffset, targetWidth, targetHeight, targetOffset, basePosition, dimensions,
 		target = $( options.of ),
 		within = $.position.getWithinInfo( options.within ),
 		scrollInfo = $.position.getScrollInfo( within ),
@@ -1195,7 +1195,7 @@ $.fn.position = function( options ) {
 	// force my and at to have valid horizontal and vertical positions
 	// if a value is missing or invalid, it will be converted to center
 	$.each( [ "my", "at" ], function() {
-		var pos = ( options[ this ] || "" ).split( " " ),
+		let pos = ( options[ this ] || "" ).split( " " ),
 			horizontalOffset,
 			verticalOffset;
 
@@ -1246,7 +1246,7 @@ $.fn.position = function( options ) {
 	basePosition.top += atOffset[ 1 ];
 
 	return this.each(function() {
-		var collisionPosition, using,
+		let collisionPosition, using,
 			elem = $( this ),
 			elemWidth = elem.outerWidth(),
 			elemHeight = elem.outerHeight(),
@@ -1305,7 +1305,7 @@ $.fn.position = function( options ) {
 		if ( options.using ) {
 			// adds feedback as second argument to using callback, if present
 			using = function( props ) {
-				var left = targetOffset.left - position.left,
+				const left = targetOffset.left - position.left,
 					right = left + targetWidth - elemWidth,
 					top = targetOffset.top - position.top,
 					bottom = top + targetHeight - elemHeight,
@@ -1349,7 +1349,7 @@ $.fn.position = function( options ) {
 $.ui.position = {
 	fit: {
 		left: function( position, data ) {
-			var within = data.within,
+			let within = data.within,
 				withinOffset = within.isWindow ? within.scrollLeft : within.offset.left,
 				outerWidth = within.width,
 				collisionPosLeft = position.left - data.collisionPosition.marginLeft,
@@ -1386,7 +1386,7 @@ $.ui.position = {
 			}
 		},
 		top: function( position, data ) {
-			var within = data.within,
+			let within = data.within,
 				withinOffset = within.isWindow ? within.scrollTop : within.offset.top,
 				outerHeight = data.within.height,
 				collisionPosTop = position.top - data.collisionPosition.marginTop,
@@ -1425,7 +1425,7 @@ $.ui.position = {
 	},
 	flip: {
 		left: function( position, data ) {
-			var within = data.within,
+			let within = data.within,
 				withinOffset = within.offset.left + within.scrollLeft,
 				outerWidth = within.width,
 				offsetLeft = within.isWindow ? within.scrollLeft : within.offset.left,
@@ -1459,7 +1459,7 @@ $.ui.position = {
 			}
 		},
 		top: function( position, data ) {
-			var within = data.within,
+			let within = data.within,
 				withinOffset = within.offset.top + within.scrollTop,
 				outerHeight = within.height,
 				offsetTop = within.isWindow ? within.scrollTop : within.offset.top,
@@ -1507,7 +1507,7 @@ $.ui.position = {
 
 // fraction support test
 (function() {
-	var testElement, testElementParent, testElementStyle, offsetLeft, i,
+	let testElement, testElementParent, testElementStyle, offsetLeft, i,
 		body = document.getElementsByTagName( "body" )[ 0 ],
 		div = document.createElement( "div" );
 
@@ -1546,7 +1546,7 @@ $.ui.position = {
 
 })();
 
-var position = $.ui.position;
+const position = $.ui.position;
 
 
 /*!
@@ -1561,7 +1561,7 @@ var position = $.ui.position;
  */
 
 
-var accordion = $.widget( "ui.accordion", {
+const accordion = $.widget( "ui.accordion", {
 	version: "1.11.3",
 	options: {
 		active: 0,
@@ -1597,7 +1597,7 @@ var accordion = $.widget( "ui.accordion", {
 	},
 
 	_create: function() {
-		var options = this.options;
+		const options = this.options;
 		this.prevShow = this.prevHide = $();
 		this.element.addClass( "ui-accordion ui-widget ui-helper-reset" )
 			// ARIA
@@ -1624,7 +1624,7 @@ var accordion = $.widget( "ui.accordion", {
 	},
 
 	_createIcons: function() {
-		var icons = this.options.icons;
+		const icons = this.options.icons;
 		if ( icons ) {
 			$( "<span>" )
 				.addClass( "ui-accordion-header-icon ui-icon " + icons.header )
@@ -1644,7 +1644,7 @@ var accordion = $.widget( "ui.accordion", {
 	},
 
 	_destroy: function() {
-		var contents;
+		let contents;
 
 		// clean up main element
 		this.element
@@ -1723,7 +1723,7 @@ var accordion = $.widget( "ui.accordion", {
 			return;
 		}
 
-		var keyCode = $.ui.keyCode,
+		let keyCode = $.ui.keyCode,
 			length = this.headers.length,
 			currentIndex = this.headers.index( event.target ),
 			toFocus = false;
@@ -1764,7 +1764,7 @@ var accordion = $.widget( "ui.accordion", {
 	},
 
 	refresh: function() {
-		var options = this.options;
+		const options = this.options;
 		this._processPanels();
 
 		// was collapsed or no panel
@@ -1796,7 +1796,7 @@ var accordion = $.widget( "ui.accordion", {
 	},
 
 	_processPanels: function() {
-		var prevHeaders = this.headers,
+		const prevHeaders = this.headers,
 			prevPanels = this.panels;
 
 		this.headers = this.element.find( this.options.header )
@@ -1815,7 +1815,7 @@ var accordion = $.widget( "ui.accordion", {
 	},
 
 	_refresh: function() {
-		var maxHeight,
+		let maxHeight,
 			options = this.options,
 			heightStyle = options.heightStyle,
 			parent = this.element.parent();
@@ -1830,7 +1830,7 @@ var accordion = $.widget( "ui.accordion", {
 		this.headers
 			.attr( "role", "tab" )
 			.each(function() {
-				var header = $( this ),
+				const header = $( this ),
 					headerId = header.uniqueId().attr( "id" ),
 					panel = header.next(),
 					panelId = panel.uniqueId().attr( "id" );
@@ -1875,7 +1875,7 @@ var accordion = $.widget( "ui.accordion", {
 		if ( heightStyle === "fill" ) {
 			maxHeight = parent.height();
 			this.element.siblings( ":visible" ).each(function() {
-				var elem = $( this ),
+				const elem = $( this ),
 					position = elem.css( "position" );
 
 				if ( position === "absolute" || position === "fixed" ) {
@@ -1905,7 +1905,7 @@ var accordion = $.widget( "ui.accordion", {
 	},
 
 	_activate: function( index ) {
-		var active = this._findActive( index )[ 0 ];
+		let active = this._findActive( index )[ 0 ];
 
 		// trying to activate the already active panel
 		if ( active === this.active[ 0 ] ) {
@@ -1927,7 +1927,7 @@ var accordion = $.widget( "ui.accordion", {
 	},
 
 	_setupEvents: function( event ) {
-		var events = {
+		const events = {
 			keydown: "_keydown"
 		};
 		if ( event ) {
@@ -1944,7 +1944,7 @@ var accordion = $.widget( "ui.accordion", {
 	},
 
 	_eventHandler: function( event ) {
-		var options = this.options,
+		const options = this.options,
 			active = this.active,
 			clicked = $( event.currentTarget ),
 			clickedIsActive = clicked[ 0 ] === active[ 0 ],
@@ -2001,7 +2001,7 @@ var accordion = $.widget( "ui.accordion", {
 	},
 
 	_toggle: function( data ) {
-		var toShow = data.newPanel,
+		const toShow = data.newPanel,
 			toHide = this.prevShow.length ? this.prevShow : data.oldPanel;
 
 		// handle activating a panel during the animation for another activation
@@ -2050,7 +2050,7 @@ var accordion = $.widget( "ui.accordion", {
 	},
 
 	_animate: function( toShow, toHide, data ) {
-		var total, easing, duration,
+		let total, easing, duration,
 			that = this,
 			adjust = 0,
 			down = toShow.length &&
@@ -2105,7 +2105,7 @@ var accordion = $.widget( "ui.accordion", {
 	},
 
 	_toggleComplete: function( data ) {
-		var toHide = data.oldPanel;
+		const toHide = data.oldPanel;
 
 		toHide
 			.removeClass( "ui-accordion-content-active" )
@@ -2134,7 +2134,7 @@ var accordion = $.widget( "ui.accordion", {
  */
 
 
-var menu = $.widget( "ui.menu", {
+const menu = $.widget( "ui.menu", {
 	version: "1.11.3",
 	defaultElement: "<ul>",
 	delay: 300,
@@ -2184,7 +2184,7 @@ var menu = $.widget( "ui.menu", {
 				event.preventDefault();
 			},
 			"click .ui-menu-item": function( event ) {
-				var target = $( event.target );
+				const target = $( event.target );
 				if ( !this.mouseHandled && target.not( ".ui-state-disabled" ).length ) {
 					this.select( event );
 
@@ -2216,7 +2216,7 @@ var menu = $.widget( "ui.menu", {
 				if ( this.previousFilter ) {
 					return;
 				}
-				var target = $( event.currentTarget );
+				const target = $( event.currentTarget );
 				// Remove ui-state-active class from siblings of the newly focused menu item
 				// to avoid a jump caused by adjacent elements both having a class with a border
 				target.siblings( ".ui-state-active" ).removeClass( "ui-state-active" );
@@ -2227,7 +2227,7 @@ var menu = $.widget( "ui.menu", {
 			focus: function( event, keepActiveItem ) {
 				// If there's already an active item, keep it active
 				// If not, activate the first item
-				var item = this.active || this.element.find( this.options.items ).eq( 0 );
+				const item = this.active || this.element.find( this.options.items ).eq( 0 );
 
 				if ( !keepActiveItem ) {
 					this.focus( event, item );
@@ -2284,7 +2284,7 @@ var menu = $.widget( "ui.menu", {
 			.removeAttr( "role" )
 			.removeAttr( "aria-haspopup" )
 			.children().each( function() {
-				var elem = $( this );
+				const elem = $( this );
 				if ( elem.data( "ui-menu-submenu-carat" ) ) {
 					elem.remove();
 				}
@@ -2295,7 +2295,7 @@ var menu = $.widget( "ui.menu", {
 	},
 
 	_keydown: function( event ) {
-		var match, prev, character, skip,
+		let match, prev, character, skip,
 			preventDefault = true;
 
 		switch ( event.keyCode ) {
@@ -2385,7 +2385,7 @@ var menu = $.widget( "ui.menu", {
 	},
 
 	refresh: function() {
-		var menus, items,
+		let menus, items,
 			that = this,
 			icon = this.options.icons.submenu,
 			submenus = this.element.find( this.options.menus );
@@ -2402,7 +2402,7 @@ var menu = $.widget( "ui.menu", {
 				"aria-expanded": "false"
 			})
 			.each(function() {
-				var menu = $( this ),
+				const menu = $( this ),
 					item = menu.parent(),
 					submenuCarat = $( "<span>" )
 						.addClass( "ui-menu-icon ui-icon " + icon )
@@ -2419,7 +2419,7 @@ var menu = $.widget( "ui.menu", {
 
 		// Initialize menu-items containing spaces and/or dashes only as dividers
 		items.not( ".ui-menu-item" ).each(function() {
-			var item = $( this );
+			const item = $( this );
 			if ( that._isDivider( item ) ) {
 				item.addClass( "ui-widget-content ui-menu-divider" );
 			}
@@ -2465,7 +2465,7 @@ var menu = $.widget( "ui.menu", {
 	},
 
 	focus: function( event, item ) {
-		var nested, focused;
+		let nested, focused;
 		this.blur( event, event && event.type === "focus" );
 
 		this._scrollIntoView( item );
@@ -2502,7 +2502,7 @@ var menu = $.widget( "ui.menu", {
 	},
 
 	_scrollIntoView: function( item ) {
-		var borderTop, paddingTop, offset, scroll, elementHeight, itemHeight;
+		let borderTop, paddingTop, offset, scroll, elementHeight, itemHeight;
 		if ( this._hasScroll() ) {
 			borderTop = parseFloat( $.css( this.activeMenu[0], "borderTopWidth" ) ) || 0;
 			paddingTop = parseFloat( $.css( this.activeMenu[0], "paddingTop" ) ) || 0;
@@ -2550,7 +2550,7 @@ var menu = $.widget( "ui.menu", {
 	},
 
 	_open: function( submenu ) {
-		var position = $.extend({
+		const position = $.extend({
 			of: this.active
 		}, this.options.position );
 
@@ -2570,7 +2570,7 @@ var menu = $.widget( "ui.menu", {
 		clearTimeout( this.timer );
 		this.timer = this._delay(function() {
 			// If we were passed an event, look for the submenu that contains the event
-			var currentMenu = all ? this.element :
+			let currentMenu = all ? this.element :
 				$( event && event.target ).closest( this.element.find( ".ui-menu" ) );
 
 			// If we found no valid submenu ancestor, use the main menu to close all sub menus anyway
@@ -2613,7 +2613,7 @@ var menu = $.widget( "ui.menu", {
 	},
 
 	collapse: function( event ) {
-		var newItem = this.active &&
+		const newItem = this.active &&
 			this.active.parent().closest( ".ui-menu-item", this.element );
 		if ( newItem && newItem.length ) {
 			this._close();
@@ -2622,7 +2622,7 @@ var menu = $.widget( "ui.menu", {
 	},
 
 	expand: function( event ) {
-		var newItem = this.active &&
+		const newItem = this.active &&
 			this.active
 				.children( ".ui-menu " )
 				.find( this.options.items )
@@ -2655,7 +2655,7 @@ var menu = $.widget( "ui.menu", {
 	},
 
 	_move: function( direction, filter, event ) {
-		var next;
+		let next;
 		if ( this.active ) {
 			if ( direction === "first" || direction === "last" ) {
 				next = this.active
@@ -2675,7 +2675,7 @@ var menu = $.widget( "ui.menu", {
 	},
 
 	nextPage: function( event ) {
-		var item, base, height;
+		let item, base, height;
 
 		if ( !this.active ) {
 			this.next( event );
@@ -2700,7 +2700,7 @@ var menu = $.widget( "ui.menu", {
 	},
 
 	previousPage: function( event ) {
-		var item, base, height;
+		let item, base, height;
 		if ( !this.active ) {
 			this.next( event );
 			return;
@@ -2730,7 +2730,7 @@ var menu = $.widget( "ui.menu", {
 		// TODO: It should never be possible to not have an active item at this
 		// point, but the tests don't trigger mouseenter before click.
 		this.active = this.active || $( event.target ).closest( ".ui-menu-item" );
-		var ui = { item: this.active };
+		const ui = { item: this.active };
 		if ( !this.active.has( ".ui-menu" ).length ) {
 			this.collapseAll( event, true );
 		}
@@ -2738,7 +2738,7 @@ var menu = $.widget( "ui.menu", {
 	},
 
 	_filterMenuItems: function(character) {
-		var escapedCharacter = character.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" ),
+		const escapedCharacter = character.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" ),
 			regex = new RegExp( "^" + escapedCharacter, "i" );
 
 		return this.activeMenu
@@ -2801,7 +2801,7 @@ $.widget( "ui.autocomplete", {
 		// so we use the suppressKeyPressRepeat flag to avoid handling keypress
 		// events when we know the keydown event was used to modify the
 		// search term. #7799
-		var suppressKeyPress, suppressKeyPressRepeat, suppressInput,
+		let suppressKeyPress, suppressKeyPressRepeat, suppressInput,
 			nodeName = this.element[ 0 ].nodeName.toLowerCase(),
 			isTextarea = nodeName === "textarea",
 			isInput = nodeName === "input";
@@ -2834,7 +2834,7 @@ $.widget( "ui.autocomplete", {
 				suppressKeyPress = false;
 				suppressInput = false;
 				suppressKeyPressRepeat = false;
-				var keyCode = $.ui.keyCode;
+				const keyCode = $.ui.keyCode;
 				switch ( event.keyCode ) {
 				case keyCode.PAGE_UP:
 					suppressKeyPress = true;
@@ -2899,7 +2899,7 @@ $.widget( "ui.autocomplete", {
 				}
 
 				// replicate some key handlers to allow them to repeat in Firefox and Opera
-				var keyCode = $.ui.keyCode;
+				const keyCode = $.ui.keyCode;
 				switch ( event.keyCode ) {
 				case keyCode.PAGE_UP:
 					this._move( "previousPage", event );
@@ -2966,10 +2966,10 @@ $.widget( "ui.autocomplete", {
 				// but we can't detect a mouseup or a click immediately afterward
 				// so we have to track the next mousedown and close the menu if
 				// the user clicks somewhere outside of the autocomplete
-				var menuElement = this.menu.element[ 0 ];
+				const menuElement = this.menu.element[ 0 ];
 				if ( !$( event.target ).closest( ".ui-menu-item" ).length ) {
 					this._delay(function() {
-						var that = this;
+						const that = this;
 						this.document.one( "mousedown", function( event ) {
 							if ( event.target !== that.element[ 0 ] &&
 									event.target !== menuElement &&
@@ -2981,7 +2981,7 @@ $.widget( "ui.autocomplete", {
 				}
 			},
 			menufocus: function( event, ui ) {
-				var label, item;
+				let label, item;
 				// support: Firefox
 				// Prevent accidental activation of menu items in Firefox (#7024 #9118)
 				if ( this.isNewMenu ) {
@@ -3013,7 +3013,7 @@ $.widget( "ui.autocomplete", {
 				}
 			},
 			menuselect: function( event, ui ) {
-				var item = ui.item.data( "ui-autocomplete-item" ),
+				const item = ui.item.data( "ui-autocomplete-item" ),
 					previous = this.previous;
 
 				// only trigger when focus was lost (click on menu)
@@ -3082,7 +3082,7 @@ $.widget( "ui.autocomplete", {
 	},
 
 	_appendTo: function() {
-		var element = this.options.appendTo;
+		let element = this.options.appendTo;
 
 		if ( element ) {
 			element = element.jquery || element.nodeType ?
@@ -3102,7 +3102,7 @@ $.widget( "ui.autocomplete", {
 	},
 
 	_initSource: function() {
-		var array, url,
+		let array, url,
 			that = this;
 		if ( $.isArray( this.options.source ) ) {
 			array = this.options.source;
@@ -3137,7 +3137,7 @@ $.widget( "ui.autocomplete", {
 		this.searching = this._delay(function() {
 
 			// Search if the value has changed, or if the user retypes the same value (see #7434)
-			var equalValues = this.term === this._value(),
+			const equalValues = this.term === this._value(),
 				menuVisible = this.menu.element.is( ":visible" ),
 				modifierKey = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
 
@@ -3174,7 +3174,7 @@ $.widget( "ui.autocomplete", {
 	},
 
 	_response: function() {
-		var index = ++this.requestIndex;
+		const index = ++this.requestIndex;
 
 		return $.proxy(function( content ) {
 			if ( index === this.requestIndex ) {
@@ -3242,7 +3242,7 @@ $.widget( "ui.autocomplete", {
 	},
 
 	_suggest: function( items ) {
-		var ul = this.menu.element.empty();
+		const ul = this.menu.element.empty();
 		this._renderMenu( ul, items );
 		this.isNewMenu = true;
 		this.menu.refresh();
@@ -3260,7 +3260,7 @@ $.widget( "ui.autocomplete", {
 	},
 
 	_resizeMenu: function() {
-		var ul = this.menu.element;
+		const ul = this.menu.element;
 		ul.outerWidth( Math.max(
 			// Firefox wraps long text (possibly a rounding bug)
 			// so we add 1px to avoid the wrapping (#7513)
@@ -3270,7 +3270,7 @@ $.widget( "ui.autocomplete", {
 	},
 
 	_renderMenu: function( ul, items ) {
-		var that = this;
+		const that = this;
 		$.each( items, function( index, item ) {
 			that._renderItemData( ul, item );
 		});
@@ -3325,7 +3325,7 @@ $.extend( $.ui.autocomplete, {
 		return value.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" );
 	},
 	filter: function( array, term ) {
-		var matcher = new RegExp( $.ui.autocomplete.escapeRegex( term ), "i" );
+		const matcher = new RegExp( $.ui.autocomplete.escapeRegex( term ), "i" );
 		return $.grep( array, function( value ) {
 			return matcher.test( value.label || value.value || value );
 		});
@@ -3347,7 +3347,7 @@ $.widget( "ui.autocomplete", $.ui.autocomplete, {
 	},
 
 	__response: function( content ) {
-		var message;
+		let message;
 		this._superApply( arguments );
 		if ( this.options.disabled || this.cancelSearch ) {
 			return;
@@ -3362,7 +3362,7 @@ $.widget( "ui.autocomplete", $.ui.autocomplete, {
 	}
 });
 
-var autocomplete = $.ui.autocomplete;
+const autocomplete = $.ui.autocomplete;
 
 
 /*!
@@ -3377,17 +3377,17 @@ var autocomplete = $.ui.autocomplete;
  */
 
 
-var lastActive,
+let lastActive,
 	baseClasses = "ui-button ui-widget ui-state-default ui-corner-all",
 	typeClasses = "ui-button-icons-only ui-button-icon-only ui-button-text-icons ui-button-text-icon-primary ui-button-text-icon-secondary ui-button-text-only",
 	formResetHandler = function() {
-		var form = $( this );
+		const form = $( this );
 		setTimeout(function() {
 			form.find( ":ui-button" ).button( "refresh" );
 		}, 1 );
 	},
 	radioGroup = function( radio ) {
-		var name = radio.name,
+		let name = radio.name,
 			form = radio.form,
 			radios = $( [] );
 		if ( name ) {
@@ -3430,7 +3430,7 @@ $.widget( "ui.button", {
 		this._determineButtonType();
 		this.hasTitle = !!this.buttonElement.attr( "title" );
 
-		var that = this,
+		const that = this,
 			options = this.options,
 			toggleButton = this.type === "checkbox" || this.type === "radio",
 			activeClass = !toggleButton ? "ui-state-active" : "";
@@ -3496,7 +3496,7 @@ $.widget( "ui.button", {
 				$( this ).addClass( "ui-state-active" );
 				that.buttonElement.attr( "aria-pressed", "true" );
 
-				var radio = that.element[ 0 ];
+				const radio = that.element[ 0 ];
 				radioGroup( radio )
 					.not( radio )
 					.map(function() {
@@ -3552,7 +3552,7 @@ $.widget( "ui.button", {
 	},
 
 	_determineButtonType: function() {
-		var ancestor, labelSelector, checked;
+		let ancestor, labelSelector, checked;
 
 		if ( this.element.is("[type=checkbox]") ) {
 			this.type = "checkbox";
@@ -3626,7 +3626,7 @@ $.widget( "ui.button", {
 
 	refresh: function() {
 		//See #8237 & #8828
-		var isDisabled = this.element.is( "input, button" ) ? this.element.is( ":disabled" ) : this.element.hasClass( "ui-button-disabled" );
+		const isDisabled = this.element.is( "input, button" ) ? this.element.is( ":disabled" ) : this.element.hasClass( "ui-button-disabled" );
 
 		if ( isDisabled !== this.options.disabled ) {
 			this._setOption( "disabled", isDisabled );
@@ -3663,7 +3663,7 @@ $.widget( "ui.button", {
 			}
 			return;
 		}
-		var buttonElement = this.buttonElement.removeClass( typeClasses ),
+		const buttonElement = this.buttonElement.removeClass( typeClasses ),
 			buttonText = $( "<span></span>", this.document[0] )
 				.addClass( "ui-button-text" )
 				.html( this.options.label )
@@ -3723,7 +3723,7 @@ $.widget( "ui.buttonset", {
 	},
 
 	refresh: function() {
-		var rtl = this.element.css( "direction" ) === "rtl",
+		const rtl = this.element.css( "direction" ) === "rtl",
 			allButtons = this.element.find( this.options.items ),
 			existingButtons = allButtons.filter( ":ui-button" );
 
@@ -3759,7 +3759,7 @@ $.widget( "ui.buttonset", {
 	}
 });
 
-var button = $.ui.button;
+const button = $.ui.button;
 
 
 /*!
@@ -3776,10 +3776,10 @@ var button = $.ui.button;
 
 $.extend($.ui, { datepicker: { version: "1.11.3" } });
 
-var datepicker_instActive;
+let datepicker_instActive;
 
 function datepicker_getZindex( elem ) {
-	var position, value;
+	let position, value;
 	while ( elem.length && elem[ 0 ] !== document ) {
 		// Ignore z-index if position is set to a value where z-index is ignored by the browser
 		// This makes behavior of this function consistent across browsers
@@ -3921,7 +3921,7 @@ $.extend(Datepicker.prototype, {
 	 * @param  settings  object - the new settings to use for this date picker instance (anonymous)
 	 */
 	_attachDatepicker: function(target, settings) {
-		var nodeName, inline, inst;
+		let nodeName, inline, inst;
 		nodeName = target.nodeName.toLowerCase();
 		inline = (nodeName === "div" || nodeName === "span");
 		if (!target.id) {
@@ -3939,7 +3939,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Create a new instance object. */
 	_newInst: function(target, inline) {
-		var id = target[0].id.replace(/([^A-Za-z0-9_\-])/g, "\\\\$1"); // escape jQuery meta chars
+		const id = target[0].id.replace(/([^A-Za-z0-9_\-])/g, "\\\\$1"); // escape jQuery meta chars
 		return {id: id, input: target, // associated target
 			selectedDay: 0, selectedMonth: 0, selectedYear: 0, // current selection
 			drawMonth: 0, drawYear: 0, // month being drawn
@@ -3950,7 +3950,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Attach the date picker to an input field. */
 	_connectDatepicker: function(target, inst) {
-		var input = $(target);
+		const input = $(target);
 		inst.append = $([]);
 		inst.trigger = $([]);
 		if (input.hasClass(this.markerClassName)) {
@@ -3969,7 +3969,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Make attachments based on settings. */
 	_attachments: function(input, inst) {
-		var showOn, buttonText, buttonImage,
+		let showOn, buttonText, buttonImage,
 			appendText = this._get(inst, "appendText"),
 			isRTL = this._get(inst, "isRTL");
 
@@ -4018,7 +4018,7 @@ $.extend(Datepicker.prototype, {
 	/* Apply the maximum length for the date format. */
 	_autoSize: function(inst) {
 		if (this._get(inst, "autoSize") && !inst.inline) {
-			var findMax, max, maxI, i,
+			let findMax, max, maxI, i,
 				date = new Date(2009, 12 - 1, 20), // Ensure double digits
 				dateFormat = this._get(inst, "dateFormat");
 
@@ -4045,7 +4045,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Attach an inline date picker to a div. */
 	_inlineDatepicker: function(target, inst) {
-		var divSpan = $(target);
+		const divSpan = $(target);
 		if (divSpan.hasClass(this.markerClassName)) {
 			return;
 		}
@@ -4074,7 +4074,7 @@ $.extend(Datepicker.prototype, {
 	 * @return the manager object
 	 */
 	_dialogDatepicker: function(input, date, onSelect, settings, pos) {
-		var id, browserWidth, browserHeight, scrollX, scrollY,
+		let id, browserWidth, browserHeight, scrollX, scrollY,
 			inst = this._dialogInst; // internal instance
 
 		if (!inst) {
@@ -4119,7 +4119,7 @@ $.extend(Datepicker.prototype, {
 	 * @param  target	element - the target input field or division or span
 	 */
 	_destroyDatepicker: function(target) {
-		var nodeName,
+		let nodeName,
 			$target = $(target),
 			inst = $.data(target, "datepicker");
 
@@ -4150,7 +4150,7 @@ $.extend(Datepicker.prototype, {
 	 * @param  target	element - the target input field or division or span
 	 */
 	_enableDatepicker: function(target) {
-		var nodeName, inline,
+		let nodeName, inline,
 			$target = $(target),
 			inst = $.data(target, "datepicker");
 
@@ -4178,7 +4178,7 @@ $.extend(Datepicker.prototype, {
 	 * @param  target	element - the target input field or division or span
 	 */
 	_disableDatepicker: function(target) {
-		var nodeName, inline,
+		let nodeName, inline,
 			$target = $(target),
 			inst = $.data(target, "datepicker");
 
@@ -4211,7 +4211,7 @@ $.extend(Datepicker.prototype, {
 		if (!target) {
 			return false;
 		}
-		for (var i = 0; i < this._disabledInputs.length; i++) {
+		for (let i = 0; i < this._disabledInputs.length; i++) {
 			if (this._disabledInputs[i] === target) {
 				return true;
 			}
@@ -4243,7 +4243,7 @@ $.extend(Datepicker.prototype, {
 	 *				(omit if above is an object or to retrieve a value)
 	 */
 	_optionDatepicker: function(target, name, value) {
-		var settings, date, minDate, maxDate,
+		let settings, date, minDate, maxDate,
 			inst = this._getInst(target);
 
 		if (arguments.length === 2 && typeof name === "string") {
@@ -4298,7 +4298,7 @@ $.extend(Datepicker.prototype, {
 	 * @param  target  element - the target input field or division or span
 	 */
 	_refreshDatepicker: function(target) {
-		var inst = this._getInst(target);
+		const inst = this._getInst(target);
 		if (inst) {
 			this._updateDatepicker(inst);
 		}
@@ -4309,7 +4309,7 @@ $.extend(Datepicker.prototype, {
 	 * @param  date	Date - the new date
 	 */
 	_setDateDatepicker: function(target, date) {
-		var inst = this._getInst(target);
+		const inst = this._getInst(target);
 		if (inst) {
 			this._setDate(inst, date);
 			this._updateDatepicker(inst);
@@ -4323,7 +4323,7 @@ $.extend(Datepicker.prototype, {
 	 * @return Date - the current date
 	 */
 	_getDateDatepicker: function(target, noDefault) {
-		var inst = this._getInst(target);
+		const inst = this._getInst(target);
 		if (inst && !inst.inline) {
 			this._setDateFromField(inst, noDefault);
 		}
@@ -4332,7 +4332,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Handle keystrokes. */
 	_doKeyDown: function(event) {
-		var onSelect, dateStr, sel,
+		let onSelect, dateStr, sel,
 			inst = $.datepicker._getInst(event.target),
 			handled = true,
 			isRTL = inst.dpDiv.is(".ui-datepicker-rtl");
@@ -4430,7 +4430,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Filter entered characters - based on date format. */
 	_doKeyPress: function(event) {
-		var chars, chr,
+		let chars, chr,
 			inst = $.datepicker._getInst(event.target);
 
 		if ($.datepicker._get(inst, "constrainInput")) {
@@ -4442,7 +4442,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Synchronise manual entry and field/alternate field. */
 	_doKeyUp: function(event) {
-		var date,
+		let date,
 			inst = $.datepicker._getInst(event.target);
 
 		if (inst.input.val() !== inst.lastVal) {
@@ -4478,7 +4478,7 @@ $.extend(Datepicker.prototype, {
 			return;
 		}
 
-		var inst, beforeShow, beforeShowSettings, isFixed,
+		let inst, beforeShow, beforeShowSettings, isFixed,
 			offset, showAnim, duration;
 
 		inst = $.datepicker._getInst(input);
@@ -4555,7 +4555,7 @@ $.extend(Datepicker.prototype, {
 		inst.dpDiv.empty().append(this._generateHTML(inst));
 		this._attachHandlers(inst);
 
-		var origyearshtml,
+		let origyearshtml,
 			numMonths = this._getNumberOfMonths(inst),
 			cols = numMonths[1],
 			width = 17,
@@ -4600,7 +4600,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Check positioning to remain on screen. */
 	_checkOffset: function(inst, offset, isFixed) {
-		var dpWidth = inst.dpDiv.outerWidth(),
+		const dpWidth = inst.dpDiv.outerWidth(),
 			dpHeight = inst.dpDiv.outerHeight(),
 			inputWidth = inst.input ? inst.input.outerWidth() : 0,
 			inputHeight = inst.input ? inst.input.outerHeight() : 0,
@@ -4622,7 +4622,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Find an object's position on the screen. */
 	_findPos: function(obj) {
-		var position,
+		let position,
 			inst = this._getInst(obj),
 			isRTL = this._get(inst, "isRTL");
 
@@ -4638,7 +4638,7 @@ $.extend(Datepicker.prototype, {
 	 * @param  input  element - the input field attached to the date picker
 	 */
 	_hideDatepicker: function(input) {
-		var showAnim, duration, postProcess, onClose,
+		let showAnim, duration, postProcess, onClose,
 			inst = this._curInst;
 
 		if (!inst || (input && inst !== $.data(input, "datepicker"))) {
@@ -4693,7 +4693,7 @@ $.extend(Datepicker.prototype, {
 			return;
 		}
 
-		var $target = $(event.target),
+		const $target = $(event.target),
 			inst = $.datepicker._getInst($target[0]);
 
 		if ( ( ( $target[0].id !== $.datepicker._mainDivId &&
@@ -4708,7 +4708,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Adjust one of the date sub-fields. */
 	_adjustDate: function(id, offset, period) {
-		var target = $(id),
+		const target = $(id),
 			inst = this._getInst(target[0]);
 
 		if (this._isDisabledDatepicker(target[0])) {
@@ -4722,7 +4722,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Action for current link. */
 	_gotoToday: function(id) {
-		var date,
+		let date,
 			target = $(id),
 			inst = this._getInst(target[0]);
 
@@ -4742,7 +4742,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Action for selecting a new month/year. */
 	_selectMonthYear: function(id, select, period) {
-		var target = $(id),
+		const target = $(id),
 			inst = this._getInst(target[0]);
 
 		inst["selected" + (period === "M" ? "Month" : "Year")] =
@@ -4755,7 +4755,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Action for selecting a day. */
 	_selectDay: function(id, month, year, td) {
-		var inst,
+		let inst,
 			target = $(id);
 
 		if ($(td).hasClass(this._unselectableClass) || this._isDisabledDatepicker(target[0])) {
@@ -4772,13 +4772,13 @@ $.extend(Datepicker.prototype, {
 
 	/* Erase the input field and hide the date picker. */
 	_clearDate: function(id) {
-		var target = $(id);
+		const target = $(id);
 		this._selectDate(target, "");
 	},
 
 	/* Update the input field with the selected date. */
 	_selectDate: function(id, dateStr) {
-		var onSelect,
+		let onSelect,
 			target = $(id),
 			inst = this._getInst(target[0]);
 
@@ -4809,7 +4809,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Update any alternate field to synchronise with the main field. */
 	_updateAlternate: function(inst) {
-		var altFormat, date, dateStr,
+		let altFormat, date, dateStr,
 			altField = this._get(inst, "altField");
 
 		if (altField) { // update alternate field too
@@ -4825,7 +4825,7 @@ $.extend(Datepicker.prototype, {
 	 * @return [boolean, string] - is this date selectable?, what is its CSS class?
 	 */
 	noWeekends: function(date) {
-		var day = date.getDay();
+		const day = date.getDay();
 		return [(day > 0 && day < 6), ""];
 	},
 
@@ -4834,7 +4834,7 @@ $.extend(Datepicker.prototype, {
 	 * @return  number - the number of the week within the year that contains this date
 	 */
 	iso8601Week: function(date) {
-		var time,
+		let time,
 			checkDate = new Date(date.getTime());
 
 		// Find Thursday of this week starting on Monday
@@ -4869,7 +4869,7 @@ $.extend(Datepicker.prototype, {
 			return null;
 		}
 
-		var iFormat, dim, extra,
+		let iFormat, dim, extra,
 			iValue = 0,
 			shortYearCutoffTemp = (settings ? settings.shortYearCutoff : null) || this._defaults.shortYearCutoff,
 			shortYearCutoff = (typeof shortYearCutoffTemp !== "string" ? shortYearCutoffTemp :
@@ -4886,7 +4886,7 @@ $.extend(Datepicker.prototype, {
 			date,
 			// Check whether a format character is doubled
 			lookAhead = function(match) {
-				var matches = (iFormat + 1 < format.length && format.charAt(iFormat + 1) === match);
+				const matches = (iFormat + 1 < format.length && format.charAt(iFormat + 1) === match);
 				if (matches) {
 					iFormat++;
 				}
@@ -4894,7 +4894,7 @@ $.extend(Datepicker.prototype, {
 			},
 			// Extract a number from the string value
 			getNumber = function(match) {
-				var isDoubled = lookAhead(match),
+				const isDoubled = lookAhead(match),
 					size = (match === "@" ? 14 : (match === "!" ? 20 :
 					(match === "y" && isDoubled ? 4 : (match === "o" ? 3 : 2)))),
 					minSize = (match === "y" ? size : 1),
@@ -4908,7 +4908,7 @@ $.extend(Datepicker.prototype, {
 			},
 			// Extract a name from the string value and convert to an index
 			getName = function(match, shortNames, longNames) {
-				var index = -1,
+				let index = -1,
 					names = $.map(lookAhead(match) ? longNames : shortNames, function (v, k) {
 						return [ [k, v] ];
 					}).sort(function (a, b) {
@@ -4916,7 +4916,7 @@ $.extend(Datepicker.prototype, {
 					});
 
 				$.each(names, function (i, pair) {
-					var name = pair[1];
+					const name = pair[1];
 					if (value.substr(iValue, name.length).toLowerCase() === name.toLowerCase()) {
 						index = pair[0];
 						iValue += name.length;
@@ -5073,14 +5073,14 @@ $.extend(Datepicker.prototype, {
 			return "";
 		}
 
-		var iFormat,
+		let iFormat,
 			dayNamesShort = (settings ? settings.dayNamesShort : null) || this._defaults.dayNamesShort,
 			dayNames = (settings ? settings.dayNames : null) || this._defaults.dayNames,
 			monthNamesShort = (settings ? settings.monthNamesShort : null) || this._defaults.monthNamesShort,
 			monthNames = (settings ? settings.monthNames : null) || this._defaults.monthNames,
 			// Check whether a format character is doubled
 			lookAhead = function(match) {
-				var matches = (iFormat + 1 < format.length && format.charAt(iFormat + 1) === match);
+				const matches = (iFormat + 1 < format.length && format.charAt(iFormat + 1) === match);
 				if (matches) {
 					iFormat++;
 				}
@@ -5088,7 +5088,7 @@ $.extend(Datepicker.prototype, {
 			},
 			// Format a number, with leading zero if necessary
 			formatNumber = function(match, value, len) {
-				var num = "" + value;
+				let num = "" + value;
 				if (lookAhead(match)) {
 					while (num.length < len) {
 						num = "0" + num;
@@ -5157,12 +5157,12 @@ $.extend(Datepicker.prototype, {
 
 	/* Extract all possible characters from the date format. */
 	_possibleChars: function (format) {
-		var iFormat,
+		let iFormat,
 			chars = "",
 			literal = false,
 			// Check whether a format character is doubled
 			lookAhead = function(match) {
-				var matches = (iFormat + 1 < format.length && format.charAt(iFormat + 1) === match);
+				const matches = (iFormat + 1 < format.length && format.charAt(iFormat + 1) === match);
 				if (matches) {
 					iFormat++;
 				}
@@ -5210,7 +5210,7 @@ $.extend(Datepicker.prototype, {
 			return;
 		}
 
-		var dateFormat = this._get(inst, "dateFormat"),
+		let dateFormat = this._get(inst, "dateFormat"),
 			dates = inst.lastVal = inst.input ? inst.input.val() : null,
 			defaultDate = this._getDefaultDate(inst),
 			date = defaultDate,
@@ -5238,8 +5238,8 @@ $.extend(Datepicker.prototype, {
 
 	/* A date may be specified as an exact value or a relative one. */
 	_determineDate: function(inst, date, defaultDate) {
-		var offsetNumeric = function(offset) {
-				var date = new Date();
+		let offsetNumeric = function(offset) {
+				const date = new Date();
 				date.setDate(date.getDate() + offset);
 				return date;
 			},
@@ -5252,7 +5252,7 @@ $.extend(Datepicker.prototype, {
 					// Ignore
 				}
 
-				var date = (offset.toLowerCase().match(/^c/) ?
+				let date = (offset.toLowerCase().match(/^c/) ?
 					$.datepicker._getDate(inst) : null) || new Date(),
 					year = date.getFullYear(),
 					month = date.getMonth(),
@@ -5309,7 +5309,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Set the date(s) directly. */
 	_setDate: function(inst, date, noChange) {
-		var clear = !date,
+		const clear = !date,
 			origMonth = inst.selectedMonth,
 			origYear = inst.selectedYear,
 			newDate = this._restrictMinMax(inst, this._determineDate(inst, date, new Date()));
@@ -5328,7 +5328,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Retrieve the date(s) directly. */
 	_getDate: function(inst) {
-		var startDate = (!inst.currentYear || (inst.input && inst.input.val() === "") ? null :
+		const startDate = (!inst.currentYear || (inst.input && inst.input.val() === "") ? null :
 			this._daylightSavingAdjust(new Date(
 			inst.currentYear, inst.currentMonth, inst.currentDay)));
 			return startDate;
@@ -5338,10 +5338,10 @@ $.extend(Datepicker.prototype, {
 	 * they work with static code transformers like Caja.
 	 */
 	_attachHandlers: function(inst) {
-		var stepMonths = this._get(inst, "stepMonths"),
+		const stepMonths = this._get(inst, "stepMonths"),
 			id = "#" + inst.id.replace( /\\\\/g, "\\" );
 		inst.dpDiv.find("[data-handler]").map(function () {
-			var handler = {
+			const handler = {
 				prev: function () {
 					$.datepicker._adjustDate(id, -stepMonths, "M");
 				},
@@ -5373,7 +5373,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Generate the HTML for the current state of the date picker. */
 	_generateHTML: function(inst) {
-		var maxDraw, prevText, prev, nextText, next, currentText, gotoDate,
+		let maxDraw, prevText, prev, nextText, next, currentText, gotoDate,
 			controls, buttonPanel, firstDay, showWeek, dayNames, dayNamesMin,
 			monthNames, monthNamesShort, beforeShowDay, showOtherMonths,
 			selectOtherMonths, defaultDate, html, dow, row, group, col, selectedDate,
@@ -5559,7 +5559,7 @@ $.extend(Datepicker.prototype, {
 	_generateMonthYearHeader: function(inst, drawMonth, drawYear, minDate, maxDate,
 			secondary, monthNames, monthNamesShort) {
 
-		var inMinYear, inMaxYear, month, years, thisYear, determineYear, year, endYear,
+		let inMinYear, inMaxYear, month, years, thisYear, determineYear, year, endYear,
 			changeMonth = this._get(inst, "changeMonth"),
 			changeYear = this._get(inst, "changeYear"),
 			showMonthAfterYear = this._get(inst, "showMonthAfterYear"),
@@ -5597,7 +5597,7 @@ $.extend(Datepicker.prototype, {
 				years = this._get(inst, "yearRange").split(":");
 				thisYear = new Date().getFullYear();
 				determineYear = function(value) {
-					var year = (value.match(/c[+\-].*/) ? drawYear + parseInt(value.substring(1), 10) :
+					const year = (value.match(/c[+\-].*/) ? drawYear + parseInt(value.substring(1), 10) :
 						(value.match(/[+\-].*/) ? thisYear + parseInt(value, 10) :
 						parseInt(value, 10)));
 					return (isNaN(year) ? thisYear : year);
@@ -5629,7 +5629,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Adjust one of the date sub-fields. */
 	_adjustInstDate: function(inst, offset, period) {
-		var year = inst.drawYear + (period === "Y" ? offset : 0),
+		const year = inst.drawYear + (period === "Y" ? offset : 0),
 			month = inst.drawMonth + (period === "M" ? offset : 0),
 			day = Math.min(inst.selectedDay, this._getDaysInMonth(year, month)) + (period === "D" ? offset : 0),
 			date = this._restrictMinMax(inst, this._daylightSavingAdjust(new Date(year, month, day)));
@@ -5644,7 +5644,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Ensure a date is within any min/max bounds. */
 	_restrictMinMax: function(inst, date) {
-		var minDate = this._getMinMaxDate(inst, "min"),
+		const minDate = this._getMinMaxDate(inst, "min"),
 			maxDate = this._getMinMaxDate(inst, "max"),
 			newDate = (minDate && date < minDate ? minDate : date);
 		return (maxDate && newDate > maxDate ? maxDate : newDate);
@@ -5652,7 +5652,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Notify change of month/year. */
 	_notifyChange: function(inst) {
-		var onChange = this._get(inst, "onChangeMonthYear");
+		const onChange = this._get(inst, "onChangeMonthYear");
 		if (onChange) {
 			onChange.apply((inst.input ? inst.input[0] : null),
 				[inst.selectedYear, inst.selectedMonth + 1, inst]);
@@ -5661,7 +5661,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Determine the number of months to show. */
 	_getNumberOfMonths: function(inst) {
-		var numMonths = this._get(inst, "numberOfMonths");
+		const numMonths = this._get(inst, "numberOfMonths");
 		return (numMonths == null ? [1, 1] : (typeof numMonths === "number" ? [1, numMonths] : numMonths));
 	},
 
@@ -5682,7 +5682,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Determines if we should allow a "next/prev" month display change. */
 	_canAdjustMonth: function(inst, offset, curYear, curMonth) {
-		var numMonths = this._getNumberOfMonths(inst),
+		const numMonths = this._getNumberOfMonths(inst),
 			date = this._daylightSavingAdjust(new Date(curYear,
 			curMonth + (offset < 0 ? offset : numMonths[0] * numMonths[1]), 1));
 
@@ -5694,7 +5694,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Is the given date in the accepted range? */
 	_isInRange: function(inst, date) {
-		var yearSplit, currentYear,
+		let yearSplit, currentYear,
 			minDate = this._getMinMaxDate(inst, "min"),
 			maxDate = this._getMinMaxDate(inst, "max"),
 			minYear = null,
@@ -5721,7 +5721,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Provide the configuration settings for formatting/parsing. */
 	_getFormatConfig: function(inst) {
-		var shortYearCutoff = this._get(inst, "shortYearCutoff");
+		let shortYearCutoff = this._get(inst, "shortYearCutoff");
 		shortYearCutoff = (typeof shortYearCutoff !== "string" ? shortYearCutoff :
 			new Date().getFullYear() % 100 + parseInt(shortYearCutoff, 10));
 		return {shortYearCutoff: shortYearCutoff,
@@ -5736,7 +5736,7 @@ $.extend(Datepicker.prototype, {
 			inst.currentMonth = inst.selectedMonth;
 			inst.currentYear = inst.selectedYear;
 		}
-		var date = (day ? (typeof day === "object" ? day :
+		const date = (day ? (typeof day === "object" ? day :
 			this._daylightSavingAdjust(new Date(year, month, day))) :
 			this._daylightSavingAdjust(new Date(inst.currentYear, inst.currentMonth, inst.currentDay)));
 		return this.formatDate(this._get(inst, "dateFormat"), date, this._getFormatConfig(inst));
@@ -5749,7 +5749,7 @@ $.extend(Datepicker.prototype, {
  * Global datepicker_instActive, set by _updateDatepicker allows the handlers to find their way back to the active picker.
  */
 function datepicker_bindHover(dpDiv) {
-	var selector = "button, .ui-datepicker-prev, .ui-datepicker-next, .ui-datepicker-calendar td a";
+	const selector = "button, .ui-datepicker-prev, .ui-datepicker-next, .ui-datepicker-calendar td a";
 	return dpDiv.delegate(selector, "mouseout", function() {
 			$(this).removeClass("ui-state-hover");
 			if (this.className.indexOf("ui-datepicker-prev") !== -1) {
@@ -5778,7 +5778,7 @@ function datepicker_handleMouseover() {
 /* jQuery extend now ignores nulls! */
 function datepicker_extendRemove(target, props) {
 	$.extend(target, props);
-	for (var name in props) {
+	for (const name in props) {
 		if (props[name] == null) {
 			target[name] = props[name];
 		}
@@ -5808,7 +5808,7 @@ $.fn.datepicker = function(options){
 		$("body").append($.datepicker.dpDiv);
 	}
 
-	var otherArgs = Array.prototype.slice.call(arguments, 1);
+	const otherArgs = Array.prototype.slice.call(arguments, 1);
 	if (typeof options === "string" && (options === "isDisabled" || options === "getDate" || options === "widget")) {
 		return $.datepicker["_" + options + "Datepicker"].
 			apply($.datepicker, [this[0]].concat(otherArgs));
@@ -5830,7 +5830,7 @@ $.datepicker.initialized = false;
 $.datepicker.uuid = new Date().getTime();
 $.datepicker.version = "1.11.3";
 
-var datepicker = $.datepicker;
+const datepicker = $.datepicker;
 
 
 /*!
@@ -5914,7 +5914,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 	},
 
 	_mouseCapture: function(event) {
-		var o = this.options;
+		const o = this.options;
 
 		this._blurActiveElement( event );
 
@@ -5937,7 +5937,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 
 	_blockFrames: function( selector ) {
 		this.iframeBlocks = this.document.find( selector ).map(function() {
-			var iframe = $( this );
+			const iframe = $( this );
 
 			return $( "<div>" )
 				.css( "position", "absolute" )
@@ -5956,7 +5956,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 	},
 
 	_blurActiveElement: function( event ) {
-		var document = this.document[ 0 ];
+		const document = this.document[ 0 ];
 
 		// Only need to blur if the event occurred on the draggable itself, see #10527
 		if ( !this.handleElement.is( event.target ) ) {
@@ -5979,7 +5979,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 
 	_mouseStart: function(event) {
 
-		var o = this.options;
+		const o = this.options;
 
 		//Create and append the visible helper
 		this.helper = this._createHelper(event);
@@ -6080,7 +6080,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 
 		//Call plugins and callbacks and use the resulting position if something is returned
 		if (!noPropagation) {
-			var ui = this._uiHash();
+			const ui = this._uiHash();
 			if (this._trigger("drag", event, ui) === false) {
 				this._mouseUp({});
 				return false;
@@ -6101,7 +6101,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 	_mouseStop: function(event) {
 
 		//If we are using droppables, inform the manager about the drop
-		var that = this,
+		let that = this,
 			dropped = false;
 		if ($.ui.ddmanager && !this.options.dropBehaviour) {
 			dropped = $.ui.ddmanager.drop(this, event);
@@ -6175,7 +6175,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 
 	_createHelper: function(event) {
 
-		var o = this.options,
+		const o = this.options,
 			helperIsFunction = $.isFunction( o.helper ),
 			helper = helperIsFunction ?
 				$( o.helper.apply( this.element[ 0 ], [ event ] ) ) :
@@ -6236,7 +6236,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 	_getParentOffset: function() {
 
 		//Get the offsetParent and cache its position
-		var po = this.offsetParent.offset(),
+		let po = this.offsetParent.offset(),
 			document = this.document[ 0 ];
 
 		// This is a special case where we need to modify a offset calculated on start, since the following happened:
@@ -6264,7 +6264,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 			return { top: 0, left: 0 };
 		}
 
-		var p = this.element.position(),
+		const p = this.element.position(),
 			scrollIsRootNode = this._isRootNode( this.scrollParent[ 0 ] );
 
 		return {
@@ -6292,7 +6292,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 
 	_setContainment: function() {
 
-		var isUserScrollable, c, ce,
+		let isUserScrollable, c, ce,
 			o = this.options,
 			document = this.document[ 0 ];
 
@@ -6366,7 +6366,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 			pos = this.position;
 		}
 
-		var mod = d === "absolute" ? 1 : -1,
+		const mod = d === "absolute" ? 1 : -1,
 			scrollIsRootNode = this._isRootNode( this.scrollParent[ 0 ] );
 
 		return {
@@ -6388,7 +6388,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 
 	_generatePosition: function( event, constrainPosition ) {
 
-		var containment, co, top, left,
+		let containment, co, top, left,
 			o = this.options,
 			scrollIsRootNode = this._isRootNode( this.scrollParent[ 0 ] ),
 			pageX = event.pageX,
@@ -6525,13 +6525,13 @@ $.widget("ui.draggable", $.ui.mouse, {
 
 $.ui.plugin.add( "draggable", "connectToSortable", {
 	start: function( event, ui, draggable ) {
-		var uiSortable = $.extend( {}, ui, {
+		const uiSortable = $.extend( {}, ui, {
 			item: draggable.element
 		});
 
 		draggable.sortables = [];
 		$( draggable.options.connectToSortable ).each(function() {
-			var sortable = $( this ).sortable( "instance" );
+			const sortable = $( this ).sortable( "instance" );
 
 			if ( sortable && !sortable.options.disabled ) {
 				draggable.sortables.push( sortable );
@@ -6545,14 +6545,14 @@ $.ui.plugin.add( "draggable", "connectToSortable", {
 		});
 	},
 	stop: function( event, ui, draggable ) {
-		var uiSortable = $.extend( {}, ui, {
+		const uiSortable = $.extend( {}, ui, {
 			item: draggable.element
 		});
 
 		draggable.cancelHelperRemoval = false;
 
 		$.each( draggable.sortables, function() {
-			var sortable = this;
+			const sortable = this;
 
 			if ( sortable.isOver ) {
 				sortable.isOver = 0;
@@ -6587,7 +6587,7 @@ $.ui.plugin.add( "draggable", "connectToSortable", {
 	},
 	drag: function( event, ui, draggable ) {
 		$.each( draggable.sortables, function() {
-			var innermostIntersecting = false,
+			let innermostIntersecting = false,
 				sortable = this;
 
 			// Copy over variables that sortable's _intersectsWith uses
@@ -6719,7 +6719,7 @@ $.ui.plugin.add( "draggable", "connectToSortable", {
 
 $.ui.plugin.add("draggable", "cursor", {
 	start: function( event, ui, instance ) {
-		var t = $( "body" ),
+		const t = $( "body" ),
 			o = instance.options;
 
 		if (t.css("cursor")) {
@@ -6728,7 +6728,7 @@ $.ui.plugin.add("draggable", "cursor", {
 		t.css("cursor", o.cursor);
 	},
 	stop: function( event, ui, instance ) {
-		var o = instance.options;
+		const o = instance.options;
 		if (o._cursor) {
 			$("body").css("cursor", o._cursor);
 		}
@@ -6737,7 +6737,7 @@ $.ui.plugin.add("draggable", "cursor", {
 
 $.ui.plugin.add("draggable", "opacity", {
 	start: function( event, ui, instance ) {
-		var t = $( ui.helper ),
+		const t = $( ui.helper ),
 			o = instance.options;
 		if (t.css("opacity")) {
 			o._opacity = t.css("opacity");
@@ -6745,7 +6745,7 @@ $.ui.plugin.add("draggable", "opacity", {
 		t.css("opacity", o.opacity);
 	},
 	stop: function( event, ui, instance ) {
-		var o = instance.options;
+		const o = instance.options;
 		if (o._opacity) {
 			$(ui.helper).css("opacity", o._opacity);
 		}
@@ -6764,7 +6764,7 @@ $.ui.plugin.add("draggable", "scroll", {
 	},
 	drag: function( event, ui, i  ) {
 
-		var o = i.options,
+		let o = i.options,
 			scrolled = false,
 			scrollParent = i.scrollParentNotHidden[ 0 ],
 			document = i.document[ 0 ];
@@ -6816,12 +6816,12 @@ $.ui.plugin.add("draggable", "scroll", {
 $.ui.plugin.add("draggable", "snap", {
 	start: function( event, ui, i ) {
 
-		var o = i.options;
+		const o = i.options;
 
 		i.snapElements = [];
 
 		$(o.snap.constructor !== String ? ( o.snap.items || ":data(ui-draggable)" ) : o.snap).each(function() {
-			var $t = $(this),
+			const $t = $(this),
 				$o = $t.offset();
 			if (this !== i.element[0]) {
 				i.snapElements.push({
@@ -6835,7 +6835,7 @@ $.ui.plugin.add("draggable", "snap", {
 	},
 	drag: function( event, ui, inst ) {
 
-		var ts, bs, ls, rs, l, r, t, b, i, first,
+		let ts, bs, ls, rs, l, r, t, b, i, first,
 			o = inst.options,
 			d = o.snapTolerance,
 			x1 = ui.offset.left, x2 = x1 + inst.helperProportions.width,
@@ -6908,7 +6908,7 @@ $.ui.plugin.add("draggable", "snap", {
 
 $.ui.plugin.add("draggable", "stack", {
 	start: function( event, ui, instance ) {
-		var min,
+		let min,
 			o = instance.options,
 			group = $.makeArray($(o.stack)).sort(function(a, b) {
 				return (parseInt($(a).css("zIndex"), 10) || 0) - (parseInt($(b).css("zIndex"), 10) || 0);
@@ -6926,7 +6926,7 @@ $.ui.plugin.add("draggable", "stack", {
 
 $.ui.plugin.add("draggable", "zIndex", {
 	start: function( event, ui, instance ) {
-		var t = $( ui.helper ),
+		const t = $( ui.helper ),
 			o = instance.options;
 
 		if (t.css("zIndex")) {
@@ -6935,7 +6935,7 @@ $.ui.plugin.add("draggable", "zIndex", {
 		t.css("zIndex", o.zIndex);
 	},
 	stop: function( event, ui, instance ) {
-		var o = instance.options;
+		const o = instance.options;
 
 		if (o._zIndex) {
 			$(ui.helper).css("zIndex", o._zIndex);
@@ -6943,7 +6943,7 @@ $.ui.plugin.add("draggable", "zIndex", {
 	}
 });
 
-var draggable = $.ui.draggable;
+const draggable = $.ui.draggable;
 
 
 /*!
@@ -7000,7 +7000,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 			return false;
 		}
 
-		var scroll = ( a && a === "left" ) ? "scrollLeft" : "scrollTop",
+		let scroll = ( a && a === "left" ) ? "scrollLeft" : "scrollTop",
 			has = false;
 
 		if ( el[ scroll ] > 0 ) {
@@ -7018,7 +7018,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 
 	_create: function() {
 
-		var n, i, handle, axis, hname,
+		let n, i, handle, axis, hname,
 			that = this,
 			o = this.options;
 		this.element.addClass("ui-resizable");
@@ -7123,7 +7123,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 
 		this._renderAxis = function(target) {
 
-			var i, axis, padPos, padWrapper;
+			let i, axis, padPos, padWrapper;
 
 			target = target || this.element;
 
@@ -7202,7 +7202,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 
 		this._mouseDestroy();
 
-		var wrapper,
+		let wrapper,
 			_destroy = function(exp) {
 				$(exp)
 					.removeClass("ui-resizable ui-resizable-disabled ui-resizable-resizing")
@@ -7234,7 +7234,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 	},
 
 	_mouseCapture: function(event) {
-		var i, handle,
+		let i, handle,
 			capture = false;
 
 		for (i in this.handles) {
@@ -7249,7 +7249,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 
 	_mouseStart: function(event) {
 
-		var curleft, curtop, cursor,
+		let curleft, curtop, cursor,
 			o = this.options,
 			el = this.element;
 
@@ -7306,7 +7306,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 
 	_mouseDrag: function(event) {
 
-		var data, props,
+		let data, props,
 			smp = this.originalMousePosition,
 			a = this.axis,
 			dx = (event.pageX - smp.left) || 0,
@@ -7350,7 +7350,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 	_mouseStop: function(event) {
 
 		this.resizing = false;
-		var pr, ista, soffseth, soffsetw, s, left, top,
+		let pr, ista, soffseth, soffsetw, s, left, top,
 			o = this.options, that = this;
 
 		if (this._helper) {
@@ -7407,7 +7407,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 	},
 
 	_applyChanges: function() {
-		var props = {};
+		const props = {};
 
 		if ( this.position.top !== this.prevPosition.top ) {
 			props.top = this.position.top + "px";
@@ -7428,7 +7428,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 	},
 
 	_updateVirtualBoundaries: function(forceAspectRatio) {
-		var pMinWidth, pMaxWidth, pMinHeight, pMaxHeight, b,
+		let pMinWidth, pMaxWidth, pMinHeight, pMaxHeight, b,
 			o = this.options;
 
 		b = {
@@ -7478,7 +7478,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 
 	_updateRatio: function( data ) {
 
-		var cpos = this.position,
+		const cpos = this.position,
 			csize = this.size,
 			a = this.axis;
 
@@ -7502,7 +7502,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 
 	_respectSize: function( data ) {
 
-		var o = this._vBoundaries,
+		const o = this._vBoundaries,
 			a = this.axis,
 			ismaxw = this._isNumber(data.width) && o.maxWidth && (o.maxWidth < data.width),
 			ismaxh = this._isNumber(data.height) && o.maxHeight && (o.maxHeight < data.height),
@@ -7548,7 +7548,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 	},
 
 	_getPaddingPlusBorderDimensions: function( element ) {
-		var i = 0,
+		let i = 0,
 			widths = [],
 			borders = [
 				element.css( "borderTopWidth" ),
@@ -7580,7 +7580,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 			return;
 		}
 
-		var prel,
+		let prel,
 			i = 0,
 			element = this.helper || this.element;
 
@@ -7605,7 +7605,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 
 	_renderProxy: function() {
 
-		var el = this.element, o = this.options;
+		const el = this.element, o = this.options;
 		this.elementOffset = el.offset();
 
 		if (this._helper) {
@@ -7636,11 +7636,11 @@ $.widget("ui.resizable", $.ui.mouse, {
 			return { width: this.originalSize.width + dx };
 		},
 		w: function(event, dx) {
-			var cs = this.originalSize, sp = this.originalPosition;
+			const cs = this.originalSize, sp = this.originalPosition;
 			return { left: sp.left + dx, width: cs.width - dx };
 		},
 		n: function(event, dx, dy) {
-			var cs = this.originalSize, sp = this.originalPosition;
+			const cs = this.originalSize, sp = this.originalPosition;
 			return { top: sp.top + dy, height: cs.height - dy };
 		},
 		s: function(event, dx, dy) {
@@ -7692,7 +7692,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 $.ui.plugin.add("resizable", "animate", {
 
 	stop: function( event ) {
-		var that = $(this).resizable( "instance" ),
+		const that = $(this).resizable( "instance" ),
 			o = that.options,
 			pr = that._proportionallyResizeElements,
 			ista = pr.length && (/textarea/i).test(pr[0].nodeName),
@@ -7710,7 +7710,7 @@ $.ui.plugin.add("resizable", "animate", {
 				easing: o.animateEasing,
 				step: function() {
 
-					var data = {
+					const data = {
 						width: parseInt(that.element.css("width"), 10),
 						height: parseInt(that.element.css("height"), 10),
 						top: parseInt(that.element.css("top"), 10),
@@ -7735,7 +7735,7 @@ $.ui.plugin.add("resizable", "animate", {
 $.ui.plugin.add( "resizable", "containment", {
 
 	start: function() {
-		var element, p, co, ch, cw, width, height,
+		let element, p, co, ch, cw, width, height,
 			that = $( this ).resizable( "instance" ),
 			o = that.options,
 			el = that.element,
@@ -7796,7 +7796,7 @@ $.ui.plugin.add( "resizable", "containment", {
 	},
 
 	resize: function( event ) {
-		var woset, hoset, isParent, isOffsetRelative,
+		let woset, hoset, isParent, isOffsetRelative,
 			that = $( this ).resizable( "instance" ),
 			o = that.options,
 			co = that.containerOffset,
@@ -7885,7 +7885,7 @@ $.ui.plugin.add( "resizable", "containment", {
 	},
 
 	stop: function() {
-		var that = $( this ).resizable( "instance" ),
+		const that = $( this ).resizable( "instance" ),
 			o = that.options,
 			co = that.containerOffset,
 			cop = that.containerPosition,
@@ -7916,11 +7916,11 @@ $.ui.plugin.add( "resizable", "containment", {
 $.ui.plugin.add("resizable", "alsoResize", {
 
 	start: function() {
-		var that = $(this).resizable( "instance" ),
+		const that = $(this).resizable( "instance" ),
 			o = that.options,
 			_store = function(exp) {
 				$(exp).each(function() {
-					var el = $(this);
+					const el = $(this);
 					el.data("ui-resizable-alsoresize", {
 						width: parseInt(el.width(), 10), height: parseInt(el.height(), 10),
 						left: parseInt(el.css("left"), 10), top: parseInt(el.css("top"), 10)
@@ -7943,7 +7943,7 @@ $.ui.plugin.add("resizable", "alsoResize", {
 	},
 
 	resize: function(event, ui) {
-		var that = $(this).resizable( "instance" ),
+		const that = $(this).resizable( "instance" ),
 			o = that.options,
 			os = that.originalSize,
 			op = that.originalPosition,
@@ -7956,7 +7956,7 @@ $.ui.plugin.add("resizable", "alsoResize", {
 
 			_alsoResize = function(exp, c) {
 				$(exp).each(function() {
-					var el = $(this), start = $(this).data("ui-resizable-alsoresize"), style = {},
+					const el = $(this), start = $(this).data("ui-resizable-alsoresize"), style = {},
 						css = c && c.length ?
 							c :
 							el.parents(ui.originalElement[0]).length ?
@@ -7964,7 +7964,7 @@ $.ui.plugin.add("resizable", "alsoResize", {
 								[ "width", "height", "top", "left" ];
 
 					$.each(css, function(i, prop) {
-						var sum = (start[prop] || 0) + (delta[prop] || 0);
+						const sum = (start[prop] || 0) + (delta[prop] || 0);
 						if (sum && sum >= 0) {
 							style[prop] = sum || null;
 						}
@@ -7992,7 +7992,7 @@ $.ui.plugin.add("resizable", "ghost", {
 
 	start: function() {
 
-		var that = $(this).resizable( "instance" ), o = that.options, cs = that.size;
+		const that = $(this).resizable( "instance" ), o = that.options, cs = that.size;
 
 		that.ghost = that.originalElement.clone();
 		that.ghost
@@ -8014,7 +8014,7 @@ $.ui.plugin.add("resizable", "ghost", {
 	},
 
 	resize: function() {
-		var that = $(this).resizable( "instance" );
+		const that = $(this).resizable( "instance" );
 		if (that.ghost) {
 			that.ghost.css({
 				position: "relative",
@@ -8025,7 +8025,7 @@ $.ui.plugin.add("resizable", "ghost", {
 	},
 
 	stop: function() {
-		var that = $(this).resizable( "instance" );
+		const that = $(this).resizable( "instance" );
 		if (that.ghost && that.helper) {
 			that.helper.get(0).removeChild(that.ghost.get(0));
 		}
@@ -8036,7 +8036,7 @@ $.ui.plugin.add("resizable", "ghost", {
 $.ui.plugin.add("resizable", "grid", {
 
 	resize: function() {
-		var outerDimensions,
+		let outerDimensions,
 			that = $(this).resizable( "instance" ),
 			o = that.options,
 			cs = that.size,
@@ -8107,7 +8107,7 @@ $.ui.plugin.add("resizable", "grid", {
 
 });
 
-var resizable = $.ui.resizable;
+const resizable = $.ui.resizable;
 
 
 /*!
@@ -8122,7 +8122,7 @@ var resizable = $.ui.resizable;
  */
 
 
-var dialog = $.widget( "ui.dialog", {
+const dialog = $.widget( "ui.dialog", {
 	version: "1.11.3",
 	options: {
 		appendTo: "body",
@@ -8146,7 +8146,7 @@ var dialog = $.widget( "ui.dialog", {
 			collision: "fit",
 			// Ensure the titlebar is always visible
 			using: function( pos ) {
-				var topOffset = $( this ).css( pos ).offset().top;
+				const topOffset = $( this ).css( pos ).offset().top;
 				if ( topOffset < 0 ) {
 					$( this ).css( "top", pos.top - topOffset );
 				}
@@ -8232,7 +8232,7 @@ var dialog = $.widget( "ui.dialog", {
 	},
 
 	_appendTo: function() {
-		var element = this.options.appendTo;
+		const element = this.options.appendTo;
 		if ( element && (element.jquery || element.nodeType) ) {
 			return $( element );
 		}
@@ -8240,7 +8240,7 @@ var dialog = $.widget( "ui.dialog", {
 	},
 
 	_destroy: function() {
-		var next,
+		let next,
 			originalPosition = this.originalPosition;
 
 		this._destroyOverlay();
@@ -8275,7 +8275,7 @@ var dialog = $.widget( "ui.dialog", {
 	enable: $.noop,
 
 	close: function( event ) {
-		var activeElement,
+		let activeElement,
 			that = this;
 
 		if ( !this._isOpen || this._trigger( "beforeClose", event ) === false ) {
@@ -8320,7 +8320,7 @@ var dialog = $.widget( "ui.dialog", {
 	},
 
 	_moveToTop: function( event, silent ) {
-		var moved = false,
+		let moved = false,
 			zIndicies = this.uiDialog.siblings( ".ui-front:visible" ).map(function() {
 				return +$( this ).css( "z-index" );
 			}).get(),
@@ -8338,7 +8338,7 @@ var dialog = $.widget( "ui.dialog", {
 	},
 
 	open: function() {
-		var that = this;
+		const that = this;
 		if ( this._isOpen ) {
 			if ( this._moveToTop() ) {
 				this._focusTabbable();
@@ -8382,7 +8382,7 @@ var dialog = $.widget( "ui.dialog", {
 		// 4. Tabbable element inside the buttonpane
 		// 5. The close button
 		// 6. The dialog itself
-		var hasFocus = this._focusedElement;
+		let hasFocus = this._focusedElement;
 		if ( !hasFocus ) {
 			hasFocus = this.element.find( "[autofocus]" );
 		}
@@ -8403,7 +8403,7 @@ var dialog = $.widget( "ui.dialog", {
 
 	_keepFocus: function( event ) {
 		function checkFocus() {
-			var activeElement = this.document[0].activeElement,
+			const activeElement = this.document[0].activeElement,
 				isActive = this.uiDialog[0] === activeElement ||
 					$.contains( this.uiDialog[0], activeElement );
 			if ( !isActive ) {
@@ -8443,7 +8443,7 @@ var dialog = $.widget( "ui.dialog", {
 				if ( event.keyCode !== $.ui.keyCode.TAB || event.isDefaultPrevented() ) {
 					return;
 				}
-				var tabbables = this.uiDialog.find( ":tabbable" ),
+				const tabbables = this.uiDialog.find( ":tabbable" ),
 					first = tabbables.filter( ":first" ),
 					last = tabbables.filter( ":last" );
 
@@ -8477,7 +8477,7 @@ var dialog = $.widget( "ui.dialog", {
 	},
 
 	_createTitlebar: function() {
-		var uiDialogTitle;
+		let uiDialogTitle;
 
 		this.uiDialogTitlebar = $( "<div>" )
 			.addClass( "ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix" )
@@ -8544,7 +8544,7 @@ var dialog = $.widget( "ui.dialog", {
 	},
 
 	_createButtons: function() {
-		var that = this,
+		const that = this,
 			buttons = this.options.buttons;
 
 		// if we already have a button pane, remove it
@@ -8557,7 +8557,7 @@ var dialog = $.widget( "ui.dialog", {
 		}
 
 		$.each( buttons, function( name, props ) {
-			var click, buttonOptions;
+			let click, buttonOptions;
 			props = $.isFunction( props ) ?
 				{ click: props, text: name } :
 				props;
@@ -8583,7 +8583,7 @@ var dialog = $.widget( "ui.dialog", {
 	},
 
 	_makeDraggable: function() {
-		var that = this,
+		const that = this,
 			options = this.options;
 
 		function filteredUi( ui ) {
@@ -8606,7 +8606,7 @@ var dialog = $.widget( "ui.dialog", {
 				that._trigger( "drag", event, filteredUi( ui ) );
 			},
 			stop: function( event, ui ) {
-				var left = ui.offset.left - that.document.scrollLeft(),
+				const left = ui.offset.left - that.document.scrollLeft(),
 					top = ui.offset.top - that.document.scrollTop();
 
 				options.position = {
@@ -8623,7 +8623,7 @@ var dialog = $.widget( "ui.dialog", {
 	},
 
 	_makeResizable: function() {
-		var that = this,
+		const that = this,
 			options = this.options,
 			handles = options.resizable,
 			// .ui-resizable has position: relative defined in the stylesheet
@@ -8660,7 +8660,7 @@ var dialog = $.widget( "ui.dialog", {
 				that._trigger( "resize", event, filteredUi( ui ) );
 			},
 			stop: function( event, ui ) {
-				var offset = that.uiDialog.offset(),
+				const offset = that.uiDialog.offset(),
 					left = offset.left - that.document.scrollLeft(),
 					top = offset.top - that.document.scrollTop();
 
@@ -8695,7 +8695,7 @@ var dialog = $.widget( "ui.dialog", {
 	},
 
 	_untrackInstance: function() {
-		var instances = this._trackingInstances(),
+		const instances = this._trackingInstances(),
 			exists = $.inArray( this, instances );
 		if ( exists !== -1 ) {
 			instances.splice( exists, 1 );
@@ -8703,7 +8703,7 @@ var dialog = $.widget( "ui.dialog", {
 	},
 
 	_trackingInstances: function() {
-		var instances = this.document.data( "ui-dialog-instances" );
+		let instances = this.document.data( "ui-dialog-instances" );
 		if ( !instances ) {
 			instances = [];
 			this.document.data( "ui-dialog-instances", instances );
@@ -8712,7 +8712,7 @@ var dialog = $.widget( "ui.dialog", {
 	},
 
 	_minHeight: function() {
-		var options = this.options;
+		const options = this.options;
 
 		return options.height === "auto" ?
 			options.minHeight :
@@ -8721,7 +8721,7 @@ var dialog = $.widget( "ui.dialog", {
 
 	_position: function() {
 		// Need to show the dialog to get the actual offset in the position plugin
-		var isVisible = this.uiDialog.is( ":visible" );
+		const isVisible = this.uiDialog.is( ":visible" );
 		if ( !isVisible ) {
 			this.uiDialog.show();
 		}
@@ -8732,7 +8732,7 @@ var dialog = $.widget( "ui.dialog", {
 	},
 
 	_setOptions: function( options ) {
-		var that = this,
+		let that = this,
 			resize = false,
 			resizableOptions = {};
 
@@ -8757,7 +8757,7 @@ var dialog = $.widget( "ui.dialog", {
 	},
 
 	_setOption: function( key, value ) {
-		var isDraggable, isResizable,
+		let isDraggable, isResizable,
 			uiDialog = this.uiDialog;
 
 		if ( key === "dialogClass" ) {
@@ -8828,7 +8828,7 @@ var dialog = $.widget( "ui.dialog", {
 	_size: function() {
 		// If the user has resized the dialog, the .ui-dialog and .ui-dialog-content
 		// divs will both have width and height set, so we need to reset them
-		var nonContentHeight, minContentHeight, maxContentHeight,
+		let nonContentHeight, minContentHeight, maxContentHeight,
 			options = this.options;
 
 		// Reset content sizing
@@ -8872,7 +8872,7 @@ var dialog = $.widget( "ui.dialog", {
 
 	_blockFrames: function() {
 		this.iframeBlocks = this.document.find( "iframe" ).map(function() {
-			var iframe = $( this );
+			const iframe = $( this );
 
 			return $( "<div>" )
 				.css({
@@ -8909,7 +8909,7 @@ var dialog = $.widget( "ui.dialog", {
 
 		// We use a delay in case the overlay is created from an
 		// event that we're going to be cancelling (#2804)
-		var isOpening = true;
+		let isOpening = true;
 		this._delay(function() {
 			isOpening = false;
 		});
@@ -8949,7 +8949,7 @@ var dialog = $.widget( "ui.dialog", {
 		}
 
 		if ( this.overlay ) {
-			var overlays = this.document.data( "ui-dialog-overlays" ) - 1;
+			const overlays = this.document.data( "ui-dialog-overlays" ) - 1;
 
 			if ( !overlays ) {
 				this.document
@@ -8999,7 +8999,7 @@ $.widget( "ui.droppable", {
 	},
 	_create: function() {
 
-		var proportions,
+		let proportions,
 			o = this.options,
 			accept = o.accept;
 
@@ -9038,7 +9038,7 @@ $.widget( "ui.droppable", {
 	},
 
 	_splice: function( drop ) {
-		var i = 0;
+		let i = 0;
 		for ( ; i < drop.length; i++ ) {
 			if ( drop[ i ] === this ) {
 				drop.splice( i, 1 );
@@ -9047,7 +9047,7 @@ $.widget( "ui.droppable", {
 	},
 
 	_destroy: function() {
-		var drop = $.ui.ddmanager.droppables[ this.options.scope ];
+		const drop = $.ui.ddmanager.droppables[ this.options.scope ];
 
 		this._splice( drop );
 
@@ -9061,7 +9061,7 @@ $.widget( "ui.droppable", {
 				return d.is( value );
 			};
 		} else if ( key === "scope" ) {
-			var drop = $.ui.ddmanager.droppables[ this.options.scope ];
+			const drop = $.ui.ddmanager.droppables[ this.options.scope ];
 
 			this._splice( drop );
 			this._addToManager( value );
@@ -9071,7 +9071,7 @@ $.widget( "ui.droppable", {
 	},
 
 	_activate: function( event ) {
-		var draggable = $.ui.ddmanager.current;
+		const draggable = $.ui.ddmanager.current;
 		if ( this.options.activeClass ) {
 			this.element.addClass( this.options.activeClass );
 		}
@@ -9081,7 +9081,7 @@ $.widget( "ui.droppable", {
 	},
 
 	_deactivate: function( event ) {
-		var draggable = $.ui.ddmanager.current;
+		const draggable = $.ui.ddmanager.current;
 		if ( this.options.activeClass ) {
 			this.element.removeClass( this.options.activeClass );
 		}
@@ -9092,7 +9092,7 @@ $.widget( "ui.droppable", {
 
 	_over: function( event ) {
 
-		var draggable = $.ui.ddmanager.current;
+		const draggable = $.ui.ddmanager.current;
 
 		// Bail if draggable and droppable are same element
 		if ( !draggable || ( draggable.currentItem || draggable.element )[ 0 ] === this.element[ 0 ] ) {
@@ -9110,7 +9110,7 @@ $.widget( "ui.droppable", {
 
 	_out: function( event ) {
 
-		var draggable = $.ui.ddmanager.current;
+		const draggable = $.ui.ddmanager.current;
 
 		// Bail if draggable and droppable are same element
 		if ( !draggable || ( draggable.currentItem || draggable.element )[ 0 ] === this.element[ 0 ] ) {
@@ -9128,7 +9128,7 @@ $.widget( "ui.droppable", {
 
 	_drop: function( event, custom ) {
 
-		var draggable = custom || $.ui.ddmanager.current,
+		let draggable = custom || $.ui.ddmanager.current,
 			childrenIntersection = false;
 
 		// Bail if draggable and droppable are same element
@@ -9137,7 +9137,7 @@ $.widget( "ui.droppable", {
 		}
 
 		this.element.find( ":data(ui-droppable)" ).not( ".ui-draggable-dragging" ).each(function() {
-			var inst = $( this ).droppable( "instance" );
+			const inst = $( this ).droppable( "instance" );
 			if (
 				inst.options.greedy &&
 				!inst.options.disabled &&
@@ -9187,7 +9187,7 @@ $.ui.intersect = (function() {
 			return false;
 		}
 
-		var x1 = ( draggable.positionAbs || draggable.position.absolute ).left + draggable.margins.left,
+		const x1 = ( draggable.positionAbs || draggable.position.absolute ).left + draggable.margins.left,
 			y1 = ( draggable.positionAbs || draggable.position.absolute ).top + draggable.margins.top,
 			x2 = x1 + draggable.helperProportions.width,
 			y2 = y1 + draggable.helperProportions.height,
@@ -9230,7 +9230,7 @@ $.ui.ddmanager = {
 	droppables: { "default": [] },
 	prepareOffsets: function( t, event ) {
 
-		var i, j,
+		let i, j,
 			m = $.ui.ddmanager.droppables[ t.options.scope ] || [],
 			type = event ? event.type : null, // workaround for #2317
 			list = ( t.currentItem || t.element ).find( ":data(ui-droppable)" ).addBack();
@@ -9268,7 +9268,7 @@ $.ui.ddmanager = {
 	},
 	drop: function( draggable, event ) {
 
-		var dropped = false;
+		let dropped = false;
 		// Create a copy of the droppables in case the list changes during the drop (#9116)
 		$.each( ( $.ui.ddmanager.droppables[ draggable.options.scope ] || [] ).slice(), function() {
 
@@ -9311,7 +9311,7 @@ $.ui.ddmanager = {
 				return;
 			}
 
-			var parentInstance, scope, parent,
+			let parentInstance, scope, parent,
 				intersects = $.ui.intersect( draggable, this, this.options.tolerance, event ),
 				c = !intersects && this.isover ? "isout" : ( intersects && !this.isover ? "isover" : null );
 			if ( !c ) {
@@ -9360,7 +9360,7 @@ $.ui.ddmanager = {
 	}
 };
 
-var droppable = $.ui.droppable;
+const droppable = $.ui.droppable;
 
 
 /*!
@@ -9375,7 +9375,7 @@ var droppable = $.ui.droppable;
  */
 
 
-var dataSpace = "ui-effects-",
+const dataSpace = "ui-effects-",
 
 	// Create a local jQuery because jQuery Color relies on it and the
 	// global may not exist with AMD and a custom build (#10199)
@@ -9397,7 +9397,7 @@ $.effects = {
  */
 (function( jQuery, undefined ) {
 
-	var stepHooks = "backgroundColor borderBottomColor borderLeftColor borderRightColor borderTopColor color columnRuleColor outlineColor textDecorationColor textEmphasisColor",
+	let stepHooks = "backgroundColor borderBottomColor borderLeftColor borderRightColor borderTopColor color columnRuleColor outlineColor textDecorationColor textEmphasisColor",
 
 	// plusequals test for += 100 -= 100
 	rplusequals = /^([\-+])=\s*(\d+\.?\d*)/,
@@ -9534,7 +9534,7 @@ each( spaces, function( spaceName, space ) {
 });
 
 function clamp( value, prop, allowEmpty ) {
-	var type = propTypes[ prop.type ] || {};
+	const type = propTypes[ prop.type ] || {};
 
 	if ( value == null ) {
 		return (allowEmpty || !prop.def) ? null : prop.def;
@@ -9560,13 +9560,13 @@ function clamp( value, prop, allowEmpty ) {
 }
 
 function stringParse( string ) {
-	var inst = color(),
+	let inst = color(),
 		rgba = inst._rgba = [];
 
 	string = string.toLowerCase();
 
 	each( stringParsers, function( i, parser ) {
-		var parsed,
+		let parsed,
 			match = parser.re.exec( string ),
 			values = match && parser.parse( match ),
 			spaceName = parser.space || "rgba";
@@ -9610,7 +9610,7 @@ color.fn = jQuery.extend( color.prototype, {
 			green = undefined;
 		}
 
-		var inst = this,
+		let inst = this,
 			type = jQuery.type( red ),
 			rgba = this._rgba = [];
 
@@ -9640,7 +9640,7 @@ color.fn = jQuery.extend( color.prototype, {
 				});
 			} else {
 				each( spaces, function( spaceName, space ) {
-					var cache = space.cache;
+					const cache = space.cache;
 					each( space.props, function( key, prop ) {
 
 						// if the cache doesn't exist, and we know how to convert
@@ -9673,12 +9673,12 @@ color.fn = jQuery.extend( color.prototype, {
 		}
 	},
 	is: function( compare ) {
-		var is = color( compare ),
+		let is = color( compare ),
 			same = true,
 			inst = this;
 
 		each( spaces, function( _, space ) {
-			var localCache,
+			let localCache,
 				isCache = is[ space.cache ];
 			if (isCache) {
 				localCache = inst[ space.cache ] || space.to && space.to( inst._rgba ) || [];
@@ -9694,7 +9694,7 @@ color.fn = jQuery.extend( color.prototype, {
 		return same;
 	},
 	_space: function() {
-		var used = [],
+		const used = [],
 			inst = this;
 		each( spaces, function( spaceName, space ) {
 			if ( inst[ space.cache ] ) {
@@ -9704,7 +9704,7 @@ color.fn = jQuery.extend( color.prototype, {
 		return used.pop();
 	},
 	transition: function( other, distance ) {
-		var end = color( other ),
+		let end = color( other ),
 			spaceName = end._space(),
 			space = spaces[ spaceName ],
 			startColor = this.alpha() === 0 ? color( "transparent" ) : this,
@@ -9713,7 +9713,7 @@ color.fn = jQuery.extend( color.prototype, {
 
 		end = end[ space.cache ];
 		each( space.props, function( key, prop ) {
-			var index = prop.idx,
+			let index = prop.idx,
 				startValue = start[ index ],
 				endValue = end[ index ],
 				type = propTypes[ prop.type ] || {};
@@ -9744,7 +9744,7 @@ color.fn = jQuery.extend( color.prototype, {
 			return this;
 		}
 
-		var rgb = this._rgba.slice(),
+		const rgb = this._rgba.slice(),
 			a = rgb.pop(),
 			blend = color( opaque )._rgba;
 
@@ -9753,7 +9753,7 @@ color.fn = jQuery.extend( color.prototype, {
 		}));
 	},
 	toRgbaString: function() {
-		var prefix = "rgba(",
+		let prefix = "rgba(",
 			rgba = jQuery.map( this._rgba, function( v, i ) {
 				return v == null ? ( i > 2 ? 1 : 0 ) : v;
 			});
@@ -9766,7 +9766,7 @@ color.fn = jQuery.extend( color.prototype, {
 		return prefix + rgba.join() + ")";
 	},
 	toHslaString: function() {
-		var prefix = "hsla(",
+		let prefix = "hsla(",
 			hsla = jQuery.map( this.hsla(), function( v, i ) {
 				if ( v == null ) {
 					v = i > 2 ? 1 : 0;
@@ -9786,7 +9786,7 @@ color.fn = jQuery.extend( color.prototype, {
 		return prefix + hsla.join() + ")";
 	},
 	toHexString: function( includeAlpha ) {
-		var rgba = this._rgba.slice(),
+		const rgba = this._rgba.slice(),
 			alpha = rgba.pop();
 
 		if ( includeAlpha ) {
@@ -9827,7 +9827,7 @@ spaces.hsla.to = function( rgba ) {
 	if ( rgba[ 0 ] == null || rgba[ 1 ] == null || rgba[ 2 ] == null ) {
 		return [ null, null, null, rgba[ 3 ] ];
 	}
-	var r = rgba[ 0 ] / 255,
+	let r = rgba[ 0 ] / 255,
 		g = rgba[ 1 ] / 255,
 		b = rgba[ 2 ] / 255,
 		a = rgba[ 3 ],
@@ -9864,7 +9864,7 @@ spaces.hsla.from = function( hsla ) {
 	if ( hsla[ 0 ] == null || hsla[ 1 ] == null || hsla[ 2 ] == null ) {
 		return [ null, null, null, hsla[ 3 ] ];
 	}
-	var h = hsla[ 0 ] / 360,
+	const h = hsla[ 0 ] / 360,
 		s = hsla[ 1 ],
 		l = hsla[ 2 ],
 		a = hsla[ 3 ],
@@ -9880,7 +9880,7 @@ spaces.hsla.from = function( hsla ) {
 };
 
 each( spaces, function( spaceName, space ) {
-	var props = space.props,
+	const props = space.props,
 		cache = space.cache,
 		to = space.to,
 		from = space.from;
@@ -9896,13 +9896,13 @@ each( spaces, function( spaceName, space ) {
 			return this[ cache ].slice();
 		}
 
-		var ret,
+		let ret,
 			type = jQuery.type( value ),
 			arr = ( type === "array" || type === "object" ) ? value : arguments,
 			local = this[ cache ].slice();
 
 		each( props, function( key, prop ) {
-			var val = arr[ type === "object" ? key : prop.idx ];
+			let val = arr[ type === "object" ? key : prop.idx ];
 			if ( val == null ) {
 				val = local[ prop.idx ];
 			}
@@ -9925,7 +9925,7 @@ each( spaces, function( spaceName, space ) {
 			return;
 		}
 		color.fn[ key ] = function( value ) {
-			var vtype = jQuery.type( value ),
+			let vtype = jQuery.type( value ),
 				fn = ( key === "alpha" ? ( this._hsla ? "hsla" : "rgba" ) : spaceName ),
 				local = this[ fn ](),
 				cur = local[ prop.idx ],
@@ -9957,11 +9957,11 @@ each( spaces, function( spaceName, space ) {
 // add cssHook and .fx.step function for each named hook.
 // accept a space separated string of properties
 color.hook = function( hook ) {
-	var hooks = hook.split( " " );
+	const hooks = hook.split( " " );
 	each( hooks, function( i, hook ) {
 		jQuery.cssHooks[ hook ] = {
 			set: function( elem, value ) {
-				var parsed, curElem,
+				let parsed, curElem,
 					backgroundColor = "";
 
 				if ( value !== "transparent" && ( jQuery.type( value ) !== "string" || ( parsed = stringParse( value ) ) ) ) {
@@ -10009,7 +10009,7 @@ color.hook( stepHooks );
 
 jQuery.cssHooks.borderColor = {
 	expand: function( value ) {
-		var expanded = {};
+		const expanded = {};
 
 		each( [ "Top", "Right", "Bottom", "Left" ], function( i, part ) {
 			expanded[ "border" + part + "Color" ] = value;
@@ -10053,7 +10053,7 @@ colors = jQuery.Color.names = {
 /******************************************************************************/
 (function() {
 
-var classAnimationActions = [ "add", "remove", "toggle" ],
+const classAnimationActions = [ "add", "remove", "toggle" ],
 	shorthandStyles = {
 		border: 1,
 		borderBottom: 1,
@@ -10076,7 +10076,7 @@ $.each([ "borderLeftStyle", "borderRightStyle", "borderBottomStyle", "borderTopS
 });
 
 function getElementStyles( elem ) {
-	var key, len,
+	let key, len,
 		style = elem.ownerDocument.defaultView ?
 			elem.ownerDocument.defaultView.getComputedStyle( elem, null ) :
 			elem.currentStyle,
@@ -10103,7 +10103,7 @@ function getElementStyles( elem ) {
 }
 
 function styleDifference( oldStyle, newStyle ) {
-	var diff = {},
+	let diff = {},
 		name, value;
 
 	for ( name in newStyle ) {
@@ -10130,17 +10130,17 @@ if ( !$.fn.addBack ) {
 }
 
 $.effects.animateClass = function( value, duration, easing, callback ) {
-	var o = $.speed( duration, easing, callback );
+	const o = $.speed( duration, easing, callback );
 
 	return this.queue( function() {
-		var animated = $( this ),
+		let animated = $( this ),
 			baseClass = animated.attr( "class" ) || "",
 			applyClassChange,
 			allAnimations = o.children ? animated.find( "*" ).addBack() : animated;
 
 		// map the animated objects to store the original styles.
 		allAnimations = allAnimations.map(function() {
-			var el = $( this );
+			const el = $( this );
 			return {
 				el: el,
 				start: getElementStyles( this )
@@ -10169,7 +10169,7 @@ $.effects.animateClass = function( value, duration, easing, callback ) {
 
 		// map all animated objects again - this time collecting a promise
 		allAnimations = allAnimations.map(function() {
-			var styleInfo = this,
+			const styleInfo = this,
 				dfd = $.Deferred(),
 				opts = $.extend({}, o, {
 					queue: false,
@@ -10191,7 +10191,7 @@ $.effects.animateClass = function( value, duration, easing, callback ) {
 			// for each animated element,
 			// clear all css properties that were animated
 			$.each( arguments, function() {
-				var el = this.el;
+				const el = this.el;
 				$.each( this.diff, function(key) {
 					el.css( key, "" );
 				});
@@ -10263,7 +10263,7 @@ $.extend( $.effects, {
 
 	// Saves a set of properties in a data storage
 	save: function( element, set ) {
-		for ( var i = 0; i < set.length; i++ ) {
+		for ( let i = 0; i < set.length; i++ ) {
 			if ( set[ i ] !== null ) {
 				element.data( dataSpace + set[ i ], element[ 0 ].style[ set[ i ] ] );
 			}
@@ -10272,7 +10272,7 @@ $.extend( $.effects, {
 
 	// Restores a set of previously saved properties from a data storage
 	restore: function( element, set ) {
-		var val, i;
+		let val, i;
 		for ( i = 0; i < set.length; i++ ) {
 			if ( set[ i ] !== null ) {
 				val = element.data( dataSpace + set[ i ] );
@@ -10299,7 +10299,7 @@ $.extend( $.effects, {
 	// Translates a [top,left] array into a baseline value
 	// this should be a little more flexible in the future to handle a string & hash
 	getBaseline: function( origin, original ) {
-		var y, x;
+		let y, x;
 		switch ( origin[ 0 ] ) {
 			case "top": y = 0; break;
 			case "middle": y = 0.5; break;
@@ -10327,7 +10327,7 @@ $.extend( $.effects, {
 		}
 
 		// wrap the element
-		var props = {
+		let props = {
 				width: element.outerWidth(true),
 				height: element.outerHeight(true),
 				"float": element.css( "float" )
@@ -10395,7 +10395,7 @@ $.extend( $.effects, {
 	},
 
 	removeWrapper: function( element ) {
-		var active = document.activeElement;
+		const active = document.activeElement;
 
 		if ( element.parent().is( ".ui-effects-wrapper" ) ) {
 			element.parent().replaceWith( element );
@@ -10412,7 +10412,7 @@ $.extend( $.effects, {
 	setTransition: function( element, list, factor, value ) {
 		value = value || {};
 		$.each( list, function( i, x ) {
-			var unit = element.cssUnit( x );
+			const unit = element.cssUnit( x );
 			if ( unit[ 0 ] > 0 ) {
 				value[ x ] = unit[ 0 ] * factor + unit[ 1 ];
 			}
@@ -10501,7 +10501,7 @@ function standardAnimationOption( option ) {
 
 $.fn.extend({
 	effect: function( /* effect, options, speed, callback */ ) {
-		var args = _normalizeArguments.apply( this, arguments ),
+		const args = _normalizeArguments.apply( this, arguments ),
 			mode = args.mode,
 			queue = args.queue,
 			effectMethod = $.effects.effect[ args.effect ];
@@ -10520,7 +10520,7 @@ $.fn.extend({
 		}
 
 		function run( next ) {
-			var elem = $( this ),
+			const elem = $( this ),
 				complete = args.complete,
 				mode = args.mode;
 
@@ -10551,7 +10551,7 @@ $.fn.extend({
 			if ( standardAnimationOption( option ) ) {
 				return orig.apply( this, arguments );
 			} else {
-				var args = _normalizeArguments.apply( this, arguments );
+				const args = _normalizeArguments.apply( this, arguments );
 				args.mode = "show";
 				return this.effect.call( this, args );
 			}
@@ -10563,7 +10563,7 @@ $.fn.extend({
 			if ( standardAnimationOption( option ) ) {
 				return orig.apply( this, arguments );
 			} else {
-				var args = _normalizeArguments.apply( this, arguments );
+				const args = _normalizeArguments.apply( this, arguments );
 				args.mode = "hide";
 				return this.effect.call( this, args );
 			}
@@ -10575,7 +10575,7 @@ $.fn.extend({
 			if ( standardAnimationOption( option ) || typeof option === "boolean" ) {
 				return orig.apply( this, arguments );
 			} else {
-				var args = _normalizeArguments.apply( this, arguments );
+				const args = _normalizeArguments.apply( this, arguments );
 				args.mode = "toggle";
 				return this.effect.call( this, args );
 			}
@@ -10584,7 +10584,7 @@ $.fn.extend({
 
 	// helper functions
 	cssUnit: function(key) {
-		var style = this.css( key ),
+		let style = this.css( key ),
 			val = [];
 
 		$.each( [ "em", "px", "%", "pt" ], function( i, unit ) {
@@ -10606,7 +10606,7 @@ $.fn.extend({
 
 // based on easing equations from Robert Penner (http://www.robertpenner.com/easing)
 
-var baseEasings = {};
+const baseEasings = {};
 
 $.each( [ "Quad", "Cubic", "Quart", "Quint", "Expo" ], function( i, name ) {
 	baseEasings[ name ] = function( p ) {
@@ -10629,7 +10629,7 @@ $.extend( baseEasings, {
 		return p * p * ( 3 * p - 2 );
 	},
 	Bounce: function( p ) {
-		var pow2,
+		let pow2,
 			bounce = 4;
 
 		while ( p < ( ( pow2 = Math.pow( 2, --bounce ) ) - 1 ) / 11 ) {}
@@ -10651,7 +10651,7 @@ $.each( baseEasings, function( name, easeIn ) {
 
 })();
 
-var effect = $.effects;
+const effect = $.effects;
 
 
 /*!
@@ -10666,9 +10666,9 @@ var effect = $.effects;
  */
 
 
-var effectBlind = $.effects.effect.blind = function( o, done ) {
+const effectBlind = $.effects.effect.blind = function( o, done ) {
 	// Create element
-	var el = $( this ),
+	let el = $( this ),
 		rvertical = /up|down|vertical/,
 		rpositivemotion = /up|left|vertical|horizontal/,
 		props = [ "position", "top", "bottom", "left", "right", "height", "width" ],
@@ -10743,8 +10743,8 @@ var effectBlind = $.effects.effect.blind = function( o, done ) {
  */
 
 
-var effectBounce = $.effects.effect.bounce = function( o, done ) {
-	var el = $( this ),
+const effectBounce = $.effects.effect.bounce = function( o, done ) {
+	let el = $( this ),
 		props = [ "position", "top", "bottom", "left", "right", "height", "width" ],
 
 		// defaults:
@@ -10853,9 +10853,9 @@ var effectBounce = $.effects.effect.bounce = function( o, done ) {
  */
 
 
-var effectClip = $.effects.effect.clip = function( o, done ) {
+const effectClip = $.effects.effect.clip = function( o, done ) {
 	// Create element
-	var el = $( this ),
+	let el = $( this ),
 		props = [ "position", "top", "bottom", "left", "right", "height", "width" ],
 		mode = $.effects.setMode( el, o.mode || "hide" ),
 		show = mode === "show",
@@ -10917,9 +10917,9 @@ var effectClip = $.effects.effect.clip = function( o, done ) {
  */
 
 
-var effectDrop = $.effects.effect.drop = function( o, done ) {
+const effectDrop = $.effects.effect.drop = function( o, done ) {
 
-	var el = $( this ),
+	let el = $( this ),
 		props = [ "position", "top", "bottom", "left", "right", "opacity", "height", "width" ],
 		mode = $.effects.setMode( el, o.mode || "hide" ),
 		show = mode === "show",
@@ -10979,9 +10979,9 @@ var effectDrop = $.effects.effect.drop = function( o, done ) {
  */
 
 
-var effectExplode = $.effects.effect.explode = function( o, done ) {
+const effectExplode = $.effects.effect.explode = function( o, done ) {
 
-	var rows = o.pieces ? Math.round( Math.sqrt( o.pieces ) ) : 3,
+	let rows = o.pieces ? Math.round( Math.sqrt( o.pieces ) ) : 3,
 		cells = rows,
 		el = $( this ),
 		mode = $.effects.setMode( el, o.mode || "hide" ),
@@ -11073,8 +11073,8 @@ var effectExplode = $.effects.effect.explode = function( o, done ) {
  */
 
 
-var effectFade = $.effects.effect.fade = function( o, done ) {
-	var el = $( this ),
+const effectFade = $.effects.effect.fade = function( o, done ) {
+	const el = $( this ),
 		mode = $.effects.setMode( el, o.mode || "toggle" );
 
 	el.animate({
@@ -11100,10 +11100,10 @@ var effectFade = $.effects.effect.fade = function( o, done ) {
  */
 
 
-var effectFold = $.effects.effect.fold = function( o, done ) {
+const effectFold = $.effects.effect.fold = function( o, done ) {
 
 	// Create element
-	var el = $( this ),
+	let el = $( this ),
 		props = [ "position", "top", "bottom", "left", "right", "height", "width" ],
 		mode = $.effects.setMode( el, o.mode || "hide" ),
 		show = mode === "show",
@@ -11173,8 +11173,8 @@ var effectFold = $.effects.effect.fold = function( o, done ) {
  */
 
 
-var effectHighlight = $.effects.effect.highlight = function( o, done ) {
-	var elem = $( this ),
+const effectHighlight = $.effects.effect.highlight = function( o, done ) {
+	const elem = $( this ),
 		props = [ "backgroundImage", "backgroundColor", "opacity" ],
 		mode = $.effects.setMode( elem, o.mode || "show" ),
 		animation = {
@@ -11220,10 +11220,10 @@ var effectHighlight = $.effects.effect.highlight = function( o, done ) {
  */
 
 
-var effectSize = $.effects.effect.size = function( o, done ) {
+const effectSize = $.effects.effect.size = function( o, done ) {
 
 	// Create element
-	var original, baseline, factor,
+	let original, baseline, factor,
 		el = $( this ),
 		props0 = [ "position", "top", "bottom", "left", "right", "width", "height", "overflow", "opacity" ],
 
@@ -11333,7 +11333,7 @@ var effectSize = $.effects.effect.size = function( o, done ) {
 		props2 = props0.concat(vProps).concat(hProps);
 
 		el.find( "*[width]" ).each( function() {
-			var child = $( this ),
+			const child = $( this ),
 				c_original = {
 					height: child.height(),
 					width: child.width(),
@@ -11406,7 +11406,7 @@ var effectSize = $.effects.effect.size = function( o, done ) {
 				} else {
 					$.each([ "top", "left" ], function( idx, pos ) {
 						el.css( pos, function( _, str ) {
-							var val = parseInt( str, 10 ),
+							const val = parseInt( str, 10 ),
 								toRef = idx ? el.to.left : el.to.top;
 
 							// if original was "auto", recalculate the new value from wrapper
@@ -11440,10 +11440,10 @@ var effectSize = $.effects.effect.size = function( o, done ) {
  */
 
 
-var effectScale = $.effects.effect.scale = function( o, done ) {
+const effectScale = $.effects.effect.scale = function( o, done ) {
 
 	// Create element
-	var el = $( this ),
+	const el = $( this ),
 		options = $.extend( true, {}, o ),
 		mode = $.effects.setMode( el, o.mode || "effect" ),
 		percent = parseInt( o.percent, 10 ) ||
@@ -11515,8 +11515,8 @@ var effectScale = $.effects.effect.scale = function( o, done ) {
  */
 
 
-var effectPuff = $.effects.effect.puff = function( o, done ) {
-	var elem = $( this ),
+const effectPuff = $.effects.effect.puff = function( o, done ) {
+	const elem = $( this ),
 		mode = $.effects.setMode( elem, o.mode || "hide" ),
 		hide = mode === "hide",
 		percent = parseInt( o.percent, 10 ) || 150,
@@ -11561,8 +11561,8 @@ var effectPuff = $.effects.effect.puff = function( o, done ) {
  */
 
 
-var effectPulsate = $.effects.effect.pulsate = function( o, done ) {
-	var elem = $( this ),
+const effectPulsate = $.effects.effect.pulsate = function( o, done ) {
+	let elem = $( this ),
 		mode = $.effects.setMode( elem, o.mode || "show" ),
 		show = mode === "show",
 		hide = mode === "hide",
@@ -11621,9 +11621,9 @@ var effectPulsate = $.effects.effect.pulsate = function( o, done ) {
  */
 
 
-var effectShake = $.effects.effect.shake = function( o, done ) {
+const effectShake = $.effects.effect.shake = function( o, done ) {
 
-	var el = $( this ),
+	let el = $( this ),
 		props = [ "position", "top", "bottom", "left", "right", "height", "width" ],
 		mode = $.effects.setMode( el, o.mode || "effect" ),
 		direction = o.direction || "left",
@@ -11692,10 +11692,10 @@ var effectShake = $.effects.effect.shake = function( o, done ) {
  */
 
 
-var effectSlide = $.effects.effect.slide = function( o, done ) {
+const effectSlide = $.effects.effect.slide = function( o, done ) {
 
 	// Create element
-	var el = $( this ),
+	let el = $( this ),
 		props = [ "position", "top", "bottom", "left", "right", "width", "height" ],
 		mode = $.effects.setMode( el, o.mode || "show" ),
 		show = mode === "show",
@@ -11753,7 +11753,7 @@ var effectSlide = $.effects.effect.slide = function( o, done ) {
  */
 
 
-var effectTransfer = $.effects.effect.transfer = function( o, done ) {
+const effectTransfer = $.effects.effect.transfer = function( o, done ) {
 	var elem = $( this ),
 		target = $( o.to ),
 		targetFixed = target.css( "position" ) === "fixed",
@@ -11797,7 +11797,7 @@ var effectTransfer = $.effects.effect.transfer = function( o, done ) {
  */
 
 
-var progressbar = $.widget( "ui.progressbar", {
+const progressbar = $.widget( "ui.progressbar", {
 	version: "1.11.3",
 	options: {
 		max: 100,
@@ -11866,7 +11866,7 @@ var progressbar = $.widget( "ui.progressbar", {
 
 	_setOptions: function( options ) {
 		// Ensure "value" option is set after other values (like max)
-		var value = options.value;
+		const value = options.value;
 		delete options.value;
 
 		this._super( options );
@@ -11893,7 +11893,7 @@ var progressbar = $.widget( "ui.progressbar", {
 	},
 
 	_refreshValue: function() {
-		var value = this.options.value,
+		const value = this.options.value,
 			percentage = this._percentage();
 
 		this.valueDiv
@@ -11942,7 +11942,7 @@ var progressbar = $.widget( "ui.progressbar", {
  */
 
 
-var selectable = $.widget("ui.selectable", $.ui.mouse, {
+const selectable = $.widget("ui.selectable", $.ui.mouse, {
 	version: "1.11.3",
 	options: {
 		appendTo: "body",
@@ -11960,7 +11960,7 @@ var selectable = $.widget("ui.selectable", $.ui.mouse, {
 		unselecting: null
 	},
 	_create: function() {
-		var selectees,
+		let selectees,
 			that = this;
 
 		this.element.addClass("ui-selectable");
@@ -11972,7 +11972,7 @@ var selectable = $.widget("ui.selectable", $.ui.mouse, {
 			selectees = $(that.options.filter, that.element[0]);
 			selectees.addClass("ui-selectee");
 			selectees.each(function() {
-				var $this = $(this),
+				const $this = $(this),
 					pos = $this.offset();
 				$.data(this, "selectable-item", {
 					element: this,
@@ -12007,7 +12007,7 @@ var selectable = $.widget("ui.selectable", $.ui.mouse, {
 	},
 
 	_mouseStart: function(event) {
-		var that = this,
+		const that = this,
 			options = this.options;
 
 		this.opos = [ event.pageX, event.pageY ];
@@ -12034,7 +12034,7 @@ var selectable = $.widget("ui.selectable", $.ui.mouse, {
 		}
 
 		this.selectees.filter(".ui-selected").each(function() {
-			var selectee = $.data(this, "selectable-item");
+			const selectee = $.data(this, "selectable-item");
 			selectee.startselected = true;
 			if (!event.metaKey && !event.ctrlKey) {
 				selectee.$element.removeClass("ui-selected");
@@ -12049,7 +12049,7 @@ var selectable = $.widget("ui.selectable", $.ui.mouse, {
 		});
 
 		$(event.target).parents().addBack().each(function() {
-			var doSelect,
+			let doSelect,
 				selectee = $.data(this, "selectable-item");
 			if (selectee) {
 				doSelect = (!event.metaKey && !event.ctrlKey) || !selectee.$element.hasClass("ui-selected");
@@ -12083,7 +12083,7 @@ var selectable = $.widget("ui.selectable", $.ui.mouse, {
 			return;
 		}
 
-		var tmp,
+		let tmp,
 			that = this,
 			options = this.options,
 			x1 = this.opos[0],
@@ -12096,7 +12096,7 @@ var selectable = $.widget("ui.selectable", $.ui.mouse, {
 		this.helper.css({ left: x1, top: y1, width: x2 - x1, height: y2 - y1 });
 
 		this.selectees.each(function() {
-			var selectee = $.data(this, "selectable-item"),
+			let selectee = $.data(this, "selectable-item"),
 				hit = false;
 
 			//prevent helper from being selected if appendTo: selectable
@@ -12169,12 +12169,12 @@ var selectable = $.widget("ui.selectable", $.ui.mouse, {
 	},
 
 	_mouseStop: function(event) {
-		var that = this;
+		const that = this;
 
 		this.dragged = false;
 
 		$(".ui-unselecting", this.element[0]).each(function() {
-			var selectee = $.data(this, "selectable-item");
+			const selectee = $.data(this, "selectable-item");
 			selectee.$element.removeClass("ui-unselecting");
 			selectee.unselecting = false;
 			selectee.startselected = false;
@@ -12183,7 +12183,7 @@ var selectable = $.widget("ui.selectable", $.ui.mouse, {
 			});
 		});
 		$(".ui-selecting", this.element[0]).each(function() {
-			var selectee = $.data(this, "selectable-item");
+			const selectee = $.data(this, "selectable-item");
 			selectee.$element.removeClass("ui-selecting").addClass("ui-selected");
 			selectee.selecting = false;
 			selectee.selected = true;
@@ -12214,7 +12214,7 @@ var selectable = $.widget("ui.selectable", $.ui.mouse, {
  */
 
 
-var selectmenu = $.widget( "ui.selectmenu", {
+const selectmenu = $.widget( "ui.selectmenu", {
 	version: "1.11.3",
 	defaultElement: "<select>",
 	options: {
@@ -12239,7 +12239,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 	},
 
 	_create: function() {
-		var selectmenuId = this.element.uniqueId().attr( "id" );
+		const selectmenuId = this.element.uniqueId().attr( "id" );
 		this.ids = {
 			element: selectmenuId,
 			button: selectmenuId + "-button",
@@ -12255,7 +12255,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 	},
 
 	_drawButton: function() {
-		var that = this;
+		const that = this;
 
 		// Associate existing label with the new button
 		this.label = $( "label[for='" + this.ids.element + "']" ).attr( "for", this.ids.button );
@@ -12309,7 +12309,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 	},
 
 	_drawMenu: function() {
-		var that = this;
+		const that = this;
 
 		// Create menu
 		this.menu = $( "<ul>", {
@@ -12340,7 +12340,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 					that._select( ui.item.data( "ui-selectmenu-item" ), event );
 				},
 				focus: function( event, ui ) {
-					var item = ui.item.data( "ui-selectmenu-item" );
+					const item = ui.item.data( "ui-selectmenu-item" );
 
 					// Prevent inital focus from firing and check if its a newly focused item
 					if ( that.focusIndex != null && item.index !== that.focusIndex ) {
@@ -12387,7 +12387,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 	_refreshMenu: function() {
 		this.menu.empty();
 
-		var item,
+		let item,
 			options = this.element.find( "option" );
 
 		if ( !options.length ) {
@@ -12462,7 +12462,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 	},
 
 	_renderMenu: function( ul, items ) {
-		var that = this,
+		let that = this,
 			currentOptgroup = "";
 
 		$.each( items, function( index, item ) {
@@ -12488,7 +12488,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 	},
 
 	_renderItem: function( ul, item ) {
-		var li = $( "<li>" );
+		const li = $( "<li>" );
 
 		if ( item.disabled ) {
 			li.addClass( "ui-state-disabled" );
@@ -12507,7 +12507,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 	},
 
 	_move: function( direction, event ) {
-		var item, next,
+		let item, next,
 			filter = ".ui-menu-item";
 
 		if ( this.isOpen ) {
@@ -12537,7 +12537,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 	},
 
 	_setSelection: function() {
-		var selection;
+		let selection;
 
 		if ( !this.range ) {
 			return;
@@ -12575,7 +12575,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 
 		// Prevent text selection from being reset when interacting with the selectmenu (#10144)
 		mousedown: function() {
-			var selection;
+			let selection;
 
 			if ( window.getSelection ) {
 				selection = window.getSelection();
@@ -12595,7 +12595,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 		},
 
 		keydown: function( event ) {
-			var preventDefault = true;
+			let preventDefault = true;
 			switch ( event.keyCode ) {
 				case $.ui.keyCode.TAB:
 				case $.ui.keyCode.ESCAPE:
@@ -12654,14 +12654,14 @@ var selectmenu = $.widget( "ui.selectmenu", {
 	},
 
 	_selectFocusedItem: function( event ) {
-		var item = this.menuItems.eq( this.focusIndex );
+		const item = this.menuItems.eq( this.focusIndex );
 		if ( !item.hasClass( "ui-state-disabled" ) ) {
 			this._select( item.data( "ui-selectmenu-item" ), event );
 		}
 	},
 
 	_select: function( item, event ) {
-		var oldIndex = this.element[ 0 ].selectedIndex;
+		const oldIndex = this.element[ 0 ].selectedIndex;
 
 		// Change native select element
 		this.element[ 0 ].selectedIndex = item.index;
@@ -12677,7 +12677,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 	},
 
 	_setAria: function( item ) {
-		var id = this.menuItems.eq( item.index ).attr( "id" );
+		const id = this.menuItems.eq( item.index ).attr( "id" );
 
 		this.button.attr({
 			"aria-labelledby": id,
@@ -12720,7 +12720,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 	},
 
 	_appendTo: function() {
-		var element = this.options.appendTo;
+		let element = this.options.appendTo;
 
 		if ( element ) {
 			element = element.jquery || element.nodeType ?
@@ -12749,7 +12749,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 	},
 
 	_resizeButton: function() {
-		var width = this.options.width;
+		let width = this.options.width;
 
 		if ( !width ) {
 			width = this.element.show().outerWidth();
@@ -12775,9 +12775,9 @@ var selectmenu = $.widget( "ui.selectmenu", {
 	},
 
 	_parseOptions: function( options ) {
-		var data = [];
+		const data = [];
 		options.each(function( index, item ) {
-			var option = $( item ),
+			const option = $( item ),
 				optgroup = option.parent( "optgroup" );
 			data.push({
 				element: option,
@@ -12813,7 +12813,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
  */
 
 
-var slider = $.widget( "ui.slider", $.ui.mouse, {
+const slider = $.widget( "ui.slider", $.ui.mouse, {
 	version: "1.11.3",
 	widgetEventPrefix: "slide",
 
@@ -12869,7 +12869,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	_createHandles: function() {
-		var i, handleCount,
+		let i, handleCount,
 			options = this.options,
 			existingHandles = this.element.find( ".ui-slider-handle" ).addClass( "ui-state-default ui-corner-all" ),
 			handle = "<span class='ui-slider-handle ui-state-default ui-corner-all' tabindex='0'></span>",
@@ -12896,7 +12896,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	_createRange: function() {
-		var options = this.options,
+		let options = this.options,
 			classes = "";
 
 		if ( options.range ) {
@@ -12962,7 +12962,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	_mouseCapture: function( event ) {
-		var position, normValue, distance, closestHandle, index, allowed, offset, mouseOverHandle,
+		let position, normValue, distance, closestHandle, index, allowed, offset, mouseOverHandle,
 			that = this,
 			o = this.options;
 
@@ -12980,7 +12980,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 		normValue = this._normValueFromMouse( position );
 		distance = this._valueMax() - this._valueMin() + 1;
 		this.handles.each(function( i ) {
-			var thisDistance = Math.abs( normValue - that.values(i) );
+			const thisDistance = Math.abs( normValue - that.values(i) );
 			if (( distance > thisDistance ) ||
 				( distance === thisDistance &&
 					(i === that._lastChangedValue || that.values(i) === o.min ))) {
@@ -13025,7 +13025,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	_mouseDrag: function( event ) {
-		var position = { x: event.pageX, y: event.pageY },
+		const position = { x: event.pageX, y: event.pageY },
 			normValue = this._normValueFromMouse( position );
 
 		this._slide( event, this._handleIndex, normValue );
@@ -13052,7 +13052,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	_normValueFromMouse: function( position ) {
-		var pixelTotal,
+		let pixelTotal,
 			pixelMouse,
 			percentMouse,
 			valueTotal,
@@ -13084,7 +13084,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	_start: function( event, index ) {
-		var uiHash = {
+		const uiHash = {
 			handle: this.handles[ index ],
 			value: this.value()
 		};
@@ -13096,7 +13096,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	_slide: function( event, index, newVal ) {
-		var otherVal,
+		let otherVal,
 			newValues,
 			allowed;
 
@@ -13138,7 +13138,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	_stop: function( event, index ) {
-		var uiHash = {
+		const uiHash = {
 			handle: this.handles[ index ],
 			value: this.value()
 		};
@@ -13152,7 +13152,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 
 	_change: function( event, index ) {
 		if ( !this._keySliding && !this._mouseSliding ) {
-			var uiHash = {
+			const uiHash = {
 				handle: this.handles[ index ],
 				value: this.value()
 			};
@@ -13180,7 +13180,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	values: function( index, newValue ) {
-		var vals,
+		let vals,
 			newValues,
 			i;
 
@@ -13213,7 +13213,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	_setOption: function( key, value ) {
-		var i,
+		let i,
 			valsLength = 0;
 
 		if ( key === "range" && this.options.range === true ) {
@@ -13280,7 +13280,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	//internal value getter
 	// _value() returns value trimmed by min and max, aligned by step
 	_value: function() {
-		var val = this.options.value;
+		let val = this.options.value;
 		val = this._trimAlignValue( val );
 
 		return val;
@@ -13290,7 +13290,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	// _values() returns array of values trimmed by min and max, aligned by step
 	// _values( index ) returns single value trimmed by min and max, aligned by step
 	_values: function( index ) {
-		var val,
+		let val,
 			vals,
 			i;
 
@@ -13321,7 +13321,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 		if ( val >= this._valueMax() ) {
 			return this._valueMax();
 		}
-		var step = ( this.options.step > 0 ) ? this.options.step : 1,
+		let step = ( this.options.step > 0 ) ? this.options.step : 1,
 			valModStep = (val - this._valueMin()) % step,
 			alignValue = val - valModStep;
 
@@ -13335,7 +13335,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	_calculateNewMax: function() {
-		var max = this.options.max,
+		let max = this.options.max,
 			min = this._valueMin(),
 			step = this.options.step,
 			aboveMin = Math.floor( ( max - min ) / step ) * step;
@@ -13344,7 +13344,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	_precision: function() {
-		var precision = this._precisionOf( this.options.step );
+		let precision = this._precisionOf( this.options.step );
 		if ( this.options.min !== null ) {
 			precision = Math.max( precision, this._precisionOf( this.options.min ) );
 		}
@@ -13352,7 +13352,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	_precisionOf: function( num ) {
-		var str = num.toString(),
+		const str = num.toString(),
 			decimal = str.indexOf( "." );
 		return decimal === -1 ? 0 : str.length - decimal - 1;
 	},
@@ -13366,7 +13366,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 	},
 
 	_refreshValue: function() {
-		var lastValPercent, valPercent, value, valueMin, valueMax,
+		let lastValPercent, valPercent, value, valueMin, valueMax,
 			oRange = this.options.range,
 			o = this.options,
 			that = this,
@@ -13424,7 +13424,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 
 	_handleEvents: {
 		keydown: function( event ) {
-			var allowed, curVal, newVal, step,
+			let allowed, curVal, newVal, step,
 				index = $( event.target ).data( "ui-slider-handle-index" );
 
 			switch ( event.keyCode ) {
@@ -13490,7 +13490,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
 			this._slide( event, index, newVal );
 		},
 		keyup: function( event ) {
-			var index = $( event.target ).data( "ui-slider-handle-index" );
+			const index = $( event.target ).data( "ui-slider-handle-index" );
 
 			if ( this._keySliding ) {
 				this._keySliding = false;
@@ -13515,7 +13515,7 @@ var slider = $.widget( "ui.slider", $.ui.mouse, {
  */
 
 
-var sortable = $.widget("ui.sortable", $.ui.mouse, {
+const sortable = $.widget("ui.sortable", $.ui.mouse, {
 	version: "1.11.3",
 	widgetEventPrefix: "sort",
 	ready: false,
@@ -13568,7 +13568,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 
 	_create: function() {
 
-		var o = this.options;
+		const o = this.options;
 		this.containerCache = {};
 		this.element.addClass("ui-sortable");
 
@@ -13615,7 +13615,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 				.removeClass( "ui-sortable-handle" );
 		this._mouseDestroy();
 
-		for ( var i = this.items.length - 1; i >= 0; i-- ) {
+		for ( let i = this.items.length - 1; i >= 0; i-- ) {
 			this.items[i].item.removeData(this.widgetName + "-item");
 		}
 
@@ -13623,7 +13623,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 	},
 
 	_mouseCapture: function(event, overrideHandle) {
-		var currentItem = null,
+		let currentItem = null,
 			validHandle = false,
 			that = this;
 
@@ -13671,7 +13671,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 
 	_mouseStart: function(event, overrideHandle, noActivation) {
 
-		var i, body,
+		let i, body,
 			o = this.options;
 
 		this.currentContainer = this;
@@ -13804,7 +13804,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 	},
 
 	_mouseDrag: function(event) {
-		var i, item, itemElement, intersection,
+		let i, item, itemElement, intersection,
 			o = this.options,
 			scrolled = false;
 
@@ -13936,7 +13936,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 		}
 
 		if(this.options.revert) {
-			var that = this,
+			const that = this,
 				cur = this.placeholder.offset(),
 				axis = this.options.axis,
 				animation = {};
@@ -13972,7 +13972,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 			}
 
 			//Post deactivating events to containers
-			for (var i = this.containers.length - 1; i >= 0; i--){
+			for (let i = this.containers.length - 1; i >= 0; i--){
 				this.containers[i]._trigger("deactivate", null, this._uiHash(this));
 				if(this.containers[i].containerCache.over) {
 					this.containers[i]._trigger("out", null, this._uiHash(this));
@@ -14011,12 +14011,12 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 
 	serialize: function(o) {
 
-		var items = this._getItemsAsjQuery(o && o.connected),
+		const items = this._getItemsAsjQuery(o && o.connected),
 			str = [];
 		o = o || {};
 
 		$(items).each(function() {
-			var res = ($(o.item || this).attr(o.attribute || "id") || "").match(o.expression || (/(.+)[\-=_](.+)/));
+			const res = ($(o.item || this).attr(o.attribute || "id") || "").match(o.expression || (/(.+)[\-=_](.+)/));
 			if (res) {
 				str.push((o.key || res[1]+"[]")+"="+(o.key && o.expression ? res[1] : res[2]));
 			}
@@ -14032,7 +14032,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 
 	toArray: function(o) {
 
-		var items = this._getItemsAsjQuery(o && o.connected),
+		const items = this._getItemsAsjQuery(o && o.connected),
 			ret = [];
 
 		o = o || {};
@@ -14045,7 +14045,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 	/* Be careful with the following core functions */
 	_intersectsWith: function(item) {
 
-		var x1 = this.positionAbs.left,
+		const x1 = this.positionAbs.left,
 			x2 = x1 + this.helperProportions.width,
 			y1 = this.positionAbs.top,
 			y2 = y1 + this.helperProportions.height,
@@ -14076,7 +14076,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 
 	_intersectsWithPointer: function(item) {
 
-		var isOverElementHeight = (this.options.axis === "x") || this._isOverAxis(this.positionAbs.top + this.offset.click.top, item.top, item.height),
+		const isOverElementHeight = (this.options.axis === "x") || this._isOverAxis(this.positionAbs.top + this.offset.click.top, item.top, item.height),
 			isOverElementWidth = (this.options.axis === "y") || this._isOverAxis(this.positionAbs.left + this.offset.click.left, item.left, item.width),
 			isOverElement = isOverElementHeight && isOverElementWidth,
 			verticalDirection = this._getDragVerticalDirection(),
@@ -14094,7 +14094,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 
 	_intersectsWithSides: function(item) {
 
-		var isOverBottomHalf = this._isOverAxis(this.positionAbs.top + this.offset.click.top, item.top + (item.height/2), item.height),
+		const isOverBottomHalf = this._isOverAxis(this.positionAbs.top + this.offset.click.top, item.top + (item.height/2), item.height),
 			isOverRightHalf = this._isOverAxis(this.positionAbs.left + this.offset.click.left, item.left + (item.width/2), item.width),
 			verticalDirection = this._getDragVerticalDirection(),
 			horizontalDirection = this._getDragHorizontalDirection();
@@ -14108,12 +14108,12 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 	},
 
 	_getDragVerticalDirection: function() {
-		var delta = this.positionAbs.top - this.lastPositionAbs.top;
+		const delta = this.positionAbs.top - this.lastPositionAbs.top;
 		return delta !== 0 && (delta > 0 ? "down" : "up");
 	},
 
 	_getDragHorizontalDirection: function() {
-		var delta = this.positionAbs.left - this.lastPositionAbs.left;
+		const delta = this.positionAbs.left - this.lastPositionAbs.left;
 		return delta !== 0 && (delta > 0 ? "right" : "left");
 	},
 
@@ -14125,13 +14125,13 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 	},
 
 	_connectWith: function() {
-		var options = this.options;
+		const options = this.options;
 		return options.connectWith.constructor === String ? [options.connectWith] : options.connectWith;
 	},
 
 	_getItemsAsjQuery: function(connected) {
 
-		var i, j, cur, inst,
+		let i, j, cur, inst,
 			items = [],
 			queries = [],
 			connectWith = this._connectWith();
@@ -14163,10 +14163,10 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 
 	_removeCurrentsFromItems: function() {
 
-		var list = this.currentItem.find(":data(" + this.widgetName + "-item)");
+		const list = this.currentItem.find(":data(" + this.widgetName + "-item)");
 
 		this.items = $.grep(this.items, function (item) {
-			for (var j=0; j < list.length; j++) {
+			for (let j=0; j < list.length; j++) {
 				if(list[j] === item.item[0]) {
 					return false;
 				}
@@ -14181,7 +14181,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 		this.items = [];
 		this.containers = [this];
 
-		var i, j, cur, inst, targetData, _queries, item, queriesLength,
+		let i, j, cur, inst, targetData, _queries, item, queriesLength,
 			items = this.items,
 			queries = [[$.isFunction(this.options.items) ? this.options.items.call(this.element[0], event, { item: this.currentItem }) : $(this.options.items, this.element), this]],
 			connectWith = this._connectWith();
@@ -14226,7 +14226,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 			this.offset.parent = this._getParentOffset();
 		}
 
-		var i, item, t, p;
+		let i, item, t, p;
 
 		for (i = this.items.length - 1; i >= 0; i--){
 			item = this.items[i];
@@ -14265,7 +14265,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 
 	_createPlaceholder: function(that) {
 		that = that || this;
-		var className,
+		let className,
 			o = that.options;
 
 		if(!o.placeholder || o.placeholder.constructor === String) {
@@ -14273,7 +14273,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 			o.placeholder = {
 				element: function() {
 
-					var nodeName = that.currentItem[0].nodeName.toLowerCase(),
+					const nodeName = that.currentItem[0].nodeName.toLowerCase(),
 						element = $( "<" + nodeName + ">", that.document[0] )
 							.addClass(className || that.currentItem[0].className+" ui-sortable-placeholder")
 							.removeClass("ui-sortable-helper");
@@ -14321,7 +14321,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 	},
 
 	_contactContainers: function(event) {
-		var i, j, dist, itemWithLeastDistance, posProperty, sizeProperty, cur, nearBottom, floating, axis,
+		let i, j, dist, itemWithLeastDistance, posProperty, sizeProperty, cur, nearBottom, floating, axis,
 			innermostContainer = null,
 			innermostIndex = null;
 
@@ -14425,7 +14425,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 
 	_createHelper: function(event) {
 
-		var o = this.options,
+		const o = this.options,
 			helper = $.isFunction(o.helper) ? $(o.helper.apply(this.element[0], [event, this.currentItem])) : (o.helper === "clone" ? this.currentItem.clone() : this.currentItem);
 
 		//Add the helper to the DOM if that didn't happen already
@@ -14474,7 +14474,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 
 		//Get the offsetParent and cache its position
 		this.offsetParent = this.helper.offsetParent();
-		var po = this.offsetParent.offset();
+		let po = this.offsetParent.offset();
 
 		// This is a special case where we need to modify a offset calculated on start, since the following happened:
 		// 1. The position of the helper is absolute, so it's position is calculated based on the next positioned parent
@@ -14501,7 +14501,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 	_getRelativeOffset: function() {
 
 		if(this.cssPosition === "relative") {
-			var p = this.currentItem.position();
+			const p = this.currentItem.position();
 			return {
 				top: p.top - (parseInt(this.helper.css("top"),10) || 0) + this.scrollParent.scrollTop(),
 				left: p.left - (parseInt(this.helper.css("left"),10) || 0) + this.scrollParent.scrollLeft()
@@ -14528,7 +14528,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 
 	_setContainment: function() {
 
-		var ce, co, over,
+		let ce, co, over,
 			o = this.options;
 		if(o.containment === "parent") {
 			o.containment = this.helper[0].parentNode;
@@ -14562,7 +14562,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 		if(!pos) {
 			pos = this.position;
 		}
-		var mod = d === "absolute" ? 1 : -1,
+		const mod = d === "absolute" ? 1 : -1,
 			scroll = this.cssPosition === "absolute" && !(this.scrollParent[0] !== this.document[0] && $.contains(this.scrollParent[0], this.offsetParent[0])) ? this.offsetParent : this.scrollParent,
 			scrollIsRootNode = (/(html|body)/i).test(scroll[0].tagName);
 
@@ -14585,7 +14585,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 
 	_generatePosition: function(event) {
 
-		var top, left,
+		let top, left,
 			o = this.options,
 			pageX = event.pageX,
 			pageY = event.pageY,
@@ -14660,7 +14660,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 		// 3. on the local scope, we copy the counter variable, and check in the timeout, if it's still the same
 		// 4. this lets only the last addition to the timeout stack through
 		this.counter = this.counter ? ++this.counter : 1;
-		var counter = this.counter;
+		const counter = this.counter;
 
 		this._delay(function() {
 			if(counter === this.counter) {
@@ -14675,7 +14675,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 		this.reverting = false;
 		// We delay all events that have to be triggered to after the point where the placeholder has been removed and
 		// everything else normalized again
-		var i,
+		let i,
 			delayedTriggers = [];
 
 		// We first have to update the dom position of the actual currentItem
@@ -14777,7 +14777,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 	},
 
 	_uiHash: function(_inst) {
-		var inst = _inst || this;
+		const inst = _inst || this;
 		return {
 			helper: inst.helper,
 			placeholder: inst.placeholder || $([]),
@@ -14806,7 +14806,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 
 function spinner_modifier( fn ) {
 	return function() {
-		var previous = this.element.val();
+		const previous = this.element.val();
 		fn.apply( this, arguments );
 		this._refresh();
 		if ( previous !== this.element.val() ) {
@@ -14815,7 +14815,7 @@ function spinner_modifier( fn ) {
 	};
 }
 
-var spinner = $.widget( "ui.spinner", {
+const spinner = $.widget( "ui.spinner", {
 	version: "1.11.3",
 	defaultElement: "<input>",
 	widgetEventPrefix: "spin",
@@ -14866,11 +14866,11 @@ var spinner = $.widget( "ui.spinner", {
 	},
 
 	_getCreateOptions: function() {
-		var options = {},
+		const options = {},
 			element = this.element;
 
 		$.each( [ "min", "max", "step" ], function( i, option ) {
-			var value = element.attr( option );
+			const value = element.attr( option );
 			if ( value !== undefined && value.length ) {
 				options[ option ] = value;
 			}
@@ -14919,7 +14919,7 @@ var spinner = $.widget( "ui.spinner", {
 			event.preventDefault();
 		},
 		"mousedown .ui-spinner-button": function( event ) {
-			var previous;
+			let previous;
 
 			// We never want the buttons to have focus; whenever the user is
 			// interacting with the spinner, the focus should be on the input.
@@ -14929,7 +14929,7 @@ var spinner = $.widget( "ui.spinner", {
 			previous = this.element[0] === this.document[0].activeElement ?
 				this.previous : this.element.val();
 			function checkFocus() {
-				var isActive = this.element[0] === this.document[0].activeElement;
+				const isActive = this.element[0] === this.document[0].activeElement;
 				if ( !isActive ) {
 					this.element.focus();
 					this.previous = previous;
@@ -14981,7 +14981,7 @@ var spinner = $.widget( "ui.spinner", {
 	},
 
 	_draw: function() {
-		var uiSpinner = this.uiSpinner = this.element
+		const uiSpinner = this.uiSpinner = this.element
 			.addClass( "ui-spinner-input" )
 			.attr( "autocomplete", "off" )
 			.wrap( this._uiSpinnerHtml() )
@@ -15011,7 +15011,7 @@ var spinner = $.widget( "ui.spinner", {
 	},
 
 	_keydown: function( event ) {
-		var options = this.options,
+		const options = this.options,
 			keyCode = $.ui.keyCode;
 
 		switch ( event.keyCode ) {
@@ -15070,7 +15070,7 @@ var spinner = $.widget( "ui.spinner", {
 	},
 
 	_spin: function( step, event ) {
-		var value = this.value() || 0;
+		let value = this.value() || 0;
 
 		if ( !this.counter ) {
 			this.counter = 1;
@@ -15085,7 +15085,7 @@ var spinner = $.widget( "ui.spinner", {
 	},
 
 	_increment: function( i ) {
-		var incremental = this.options.incremental;
+		const incremental = this.options.incremental;
 
 		if ( incremental ) {
 			return $.isFunction( incremental ) ?
@@ -15097,7 +15097,7 @@ var spinner = $.widget( "ui.spinner", {
 	},
 
 	_precision: function() {
-		var precision = this._precisionOf( this.options.step );
+		let precision = this._precisionOf( this.options.step );
 		if ( this.options.min !== null ) {
 			precision = Math.max( precision, this._precisionOf( this.options.min ) );
 		}
@@ -15105,13 +15105,13 @@ var spinner = $.widget( "ui.spinner", {
 	},
 
 	_precisionOf: function( num ) {
-		var str = num.toString(),
+		const str = num.toString(),
 			decimal = str.indexOf( "." );
 		return decimal === -1 ? 0 : str.length - decimal - 1;
 	},
 
 	_adjustValue: function( value ) {
-		var base, aboveMin,
+		let base, aboveMin,
 			options = this.options;
 
 		// make sure we're at a valid step
@@ -15151,7 +15151,7 @@ var spinner = $.widget( "ui.spinner", {
 
 	_setOption: function( key, value ) {
 		if ( key === "culture" || key === "numberFormat" ) {
-			var prevValue = this._parse( this.element.val() );
+			const prevValue = this._parse( this.element.val() );
 			this.options[ key ] = value;
 			this.element.val( this._format( prevValue ) );
 			return;
@@ -15211,7 +15211,7 @@ var spinner = $.widget( "ui.spinner", {
 	},
 
 	isValid: function() {
-		var value = this.value();
+		const value = this.value();
 
 		// null is invalid
 		if ( value === null ) {
@@ -15224,7 +15224,7 @@ var spinner = $.widget( "ui.spinner", {
 
 	// update the value without triggering change
 	_value: function( value, allowAny ) {
-		var parsed;
+		let parsed;
 		if ( value !== "" ) {
 			parsed = this._parse( value );
 			if ( parsed !== null ) {
@@ -15303,7 +15303,7 @@ var spinner = $.widget( "ui.spinner", {
  */
 
 
-var tabs = $.widget( "ui.tabs", {
+const tabs = $.widget( "ui.tabs", {
 	version: "1.11.3",
 	delay: 300,
 	options: {
@@ -15322,10 +15322,10 @@ var tabs = $.widget( "ui.tabs", {
 	},
 
 	_isLocal: (function() {
-		var rhash = /#.*$/;
+		const rhash = /#.*$/;
 
 		return function( anchor ) {
-			var anchorUrl, locationUrl;
+			let anchorUrl, locationUrl;
 
 			// support: IE7
 			// IE7 doesn't normalize the href property when set via script (#9317)
@@ -15347,7 +15347,7 @@ var tabs = $.widget( "ui.tabs", {
 	})(),
 
 	_create: function() {
-		var that = this,
+		const that = this,
 			options = this.options;
 
 		this.running = false;
@@ -15384,7 +15384,7 @@ var tabs = $.widget( "ui.tabs", {
 	},
 
 	_initialActive: function() {
-		var active = this.options.active,
+		let active = this.options.active,
 			collapsible = this.options.collapsible,
 			locationHash = location.hash.substring( 1 );
 
@@ -15434,7 +15434,7 @@ var tabs = $.widget( "ui.tabs", {
 	},
 
 	_tabKeydown: function( event ) {
-		var focusedTab = $( this.document[0].activeElement ).closest( "li" ),
+		let focusedTab = $( this.document[0].activeElement ).closest( "li" ),
 			selectedIndex = this.tabs.index( focusedTab ),
 			goingForward = true;
 
@@ -15520,7 +15520,7 @@ var tabs = $.widget( "ui.tabs", {
 	},
 
 	_findNextTab: function( index, goingForward ) {
-		var lastTabIndex = this.tabs.length - 1;
+		const lastTabIndex = this.tabs.length - 1;
 
 		function constrain() {
 			if ( index > lastTabIndex ) {
@@ -15582,7 +15582,7 @@ var tabs = $.widget( "ui.tabs", {
 	},
 
 	refresh: function() {
-		var options = this.options,
+		const options = this.options,
 			lis = this.tablist.children( ":has(a[href])" );
 
 		// get disabled tabs from class attribute from HTML
@@ -15652,7 +15652,7 @@ var tabs = $.widget( "ui.tabs", {
 	},
 
 	_processTabs: function() {
-		var that = this,
+		const that = this,
 			prevTabs = this.tabs,
 			prevAnchors = this.anchors,
 			prevPanels = this.panels;
@@ -15699,7 +15699,7 @@ var tabs = $.widget( "ui.tabs", {
 		this.panels = $();
 
 		this.anchors.each(function( i, anchor ) {
-			var selector, panel, panelId,
+			let selector, panel, panelId,
 				anchorId = $( anchor ).uniqueId().attr( "id" ),
 				tab = $( anchor ).closest( "li" ),
 				originalAriaControls = tab.attr( "aria-controls" );
@@ -15786,7 +15786,7 @@ var tabs = $.widget( "ui.tabs", {
 	},
 
 	_setupEvents: function( event ) {
-		var events = {};
+		const events = {};
 		if ( event ) {
 			$.each( event.split(" "), function( index, eventName ) {
 				events[ eventName ] = "_eventHandler";
@@ -15809,7 +15809,7 @@ var tabs = $.widget( "ui.tabs", {
 	},
 
 	_setupHeightStyle: function( heightStyle ) {
-		var maxHeight,
+		let maxHeight,
 			parent = this.element.parent();
 
 		if ( heightStyle === "fill" ) {
@@ -15817,7 +15817,7 @@ var tabs = $.widget( "ui.tabs", {
 			maxHeight -= this.element.outerHeight() - this.element.height();
 
 			this.element.siblings( ":visible" ).each(function() {
-				var elem = $( this ),
+				const elem = $( this ),
 					position = elem.css( "position" );
 
 				if ( position === "absolute" || position === "fixed" ) {
@@ -15844,7 +15844,7 @@ var tabs = $.widget( "ui.tabs", {
 	},
 
 	_eventHandler: function( event ) {
-		var options = this.options,
+		const options = this.options,
 			active = this.active,
 			anchor = $( event.currentTarget ),
 			tab = anchor.closest( "li" ),
@@ -15892,7 +15892,7 @@ var tabs = $.widget( "ui.tabs", {
 
 	// handles show/hide for selecting tabs
 	_toggle: function( event, eventData ) {
-		var that = this,
+		const that = this,
 			toShow = eventData.newPanel,
 			toHide = eventData.oldPanel;
 
@@ -15952,7 +15952,7 @@ var tabs = $.widget( "ui.tabs", {
 	},
 
 	_activate: function( index ) {
-		var anchor,
+		let anchor,
 			active = this._findActive( index );
 
 		// trying to activate the already active panel
@@ -16024,7 +16024,7 @@ var tabs = $.widget( "ui.tabs", {
 		});
 
 		this.tabs.each(function() {
-			var li = $( this ),
+			const li = $( this ),
 				prev = li.data( "ui-tabs-aria-controls" );
 			if ( prev ) {
 				li
@@ -16043,7 +16043,7 @@ var tabs = $.widget( "ui.tabs", {
 	},
 
 	enable: function( index ) {
-		var disabled = this.options.disabled;
+		let disabled = this.options.disabled;
 		if ( disabled === false ) {
 			return;
 		}
@@ -16066,7 +16066,7 @@ var tabs = $.widget( "ui.tabs", {
 	},
 
 	disable: function( index ) {
-		var disabled = this.options.disabled;
+		let disabled = this.options.disabled;
 		if ( disabled === true ) {
 			return;
 		}
@@ -16089,7 +16089,7 @@ var tabs = $.widget( "ui.tabs", {
 
 	load: function( index, event ) {
 		index = this._getIndex( index );
-		var that = this,
+		const that = this,
 			tab = this.tabs.eq( index ),
 			anchor = tab.find( ".ui-tabs-anchor" ),
 			panel = this._getPanelForTab( tab ),
@@ -16141,7 +16141,7 @@ var tabs = $.widget( "ui.tabs", {
 	},
 
 	_ajaxSettings: function( anchor, event, eventData ) {
-		var that = this;
+		const that = this;
 		return {
 			url: anchor.attr( "href" ),
 			beforeSend: function( jqXHR, settings ) {
@@ -16152,7 +16152,7 @@ var tabs = $.widget( "ui.tabs", {
 	},
 
 	_getPanelForTab: function( tab ) {
-		var id = $( tab ).attr( "aria-controls" );
+		const id = $( tab ).attr( "aria-controls" );
 		return this.element.find( this._sanitizeSelector( "#" + id ) );
 	}
 });
@@ -16170,13 +16170,13 @@ var tabs = $.widget( "ui.tabs", {
  */
 
 
-var tooltip = $.widget( "ui.tooltip", {
+const tooltip = $.widget( "ui.tooltip", {
 	version: "1.11.3",
 	options: {
 		content: function() {
 			// support: IE<9, Opera in jQuery <1.7
 			// .text() can't accept undefined, so coerce to a string
-			var title = $( this ).attr( "title" ) || "";
+			const title = $( this ).attr( "title" ) || "";
 			// Escape title, since we're going from an attribute to raw HTML
 			return $( "<a>" ).text( title ).html();
 		},
@@ -16198,7 +16198,7 @@ var tooltip = $.widget( "ui.tooltip", {
 	},
 
 	_addDescribedBy: function( elem, id ) {
-		var describedby = (elem.attr( "aria-describedby" ) || "").split( /\s+/ );
+		const describedby = (elem.attr( "aria-describedby" ) || "").split( /\s+/ );
 		describedby.push( id );
 		elem
 			.data( "ui-tooltip-id", id )
@@ -16206,7 +16206,7 @@ var tooltip = $.widget( "ui.tooltip", {
 	},
 
 	_removeDescribedBy: function( elem ) {
-		var id = elem.data( "ui-tooltip-id" ),
+		let id = elem.data( "ui-tooltip-id" ),
 			describedby = (elem.attr( "aria-describedby" ) || "").split( /\s+/ ),
 			index = $.inArray( id, describedby );
 
@@ -16251,7 +16251,7 @@ var tooltip = $.widget( "ui.tooltip", {
 	},
 
 	_setOption: function( key, value ) {
-		var that = this;
+		const that = this;
 
 		if ( key === "disabled" ) {
 			this[ value ? "_disable" : "_enable" ]();
@@ -16270,18 +16270,18 @@ var tooltip = $.widget( "ui.tooltip", {
 	},
 
 	_disable: function() {
-		var that = this;
+		const that = this;
 
 		// close open tooltips
 		$.each( this.tooltips, function( id, tooltipData ) {
-			var event = $.Event( "blur" );
+			const event = $.Event( "blur" );
 			event.target = event.currentTarget = tooltipData.element[ 0 ];
 			that.close( event, true );
 		});
 
 		// remove title attributes to prevent native tooltips
 		this.element.find( this.options.items ).addBack().each(function() {
-			var element = $( this );
+			const element = $( this );
 			if ( element.is( "[title]" ) ) {
 				element
 					.data( "ui-tooltip-title", element.attr( "title" ) )
@@ -16293,7 +16293,7 @@ var tooltip = $.widget( "ui.tooltip", {
 	_enable: function() {
 		// restore title attributes
 		this.element.find( this.options.items ).addBack().each(function() {
-			var element = $( this );
+			const element = $( this );
 			if ( element.data( "ui-tooltip-title" ) ) {
 				element.attr( "title", element.data( "ui-tooltip-title" ) );
 			}
@@ -16301,7 +16301,7 @@ var tooltip = $.widget( "ui.tooltip", {
 	},
 
 	open: function( event ) {
-		var that = this,
+		const that = this,
 			target = $( event ? event.target : this.element )
 				// we need closest here due to mouseover bubbling,
 				// but always pointing at the same event target
@@ -16321,7 +16321,7 @@ var tooltip = $.widget( "ui.tooltip", {
 		// kill parent tooltips, custom or native, for hover
 		if ( event && event.type === "mouseover" ) {
 			target.parents().each(function() {
-				var parent = $( this ),
+				let parent = $( this ),
 					blurEvent;
 				if ( parent.data( "ui-tooltip-open" ) ) {
 					blurEvent = $.Event( "blur" );
@@ -16343,7 +16343,7 @@ var tooltip = $.widget( "ui.tooltip", {
 	},
 
 	_updateContent: function( target, event ) {
-		var content,
+		let content,
 			contentOption = this.options.content,
 			that = this,
 			eventType = event ? event.type : null;
@@ -16377,7 +16377,7 @@ var tooltip = $.widget( "ui.tooltip", {
 	},
 
 	_open: function( event, target, content ) {
-		var tooltipData, tooltip, events, delayedShow, a11yContent,
+		let tooltipData, tooltip, events, delayedShow, a11yContent,
 			positionOption = $.extend( {}, this.options.position );
 
 		if ( !content ) {
@@ -16463,7 +16463,7 @@ var tooltip = $.widget( "ui.tooltip", {
 		events = {
 			keyup: function( event ) {
 				if ( event.keyCode === $.ui.keyCode.ESCAPE ) {
-					var fakeEvent = $.Event(event);
+					const fakeEvent = $.Event(event);
 					fakeEvent.currentTarget = target[0];
 					this.close( fakeEvent, true );
 				}
@@ -16488,7 +16488,7 @@ var tooltip = $.widget( "ui.tooltip", {
 	},
 
 	close: function( event ) {
-		var tooltip,
+		let tooltip,
 			that = this,
 			target = $( event ? event.currentTarget : this.element ),
 			tooltipData = this._find( target );
@@ -16547,7 +16547,7 @@ var tooltip = $.widget( "ui.tooltip", {
 	},
 
 	_tooltip: function( element ) {
-		var tooltip = $( "<div>" )
+		const tooltip = $( "<div>" )
 				.attr( "role", "tooltip" )
 				.addClass( "ui-tooltip ui-widget ui-corner-all ui-widget-content " +
 					( this.options.tooltipClass || "" ) ),
@@ -16566,7 +16566,7 @@ var tooltip = $.widget( "ui.tooltip", {
 	},
 
 	_find: function( target ) {
-		var id = target.data( "ui-tooltip-id" );
+		const id = target.data( "ui-tooltip-id" );
 		return id ? this.tooltips[ id ] : null;
 	},
 
@@ -16576,12 +16576,12 @@ var tooltip = $.widget( "ui.tooltip", {
 	},
 
 	_destroy: function() {
-		var that = this;
+		const that = this;
 
 		// close open tooltips
 		$.each( this.tooltips, function( id, tooltipData ) {
 			// Delegate to close method to handle common cleanup
-			var event = $.Event( "blur" ),
+			const event = $.Event( "blur" ),
 				element = tooltipData.element;
 			event.target = event.currentTarget = element[ 0 ];
 			that.close( event, true );

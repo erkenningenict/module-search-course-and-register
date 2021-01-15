@@ -1,14 +1,18 @@
-import { useMutation, useQuery } from '@apollo/react-hooks';
-import { Alert, Button, PanelBody, Spinner, toDutchDate } from '@erkenningen/ui';
+import { Alert } from '@erkenningen/ui/components/alert';
+import { Button } from '@erkenningen/ui/components/button';
+import { Spinner } from '@erkenningen/ui/components/spinner';
+import { toDutchDate } from '@erkenningen/ui/utils';
+import { PanelBody } from '@erkenningen/ui/layout/panel';
+
 import { Formik } from 'formik';
 import React, { useContext } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { object, string } from 'yup';
-import { IKennisgebied, ILand } from '../shared/Model';
-import { IRegisterForCourseInput, REGISTER } from '../shared/Mutations';
-import { IListsQuery, LISTS } from '../shared/Queries';
+import { useGetListsQuery, useRegisterForCourseMutation } from '../generated/graphql';
+import { UserContext } from '../shared/Auth';
+import { ILand } from '../shared/Model';
+import { IRegisterForCourseInput } from '../shared/Mutations';
 import { SelectedLicenseContext } from '../shared/SelectedLicenseContext';
-import { UserContext } from '../shared/UserContext';
 import FormSelect from './ui/FormSelect';
 import FormText from './ui/FormText';
 
@@ -29,10 +33,7 @@ interface IRegister extends RouteComponentProps {
 const MessageRequired = 'Dit is een verplicht veld';
 const numberRegEx = /^[1-9][0-9]{0,5}$/;
 const RegisterSchema = object().shape({
-  Street: string()
-    .min(2, 'Te weinig tekens')
-    .max(100, 'Max 100 tekens')
-    .required(MessageRequired),
+  Street: string().min(2, 'Te weinig tekens').max(100, 'Max 100 tekens').required(MessageRequired),
   HouseNr: string()
     .required(MessageRequired)
     .matches(numberRegEx, 'Voer een geheel getal in, groter dan 0, maximaal 5 cijfers'),
@@ -46,21 +47,13 @@ const RegisterSchema = object().shape({
         'Nederlandse postcode moet geformatteerd zijn als "1234 AB". Buitenlandse postcode? Wijzig eerst het land.',
       ),
     }),
-  Country: string()
-    .min(2, 'Te weinig tekens')
-    .max(100, 'Max 100 tekens')
-    .required(MessageRequired),
-  City: string()
-    .min(2, 'Te weinig tekens')
-    .max(100, 'Max 100 tekens')
-    .required(MessageRequired),
+  Country: string().min(2, 'Te weinig tekens').max(100, 'Max 100 tekens').required(MessageRequired),
+  City: string().min(2, 'Te weinig tekens').max(100, 'Max 100 tekens').required(MessageRequired),
   EmailAddress: string()
     .email('E-mailadres is incorrect')
     .max(200, 'Max 200 tekens')
     .required(MessageRequired),
-  KnowledgeArea: string()
-    .min(2, 'Selecteer een sector')
-    .required('Selecteer een sector'),
+  KnowledgeArea: string().min(2, 'Selecteer een sector').required('Selecteer een sector'),
 });
 
 export function Register(properties: IRegister) {
@@ -70,14 +63,11 @@ export function Register(properties: IRegister) {
   const search = (properties.location && properties.location && properties.location.search) || '';
   const returnToListLink = <Link to={`/bijeenkomsten-zoeken/op-locatie${search}`}>Terug</Link>;
 
-  const { loading, data, error } = useQuery<IListsQuery>(LISTS);
+  const { loading, data, error } = useGetListsQuery();
   const [
     registerCourse,
     { loading: mutationLoading, error: mutationError, data: mutationData },
-  ] = useMutation<
-    { registerForCourse: { success: boolean; message: string } },
-    { input: IRegisterForCourseInput }
-  >(REGISTER);
+  ] = useRegisterForCourseMutation();
   if (loading || mutationLoading) {
     return (
       <div>
@@ -114,8 +104,8 @@ export function Register(properties: IRegister) {
   if (!data) {
     return null;
   }
-  const userData = user && user.my && user.my.Persoon;
-  const contactData = user && user.my && user.my.Persoon && user.my.Persoon.Contactgegevens;
+  const userData = user && user?.Persoon;
+  const contactData = user && user?.Persoon && user?.Persoon?.Contactgegevens;
   if (!userData || !contactData) {
     return <p>Er zijn geen gegevens gevonden.</p>;
   }
@@ -130,12 +120,12 @@ export function Register(properties: IRegister) {
 
       <Formik
         initialValues={{
-          Street: contactData.Adresregel1,
-          HouseNr: contactData.Huisnummer,
-          HouseNrAddition: contactData.HuisnummerToevoeging,
-          Country: contactData.Land,
-          Zipcode: contactData.Postcode,
-          City: contactData.Woonplaats,
+          Street: contactData.Adresregel1 || '',
+          HouseNr: contactData.Huisnummer || '',
+          HouseNrAddition: contactData.HuisnummerToevoeging || '',
+          Country: contactData.Land || '',
+          Zipcode: contactData.Postcode || '',
+          City: contactData.Woonplaats || '',
           PhoneNr: contactData.Telefoon || '',
           BirthPlace: '',
           EmailAddress: contactData.Email || '',
@@ -143,7 +133,7 @@ export function Register(properties: IRegister) {
           AccountAddress: '',
         }}
         validationSchema={RegisterSchema}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values) => {
           const input: IRegisterForCourseInput = {
             licenseId,
             code: registerCourseDetails.code,
@@ -166,7 +156,8 @@ export function Register(properties: IRegister) {
           };
           registerCourse({ variables: { input } });
         }}
-        render={(props: any) => {
+      >
+        {(props: any) => {
           return (
             <form onSubmit={props.handleSubmit} className="form form-horizontal">
               <div className="form-group">
@@ -263,7 +254,7 @@ export function Register(properties: IRegister) {
               <FormSelect
                 id="knowledgeArea"
                 label="Sector"
-                options={data.Kennisgebieden.map((item: IKennisgebied) => ({
+                options={data.Kennisgebieden.map((item) => ({
                   value: item.Naam,
                   label: item.Naam,
                 }))}
@@ -282,7 +273,10 @@ export function Register(properties: IRegister) {
                 helpText="Alleen invullen als de rekening niet naar uw eigen adres gestuurd moet worden. Vul in dat geval de naam en het VOLLEDIGE adres in van de organisatie waar de rekening naar toe moet."
               />
               <div className="form-group">
-                <div className="col-md-offset-3 col-md-6">
+                <div
+                  className="col-md-offset-3 col-md-6"
+                  style={{ display: 'flex', alignItems: 'center', paddingBottom: '10px' }}
+                >
                   <Button
                     buttonType="submit"
                     label="Aanmelden"
@@ -295,7 +289,7 @@ export function Register(properties: IRegister) {
             </form>
           );
         }}
-      />
+      </Formik>
     </>
   );
 }

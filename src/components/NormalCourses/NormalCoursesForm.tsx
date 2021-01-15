@@ -1,20 +1,19 @@
-import { useQuery } from '@apollo/react-hooks';
 import {
-  Button,
-  LinkButtonContainer,
-  PanelBody,
   parseLocationSearch,
-  Spinner,
-} from '@erkenningen/ui';
+} from '@erkenningen/ui/utils';
+import {Spinner} from '@erkenningen/ui/components/spinner';
+import {Button} from '@erkenningen/ui/components/button';
+import {PanelBody} from '@erkenningen/ui/layout/panel';
+import {LinkButtonContainer} from '@erkenningen/ui/components/link-button';
+
 import { addMonths } from 'date-fns';
 import { Formik } from 'formik';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { date, object } from 'yup';
-import { ICompetentie, IKennisgebied, IThema } from '../../shared/Model';
-import { IListsQuery, LISTS } from '../../shared/Queries';
-import { UserContext } from '../../shared/UserContext';
+import { useGetListsQuery } from '../../generated/graphql';
+import { UserContext } from '../../shared/Auth';
 import FormCalendar from '../ui/FormCalendar';
 import FormSelect from '../ui/FormSelect';
 import FormText from '../ui/FormText';
@@ -28,6 +27,7 @@ interface IIdLabel {
 
 interface INormalCourseFormProps extends RouteComponentProps {
   isOnline: boolean;
+  seenOverview: (seen: boolean) => void;
 }
 
 const NormalCoursesSchema = object().shape({
@@ -36,12 +36,16 @@ const NormalCoursesSchema = object().shape({
 });
 
 export function NormalCoursesForm(props: INormalCourseFormProps) {
-  const [searchData, setSearchData] = useState();
+  useEffect(() => {
+    props.seenOverview(true); 
+  });
+
+  const [searchData, setSearchData] = useState<any>();
   const [themeId, setThemeId] = useQueryParam('themaId', StringParam);
   const [competenceId, setCompetenceId] = useQueryParam('competentieId', StringParam);
   const [knowledgeAreaId, setKnowledgeAreaId] = useQueryParam('sectorId', StringParam);
   const toDate = addMonths(new Date(), 3);
-  const { loading, data, error } = useQuery<IListsQuery>(LISTS);
+  const { loading, data, error } = useGetListsQuery();
 
   const distances: IIdLabel[] = [
     { Id: 0, Label: 'Alle' },
@@ -60,7 +64,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
       form.setFieldValue('distanceRadius', 0);
     }
   };
-  const value = useContext(UserContext);
+  const user = useContext(UserContext);
 
   if (loading) {
     return <Spinner />;
@@ -70,12 +74,11 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
     return <p>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</p>;
   }
 
-  const licenseId: string | null =
-    (value &&
-      value.my &&
-      value.my.Certificeringen &&
-      value.my.Certificeringen.length > 0 &&
-      value.my.Certificeringen[0].CertificeringID) ||
+  const licenseId: number | null =
+    (user &&
+      user.Certificeringen &&
+      user.Certificeringen.length > 0 &&
+      user.Certificeringen[0].CertificeringID) ||
     null;
   let theme = '0';
   let competence = '0';
@@ -113,15 +116,15 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
   }
   const knowledgeAreas = [
     { KennisgebiedID: '0', Naam: 'Alle' },
-    ...data.Kennisgebieden.sort((a: IKennisgebied, b: IKennisgebied) => (a.Naam < b.Naam ? -1 : 1)),
+    ...data.Kennisgebieden.slice().sort((a, b) => (a?.Naam < b?.Naam ? -1 : 1)),
   ];
   const themes = [
     { ThemaID: '0', Naam: 'Alle' },
-    ...data.Themas.sort((a: IThema, b: IThema) => (a.Naam < b.Naam ? -1 : 1)),
+    ...data.Themas.slice().sort((a, b) => (a.Naam < b.Naam ? -1 : 1)),
   ];
   const competences = [
     { CompetentieID: '0', Naam: 'Alle' },
-    ...data.Competenties.sort((a: ICompetentie, b: ICompetentie) => (a.Naam < b.Naam ? -1 : 1)),
+    ...data.Competenties.slice().sort((a, b) => (a.Naam < b.Naam ? -1 : 1)),
   ];
   return (
     <>
@@ -130,7 +133,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
           <LinkButton to={`/bijeenkomsten-zoeken/online${props.location.search}`}>
             Online bijeenkomsten
           </LinkButton>
-          {value && (
+          {user && (
             <>
               <LinkButton to={`/waar-ben-ik-aangemeld${props.location.search}`}>
                 Waar ben ik aangemeld?
@@ -149,10 +152,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
             themeId: (searchData && searchData.themeId) || '0',
             competenceId: (searchData && searchData.competenceId) || '0',
             zipcodeNumbers:
-              (value &&
-                value.my &&
-                value.my.Persoon &&
-                value.my.Persoon.Contactgegevens.Postcode) ||
+              ( user?.Persoon?.Contactgegevens?.Postcode) ||
               '',
             distanceRadius: 0,
             from: new Date(),
@@ -164,12 +164,13 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
             setSearchData(values);
             setSubmitting(false);
           }}
-          render={(formProps: any) => (
+          >
+          {(formProps: any) => (
             <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
               <FormSelect
                 id="knowledgeArea"
                 label="Sector"
-                options={knowledgeAreas.map((item: IKennisgebied) => {
+                options={knowledgeAreas.map((item) => {
                   return {
                     value: item.KennisgebiedID,
                     label: item.Naam,
@@ -193,7 +194,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
               <FormSelect
                 id="themeId"
                 label="Thema"
-                options={themes.map((item: IThema) => ({
+                options={themes.map((item) => ({
                   value: item.ThemaID,
                   label: item.Naam,
                 }))}
@@ -215,7 +216,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
               <FormSelect
                 id="competenceId"
                 label="Bijeenkomsttype"
-                options={competences.map((item: ICompetentie) => ({
+                options={competences.map((item) => ({
                   value: item.CompetentieID,
                   label: item.Naam,
                 }))}
@@ -279,7 +280,8 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
               </div>
             </form>
           )}
-        />
+      </Formik>
+        
       </PanelBody>
       {searchData && <NormalCoursesTable {...props} searchData={searchData} />}
     </>

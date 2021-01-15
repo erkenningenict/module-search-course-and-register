@@ -1,4 +1,5 @@
-import { Input, TextArea } from '@erkenningen/ui';
+import { Textarea } from '@erkenningen/ui/components/textarea';
+import { Input } from '@erkenningen/ui/components/input';
 import { FormikProps } from 'formik';
 import React from 'react';
 import FormItem from './FormItem';
@@ -21,7 +22,7 @@ interface IFormTextProps {
   helpText?: string;
 }
 
-class FormText extends React.Component<IFormTextProps, {}> {
+class FormText extends React.Component<IFormTextProps, unknown> {
   public render() {
     const handleChange = (event: any) => {
       if (this.props.form) {
@@ -59,7 +60,7 @@ class FormText extends React.Component<IFormTextProps, {}> {
         helpText={this.props.helpText}
       >
         {this.props.isTextArea ? (
-          <TextArea
+          <Textarea
             id={this.props.id}
             name={this.props.name}
             placeholder={this.props.placeholder || this.props.label}

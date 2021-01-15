@@ -1,28 +1,31 @@
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/client';
 import { ERKENNINGEN_LOGIN_URL } from '@erkenningen/config';
-import { Alert, Button, Col, PanelBody, Row, Spinner } from '@erkenningen/ui';
+import { Alert } from '@erkenningen/ui/components/alert';
+import { Button } from '@erkenningen/ui/components/button';
+import { Spinner } from '@erkenningen/ui/components/spinner';
+import { PanelBody } from '@erkenningen/ui/layout/panel';
+import { Row } from '@erkenningen/ui/layout/row';
+import { Col } from '@erkenningen/ui/layout/col';
 import { addHours, addMinutes } from 'date-fns';
 import React, { useContext, useState } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { UserContext } from '../../shared/Auth';
 import {
   COURSE_SESSION_DETAILS,
   IIsLicenseValidForSpecialty,
   SEARCH_COURSE_SESSIONS,
 } from '../../shared/Queries';
 import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
-import { UserContext } from '../../shared/UserContext';
 import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
 import { Register } from '../Register';
 import { NormalCourseDetails } from './NormalCourseDetails';
-
-interface INormalCourseDetailsProps extends RouteComponentProps<any> {}
 
 interface IInputVariables {
   input: { currentCourseId: number; isOnlineCourse: boolean };
   inputCheck?: { licenseId: number; courseId: number };
 }
 
-export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
+export function NormalCourseDetailsContainer(props: any) {
   const [showRegister, setShowRegister] = useState(false);
   const user = useContext(UserContext);
   const licenseId = useContext(SelectedLicenseContext);
@@ -109,7 +112,7 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
         <Row>
           <Col>
             {user ? (
-              <>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 {data.isLicenseValidForSpecialty.success && (
                   <Button
                     label="Aanmelden"
@@ -118,7 +121,7 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
                   />
                 )}
                 {returnToListLink}
-              </>
+              </div>
             ) : (
               <>
                 <Alert type="warning">
@@ -127,18 +130,20 @@ export function NormalCourseDetailsContainer(props: INormalCourseDetailsProps) {
                     melden om eerst in te loggen, keer dan hier terug om u aan te melden.
                   </div>
                 </Alert>
-                <Button
-                  label="Inloggen om aan te melden"
-                  onClick={() => {
-                    const { origin, href } = window.location;
-                    const redirectUrl = `${ERKENNINGEN_LOGIN_URL}&returnurl=${encodeURIComponent(
-                      href.replace(origin, ''),
-                    )}`;
-                    window.location.href = redirectUrl;
-                  }}
-                  icon="pi pi-check"
-                />
-                {returnToListLink}
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Button
+                    label="Inloggen om aan te melden"
+                    onClick={() => {
+                      const { origin, href } = window.location;
+                      const redirectUrl = `${ERKENNINGEN_LOGIN_URL}&returnurl=${encodeURIComponent(
+                        href.replace(origin, ''),
+                      )}`;
+                      window.location.href = redirectUrl;
+                    }}
+                    icon="pi pi-check"
+                  />
+                  {returnToListLink}
+                </div>
               </>
             )}
           </Col>

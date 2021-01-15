@@ -1,4 +1,4 @@
-import { Panel } from '@erkenningen/ui';
+import { Panel } from '@erkenningen/ui/layout/panel';
 import React, { useState } from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { SelectedLicenseContext } from '../../../shared/SelectedLicenseContext';
@@ -40,16 +40,26 @@ export function SearchCourse() {
               exact={true}
               path="/bijeenkomsten-zoeken/op-locatie"
               render={(routerProps: RouteComponentProps) => {
-                setSeenOverview(true);
-                return <NormalCoursesForm {...routerProps} isOnline={false} />;
+                return (
+                  <NormalCoursesForm
+                    {...routerProps}
+                    isOnline={false}
+                    seenOverview={(seen) => setSeenOverview(seen)}
+                  />
+                );
               }}
             />
             <Route
               exact={true}
               path="/bijeenkomsten-zoeken/online"
               render={(routerProps: RouteComponentProps) => {
-                setSeenOverview(true);
-                return <OnlineCoursesForm {...routerProps} isOnline={true} />;
+                return (
+                  <OnlineCoursesForm
+                    {...routerProps}
+                    isOnline={true}
+                    seenOverview={(seen) => setSeenOverview(seen)}
+                  />
+                );
               }}
             />
           </LicenseChooser>

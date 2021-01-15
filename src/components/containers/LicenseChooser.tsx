@@ -1,25 +1,27 @@
-import { Alert, PanelBody } from '@erkenningen/ui';
-import React, { useContext, useState } from 'react';
-import { ICertificering } from '../../shared/Queries';
+import { Alert } from '@erkenningen/ui/components/alert';
+import { PanelBody } from '@erkenningen/ui/layout/panel';
+import React, { useContext, useEffect, useState } from 'react';
+import { UserContext } from '../../shared/Auth';
 import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
-import { UserContext } from '../../shared/UserContext';
 import FormSelect from '../ui/FormSelect';
 
 export function LicenseChooser(props: any) {
-  const [certs, setCerts] = useState();
+  const [certs, setCerts] = useState<any>();
   const user = useContext(UserContext);
   const licenseId = useContext(SelectedLicenseContext);
   if (!user) {
     return props.children;
   }
-  const certificeringen: ICertificering[] = (user && user.my && user.my.Certificeringen) || [];
+  const certificeringen = user?.Certificeringen || [];
   if (!certs && certificeringen.length > 0) {
     setCerts(certificeringen);
   }
 
-  if (licenseId === 0 && certs && certs.length > 0) {
-    props.setLicenseId(parseInt(certs[0].CertificeringID, 10));
-  }
+  useEffect(() => {
+    if (licenseId === 0 && certs && certs?.length > 0) {
+      props.setLicenseId(certs[0].CertificeringID);
+    }
+  });
 
   if (
     props.location.pathname.match(
@@ -39,12 +41,12 @@ export function LicenseChooser(props: any) {
           <FormSelect
             id="license"
             label="Kies uw licentie"
-            value={licenseId.toString()}
+            value={licenseId}
             options={certificeringen.map((item: any) => ({
-              value: item.CertificeringID.toString(),
+              value: item.CertificeringID,
               label: `${item.NummerWeergave} - ${item.Certificaat.Naam}`,
             }))}
-            onChange={(event: any) => props.setLicenseId(parseInt(event.value, 10))}
+            onChange={(event: any) => props.setLicenseId(event.value)}
             name="licenseId"
             loading={false}
           />

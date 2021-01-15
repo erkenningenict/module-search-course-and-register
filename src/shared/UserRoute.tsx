@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import { UserContext } from './UserContext';
+import { UserContext } from './Auth';
 
-// TODO Implement UserRoute later
 export default function UserRoute({ component: Component, ...rest }) {
   const user = useContext(UserContext);
   return (

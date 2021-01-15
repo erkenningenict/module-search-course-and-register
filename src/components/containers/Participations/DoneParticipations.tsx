@@ -1,13 +1,11 @@
-import { LinkButtonContainer, Panel, PanelBody } from '@erkenningen/ui';
+import { PanelBody, Panel } from '@erkenningen/ui/layout/panel';
+import { LinkButtonContainer } from '@erkenningen/ui/components/link-button';
 import React, { useState } from 'react';
-import { RouteComponentProps } from 'react-router';
 import DoneParticipationSelectLicense from '../../DoneParticipations/DoneParticipationsSelectLicense';
 import DoneParticipationsTable from '../../DoneParticipations/DoneParticipationsTable';
 import LinkButton from '../../ui/LinkButton';
 
-interface IDoneParticipationsProps extends RouteComponentProps<any> {}
-
-export default function DoneParticipations(props: IDoneParticipationsProps) {
+export default function DoneParticipations(props) {
   const [licenseId, setLicenseId] = useState(0);
   return (
     <Panel title="Welke bijeenkomsten heb ik al gevolgd?" doNotIncludeBody={true}>

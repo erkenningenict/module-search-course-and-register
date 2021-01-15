@@ -1,7 +1,9 @@
-import { useQuery } from '@apollo/react-hooks';
-import { Alert, PanelBody, Spinner, TableResponsive } from '@erkenningen/ui';
+import {Alert} from '@erkenningen/ui/components/alert';
+import {Spinner} from '@erkenningen/ui/components/spinner';
+import {PanelBody} from '@erkenningen/ui/layout/panel';
+import {TableResponsive} from '@erkenningen/ui/layout/table';
 import React from 'react';
-import { GET_PARTICIPATIONS, IGetParticipation } from '../../shared/Queries';
+import {  useGetCursusDeelnamesQuery } from '../../generated/graphql';
 import DoneParticipationsRow from './DoneParticipationsRow';
 
 interface IDoneParticipationsTableProps {
@@ -9,12 +11,7 @@ interface IDoneParticipationsTableProps {
 }
 
 export default function DoneParticipationsTable(props: IDoneParticipationsTableProps) {
-  const { loading, data, error } = useQuery<
-    { CursusDeelnames: IGetParticipation[] },
-    {
-      licenseId: number;
-    }
-  >(GET_PARTICIPATIONS, {
+  const { loading, data, error } = useGetCursusDeelnamesQuery({
     variables: {
       licenseId: props.licenseId,
     },
@@ -52,10 +49,10 @@ export default function DoneParticipationsTable(props: IDoneParticipationsTableP
           <tbody>
             {data &&
               data.CursusDeelnames &&
-              data.CursusDeelnames.map((item: IGetParticipation) => (
+              data.CursusDeelnames.map((item) => (
                 <DoneParticipationsRow key={item.CursusDeelnameID} row={item} />
               ))}
-            {!data || data.CursusDeelnames.length === 0 ? (
+            {!data || data?.CursusDeelnames?.length === 0 ? (
               <tr>
                 <td colSpan={6}>
                   <Alert type="info">U heeft nog geen bijeenkomsten gevolgd</Alert>
@@ -67,7 +64,7 @@ export default function DoneParticipationsTable(props: IDoneParticipationsTableP
       </TableResponsive>
       <PanelBody>
         <p>
-          * Status 'voorlopig' kan betekenen dat de deelnamelijst nog niet compleet is of dat de
+          * Status &apos;voorlopig&apos; kan betekenen dat de deelnamelijst nog niet compleet is of dat de
           kennisaanbieder nog niet betaald heeft.
         </p>
       </PanelBody>

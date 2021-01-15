@@ -1,10 +1,9 @@
-import { toDutchDate, toDutchMoney } from '@erkenningen/ui';
+import { toDutchDate, toDutchMoney } from '@erkenningen/ui/utils';
 import React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
 
 interface INormalCourseRow extends RouteComponentProps {
-  row: INormalCourseDetails;
+  row: any;
   showDistance: boolean;
 }
 

@@ -1,33 +1,35 @@
-import { useQuery } from '@apollo/react-hooks';
 import {
-  Button,
-  LinkButtonContainer,
-  PanelBody,
   parseLocationSearch,
-  Spinner,
-} from '@erkenningen/ui';
+} from '@erkenningen/ui/utils';
+import {Spinner} from '@erkenningen/ui/components/spinner';
+import {Button} from '@erkenningen/ui/components/button';
+import {PanelBody} from '@erkenningen/ui/layout/panel';
+import {LinkButtonContainer} from '@erkenningen/ui/components/link-button';
 import { Formik } from 'formik';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { StringParam, useQueryParam } from 'use-query-params';
-import { IKennisgebied, IThema } from '../../shared/Model';
-import { IListsQuery, LISTS } from '../../shared/Queries';
-import { UserContext } from '../../shared/UserContext';
+import { useGetListsQuery } from '../../generated/graphql';
+import { UserContext } from '../../shared/Auth';
 import FormSelect from '../ui/FormSelect';
 import LinkButton from '../ui/LinkButton';
 import { OnlineCoursesTable } from './OnlineCoursesTable';
 
 interface IOnlineCourseFormProps extends RouteComponentProps {
   isOnline: boolean;
+  seenOverview: (seen: boolean)=> void;
 }
 
 export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
-  const [searchData, setSearchData] = useState();
+  useEffect(() => {
+    props.seenOverview(true); 
+  });
+  const [searchData, setSearchData] = useState<any>();
   const [themeId, setThemeId] = useQueryParam('themaId', StringParam);
   const [knowledgeAreaId, setKnowledgeAreaId] = useQueryParam('sectorId', StringParam);
 
-  const value = useContext(UserContext);
-  const { loading, data, error } = useQuery<IListsQuery>(LISTS);
+  const user = useContext(UserContext);
+  const { loading, data, error } = useGetListsQuery();
   if (loading) {
     return (
       <div>
@@ -40,12 +42,10 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
     return <p>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</p>;
   }
 
-  const licenseId: string | null =
-    (value &&
-      value.my &&
-      value.my.Certificeringen &&
-      value.my.Certificeringen.length > 0 &&
-      value.my.Certificeringen[0].CertificeringID) ||
+  const licenseId: number | null =
+    (user && user?.Certificeringen &&
+      user?.Certificeringen.length > 0 &&
+      user?.Certificeringen[0].CertificeringID) ||
     null;
 
   if (!searchData) {
@@ -78,13 +78,13 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
     return null;
   }
 
-  const knowledgeAreas: IKennisgebied[] = [
+  const knowledgeAreas = [
     { KennisgebiedID: '0', Naam: 'Alle' },
-    ...data.Kennisgebieden.sort((a: IKennisgebied, b: IKennisgebied) => (a.Naam < b.Naam ? -1 : 1)),
+    ...data.Kennisgebieden.slice().sort((a, b) => (a.Naam < b.Naam ? -1 : 1)),
   ];
   const themes = [
     { ThemaID: '0', Naam: 'Alle' },
-    ...data.Themas.sort((a: IThema, b: IThema) => (a.Naam < b.Naam ? -1 : 1)),
+    ...data.Themas.slice().sort((a , b) => (a.Naam < b.Naam ? -1 : 1)),
   ];
   return (
     <>
@@ -98,7 +98,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
           >
             Bijeenkomsten op locatie
           </LinkButton>
-          {value && (
+          {user && (
             <>
               <LinkButton
                 to={{
@@ -132,12 +132,13 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
             setSearchData(values);
             setSubmitting(false);
           }}
-          render={(formProps: any) => (
+          >
+          {(formProps: any) => (
             <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
               <FormSelect
                 id="knowledgeArea"
                 label="Sector"
-                options={knowledgeAreas.map((item: IKennisgebied) => ({
+                options={knowledgeAreas.map((item) => ({
                   value: item.KennisgebiedID,
                   label: item.Naam,
                 }))}
@@ -157,7 +158,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
               <FormSelect
                 id="themeId"
                 label="Thema"
-                options={themes.map((item: IThema) => ({
+                options={themes.map((item) => ({
                   value: item.ThemaID,
                   label: item.Naam,
                 }))}
@@ -186,7 +187,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
               </div>
             </form>
           )}
-        />
+</Formik>
       </PanelBody>
       {searchData && <OnlineCoursesTable {...props} searchData={searchData} />}
     </>

@@ -1,9 +1,9 @@
 !(function(a) {
   a(function() {
-    var s = a("ul.navbar-nav:not([data-sm-skip])");
+    const s = a("ul.navbar-nav:not([data-sm-skip])");
     s.each(function() {
       function s() {
-        var a = e.getViewportWidth();
+        const a = e.getViewportWidth();
         a != o &&
           (e.isCollapsible()
             ? (i.addClass("sm-collapsible"),
@@ -29,7 +29,7 @@
         })
         .bind({
           "show.smapi": function(s, i) {
-            var e = a(i),
+            const e = a(i),
               o = e.dataSM("scroll-arrows");
             o &&
               o.css(
@@ -52,7 +52,7 @@
         i.bind({
           "click.smapi": function(s, i) {
             if (e.isCollapsible()) {
-              var o = a(i),
+              const o = a(i),
                 n = o.parent().dataSM("sub");
               if (n && n.dataSM("shown-before") && n.is(":visible"))
                 return e.itemActivate(o), e.menuHide(n), !1;
