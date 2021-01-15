@@ -1,10 +1,8 @@
-import {
-  parseLocationSearch,
-} from '@erkenningen/ui/utils';
-import {Spinner} from '@erkenningen/ui/components/spinner';
-import {Button} from '@erkenningen/ui/components/button';
-import {PanelBody} from '@erkenningen/ui/layout/panel';
-import {LinkButtonContainer} from '@erkenningen/ui/components/link-button';
+import { parseLocationSearch } from '@erkenningen/ui/utils';
+import { Spinner } from '@erkenningen/ui/components/spinner';
+import { Button } from '@erkenningen/ui/components/button';
+import { PanelBody } from '@erkenningen/ui/layout/panel';
+import { LinkButtonContainer } from '@erkenningen/ui/components/link-button';
 
 import { addMonths } from 'date-fns';
 import { Formik } from 'formik';
@@ -37,7 +35,7 @@ const NormalCoursesSchema = object().shape({
 
 export function NormalCoursesForm(props: INormalCourseFormProps) {
   useEffect(() => {
-    props.seenOverview(true); 
+    props.seenOverview(true);
   });
 
   const [searchData, setSearchData] = useState<any>();
@@ -151,9 +149,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
             knowledgeAreaId: (searchData && searchData.knowledgeAreaId) || '0',
             themeId: (searchData && searchData.themeId) || '0',
             competenceId: (searchData && searchData.competenceId) || '0',
-            zipcodeNumbers:
-              ( user?.Persoon?.Contactgegevens?.Postcode) ||
-              '',
+            zipcodeNumbers: user?.Persoon?.Contactgegevens?.Postcode || '',
             distanceRadius: 0,
             from: new Date(),
             to: toDate,
@@ -164,7 +160,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
             setSearchData(values);
             setSubmitting(false);
           }}
-          >
+        >
           {(formProps: any) => (
             <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
               <FormSelect
@@ -280,8 +276,7 @@ export function NormalCoursesForm(props: INormalCourseFormProps) {
               </div>
             </form>
           )}
-      </Formik>
-        
+        </Formik>
       </PanelBody>
       {searchData && <NormalCoursesTable {...props} searchData={searchData} />}
     </>
