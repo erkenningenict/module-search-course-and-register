@@ -6,7 +6,6 @@ import { Spinner } from '@erkenningen/ui/components/spinner';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
 import { Row } from '@erkenningen/ui/layout/row';
 import { Col } from '@erkenningen/ui/layout/col';
-import { addHours, addMinutes } from 'date-fns';
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../shared/Auth';
