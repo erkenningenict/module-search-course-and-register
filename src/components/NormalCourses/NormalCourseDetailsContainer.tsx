@@ -91,7 +91,16 @@ export function NormalCourseDetailsContainer(props: any) {
   }
 
   const course: INormalCourseDetails = data.CursusSessies[0];
-  const timezoneOffset: number = new Date(course.Date).getTimezoneOffset();
+
+  const getCourseDateTime = () => {
+    const d = new Date(course.Date);
+    const timeParts = course.StartTime.split(':');
+
+    d.setHours(parseInt(timeParts[0], 10));
+    d.setMinutes(parseInt(timeParts[1], 10));
+
+    return d;
+  };
 
   return course && !showRegister ? (
     <>
@@ -156,13 +165,14 @@ export function NormalCourseDetailsContainer(props: any) {
       registerCourseDetails={{
         code: course.CourseCode,
         courseId: course.CourseId.toString(),
-        courseDateTime: addMinutes(
-          addMinutes(
-            addHours(new Date(course.Date), parseInt(course.StartTime.split(':')[0], 10)),
-            parseInt(course.StartTime.split(':')[1], 10),
-          ),
-          timezoneOffset,
-        ),
+        // courseDateTime: addMinutes(
+        //   addMinutes(
+        //     addHours(new Date(course.Date), parseInt(course.StartTime.split(':')[0], 10)),
+        //     parseInt(course.StartTime.split(':')[1], 10),
+        //   ),
+        //   timezoneOffset,
+        // ),
+        courseDateTime: getCourseDateTime(),
         isDigitalSpecialty: false,
         title: course.Title,
         specialtyId: course.SpecialtyId,
