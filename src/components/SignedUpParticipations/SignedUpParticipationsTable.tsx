@@ -1,8 +1,8 @@
+import React, { useContext } from 'react';
 import { Alert } from '@erkenningen/ui/components/alert';
 import { Spinner } from '@erkenningen/ui/components/spinner';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
 import { TableResponsive } from '@erkenningen/ui/layout/table';
-import React, { useContext } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { useGetMySignedUpParticipationsListQuery } from '../../generated/graphql';
 import { UserContext } from '../../shared/Auth';

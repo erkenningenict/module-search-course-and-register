@@ -1,23 +1,19 @@
-import { useMutation, useQuery } from '@apollo/client';
+import React from 'react';
 import { Alert } from '@erkenningen/ui/components/alert';
 import { Button } from '@erkenningen/ui/components/button';
 import { Spinner } from '@erkenningen/ui/components/spinner';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
-import React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { UNREGISTER } from '../../shared/Mutations';
-import { GET_PARTICIPATION_DETAILS, IParticipationDetails } from '../../shared/Queries';
-import { INormalCourseDetails } from '../../types/IFindNormalCoursesRow';
-import { IOnlineCourseDetails } from '../../types/IFindOnlineCoursesRow';
-import { NormalCourseDetails } from '../NormalCourses/NormalCourseDetails';
-import { OnlineCourseDetails } from '../OnlineCourses/OnlineCourseDetails';
+import {
+  useGetCursusDeelnameDetailsQuery,
+  useUnRegisterForCourseMutation,
+} from '../../generated/graphql';
+import { NormalCourseDetailsCursusDeelnameDetails } from './NormalCourseDetailsCursusDeelnameDetailsQuery';
+import { OnlineCourseDetailsCursusDeelnameDetails } from './OnlineCourseDetailsCursusDeelnameDetails';
 
 export function SignedUpParticipationDetails(props: RouteComponentProps<any>) {
   const returnToListLink = <Link to={`/waar-ben-ik-aangemeld${props.location.search}`}>Terug</Link>;
-  const { loading, data, error } = useQuery<
-    { CursusDeelnameDetails: IParticipationDetails },
-    { participationId: number }
-  >(GET_PARTICIPATION_DETAILS, {
+  const { loading, data, error } = useGetCursusDeelnameDetailsQuery({
     variables: {
       participationId: parseInt(props.match.params.participationId, 10),
     },
@@ -27,10 +23,7 @@ export function SignedUpParticipationDetails(props: RouteComponentProps<any>) {
   const [
     unRegisterCourse,
     { loading: mutationLoading, error: mutationError, data: mutationData },
-  ] = useMutation<
-    { unRegisterForCourse: { success: boolean; message: string } },
-    { CursusDeelnameID: number }
-  >(UNREGISTER);
+  ] = useUnRegisterForCourseMutation();
 
   if (mutationLoading || loading) {
     return (
@@ -94,71 +87,18 @@ export function SignedUpParticipationDetails(props: RouteComponentProps<any>) {
       </PanelBody>
     );
   }
-  const d = data.CursusDeelnameDetails;
-  const organizerData = d.Cursus.Vak.VakgroepID
-    ? d.Cursus.Vak.Vakgroep
-    : d.Cursus.Vak.ExamenInstelling;
 
-  if (!data.CursusDeelnameDetails.Cursus.Vak.DigitaalAanbod) {
-    const details: INormalCourseDetails = {
-      Distance: 0,
-      RegisteredDate: null,
-      CanUnRegister: true,
-      CourseId: d.Cursus.CursusID,
-      CourseCode: d.Cursus.CursusCode,
-      Date: d.Cursus.Sessies[0].Datum,
-      StartTime: new Date(d.Cursus.Sessies[0].Begintijd).toISOString().substr(11, 5),
-      EndTime: new Date(d.Cursus.Sessies[0].Eindtijd).toISOString().substr(11, 5),
-      LocationName: d.Cursus.Sessies[0].Lokatie.Naam,
-      LocationAddress: {
-        ContactDataId: 0,
-        Street: d.Cursus.Sessies[0].Lokatie.Contactgegevens.Adresregel1,
-        HouseNr: d.Cursus.Sessies[0].Lokatie.Contactgegevens.Huisnummer,
-        HouseNrExtension: d.Cursus.Sessies[0].Lokatie.Contactgegevens.HuisnummerToevoeging,
-        Zipcode: d.Cursus.Sessies[0].Lokatie.Contactgegevens.Postcode,
-        City: d.Cursus.Sessies[0].Lokatie.Contactgegevens.Woonplaats,
-        Phone: d.Cursus.Sessies[0].Lokatie.Contactgegevens.Telefoon,
-        Email: d.Cursus.Sessies[0].Lokatie.Contactgegevens.Email,
-        EmailEmployer: '',
-        Website: d.Cursus.Sessies[0].Lokatie.Contactgegevens.Straat,
-      },
-      Remarks: null,
-      SpecialtyId: 1,
-      Title: d.Cursus.Titel.length === 0 ? d.Cursus.Vak.Titel : d.Cursus.Titel,
-      Theme: d.Cursus.Vak.Themas[0].Naam,
-      Competence: d.Cursus.Vak.Competenties[0].Naam,
-      PromoText:
-        d.Cursus.Promotietekst.length === 0 ? d.Cursus.Vak.Promotietekst : d.Cursus.Promotietekst,
-      Price: d.Cursus.Prijs === 0 ? d.Cursus.Vak.Kosten : d.Cursus.Prijs,
-      Organizer: organizerData.Naam,
-      OrganizerPhone: organizerData.Contactgegevens.Telefoon,
-      OrganizerEmail: organizerData.Contactgegevens.Email,
-      OrganizerWebsite: organizerData.Contactgegevens.Website,
-    };
+  if (!data?.CursusDeelnameDetails?.Cursus.Vak.DigitaalAanbod) {
     return (
       <>
-        <NormalCourseDetails details={details} />
+        <NormalCourseDetailsCursusDeelnameDetails details={data} />
         {!mutationData && unregisterFragment}
       </>
     );
   } else {
-    const onlineDetails: IOnlineCourseDetails = {
-      Code: d.Cursus.Vak.VakID,
-      SpecialtyId: d.Cursus.Vak.VakID,
-      Title: d.Cursus.Titel.length === 0 ? d.Cursus.Vak.Titel : d.Cursus.Titel,
-      Theme: d.Cursus.Vak.Themas[0].Naam,
-      Competence: d.Cursus.Vak.Competenties[0].Naam,
-      PromoText:
-        d.Cursus.Promotietekst.length === 0 ? d.Cursus.Vak.Promotietekst : d.Cursus.Promotietekst,
-      Price: d.Cursus.Prijs === 0 ? d.Cursus.Vak.Kosten : d.Cursus.Prijs,
-      Organizer: organizerData.Naam,
-      OrganizerPhone: organizerData.Contactgegevens.Telefoon,
-      OrganizerEmail: organizerData.Contactgegevens.Email,
-      OrganizerWebsite: organizerData.Contactgegevens.Website,
-    };
     return (
       <>
-        <OnlineCourseDetails details={onlineDetails} />
+        <OnlineCourseDetailsCursusDeelnameDetails details={data} />
         {!mutationData && unregisterFragment}
       </>
     );

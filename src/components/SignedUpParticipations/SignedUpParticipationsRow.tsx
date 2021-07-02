@@ -1,13 +1,13 @@
-import { toDutchDate } from '@erkenningen/ui/utils';
 import React from 'react';
+import { toDutchDate } from '@erkenningen/ui/utils';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { AangemeldeCursusDeelname } from '../../generated/graphql';
+import { AangemeldeCursusDeelnameFieldsFragment } from '../../generated/graphql';
 
-interface ISignedUpParticipationsRowProps extends RouteComponentProps<any> {
-  row: Pick<AangemeldeCursusDeelname, 'CursusDeelnameID' | 'CursusID' | 'Titel' | 'Prijs' | 'Status' | 'Datum' | 'Begintijd' | 'Eindtijd' | 'Locatie'>;
+interface SignedUpParticipationsRowProps extends RouteComponentProps<any> {
+  row: AangemeldeCursusDeelnameFieldsFragment;
 }
 
-export default function SignedUpParticipationsRow(props: ISignedUpParticipationsRowProps) {
+export default function SignedUpParticipationsRow(props: SignedUpParticipationsRowProps) {
   const { row } = props;
   return (
     <>

@@ -1,12 +1,12 @@
-import { toDutchMoney } from '@erkenningen/ui/utils';
 import React from 'react';
+import { toDutchMoney } from '@erkenningen/ui/utils';
 import { Link, RouteComponentProps } from 'react-router-dom';
 
-interface IOnlineCourseRow extends RouteComponentProps {
+interface OnlineCourseRowProps extends RouteComponentProps {
   row: any;
 }
 
-export function OnlineCoursesRow(props: IOnlineCourseRow) {
+export function OnlineCoursesRow(props: OnlineCourseRowProps) {
   const { row } = props;
   return (
     <>

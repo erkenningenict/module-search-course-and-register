@@ -1,13 +1,13 @@
-import { toDutchDate, toDutchMoney } from '@erkenningen/ui/utils';
 import React from 'react';
+import { toDutchDate, toDutchMoney } from '@erkenningen/ui/utils';
 import { Link, RouteComponentProps } from 'react-router-dom';
 
-interface INormalCourseRow extends RouteComponentProps {
+interface NormalCourseRowProps extends RouteComponentProps {
   row: any;
   showDistance: boolean;
 }
 
-export function NormalCoursesRow(props: INormalCourseRow) {
+export function NormalCoursesRow(props: NormalCourseRowProps) {
   const { row, showDistance } = props;
   return (
     <>

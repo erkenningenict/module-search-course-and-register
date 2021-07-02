@@ -1,19 +1,18 @@
+import React, { useEffect, useState } from 'react';
 import { Alert } from '@erkenningen/ui/components/alert';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
 import { toDutchDate } from '@erkenningen/ui/utils';
-
-import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Certificering, useGetMyQuery } from '../../generated/graphql';
 import FormSelect from '../ui/FormSelect';
 
-interface IDoneParticipationSelectLicenseProps {
+interface DoneParticipationSelectLicenseProps {
   licenseId: number;
   setLicenseId: (licenseId: number) => void;
 }
 
 export default function DoneParticipationSelectLicense(
-  props: IDoneParticipationSelectLicenseProps & RouteComponentProps<any>,
+  props: DoneParticipationSelectLicenseProps & RouteComponentProps<any>,
 ) {
   const [certs, setCerts] = useState<Certificering[]>();
 

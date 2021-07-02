@@ -1,8 +1,14 @@
-import { Row } from '@erkenningen/ui/layout/row';
 import React from 'react';
+import { Row } from '@erkenningen/ui/layout/row';
+import { ExamenInstellingFieldsFragment, VakgroepFieldsFragment } from '../../generated/graphql';
+
 import './OrganizerDetails.scss';
 
-export default function OrganizerDetails(props) {
+interface OrganizerDetailsProps {
+  data?: VakgroepFieldsFragment | ExamenInstellingFieldsFragment;
+}
+
+export default function OrganizerDetails(props: OrganizerDetailsProps) {
   const { data } = props;
   return (
     <>
@@ -10,18 +16,18 @@ export default function OrganizerDetails(props) {
         <div className="organizer-area">
           <p className="organizer-label">Organisator</p>
           <div>
-            <p className="organizer-title">{data.Organizer}</p>
-            {data.OrganizerPhone && (
+            <p className="organizer-title">{data?.Naam}</p>
+            {data?.Contactgegevens.Telefoon && (
               <div className="organizer-row">
                 <i className="fas fa-phone fa-icon" />
-                {data.OrganizerPhone || 'onbekend'}
+                {data.Contactgegevens.Telefoon || 'onbekend'}
               </div>
             )}
-            {data.OrganizerEmail && (
+            {data?.Contactgegevens.Email && (
               <div className="organizer-row">
                 <i className="fas fa-envelope fa-icon" />
 
-                <a href={`mailto:${data.OrganizerEmail}`}>{data.OrganizerEmail}</a>
+                <a href={`mailto:${data.Contactgegevens?.Email}`}>{data.Contactgegevens?.Email}</a>
               </div>
             )}
           </div>

@@ -1,17 +1,18 @@
+import React, { useContext } from 'react';
 import { Alert } from '@erkenningen/ui/components/alert';
 import { Button } from '@erkenningen/ui/components/button';
 import { Spinner } from '@erkenningen/ui/components/spinner';
 import { toDutchDate } from '@erkenningen/ui/utils';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
-
 import { Formik } from 'formik';
-import React, { useContext } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
 import { object, string } from 'yup';
-import { useGetListsQuery, useRegisterForCourseMutation } from '../generated/graphql';
+import {
+  Landen,
+  RegisterForCourseInput,
+  useGetListsQuery,
+  useRegisterForCourseMutation,
+} from '../generated/graphql';
 import { UserContext } from '../shared/Auth';
-import { ILand } from '../shared/Model';
-import { IRegisterForCourseInput } from '../shared/Mutations';
 import { SelectedLicenseContext } from '../shared/SelectedLicenseContext';
 import FormSelect from './ui/FormSelect';
 import FormText from './ui/FormText';
@@ -25,9 +26,10 @@ export interface IRegisterCourseDetails {
   courseDateTime: Date;
 }
 
-interface IRegister extends RouteComponentProps {
+interface IRegister {
   registerCourseDetails: IRegisterCourseDetails;
   onCancel: any;
+  returnToListLink: any;
 }
 
 const MessageRequired = 'Dit is een verplicht veld';
@@ -60,8 +62,6 @@ export function Register(properties: IRegister) {
   const licenseId = useContext(SelectedLicenseContext);
   const user = useContext(UserContext);
   const registerCourseDetails = properties.registerCourseDetails;
-  const search = (properties.location && properties.location && properties.location.search) || '';
-  const returnToListLink = <Link to={`/bijeenkomsten-zoeken/op-locatie${search}`}>Terug</Link>;
 
   const { loading, data, error } = useGetListsQuery();
   const [
@@ -89,7 +89,7 @@ export function Register(properties: IRegister) {
     return (
       <PanelBody>
         <Alert type="success">Uw aanvraag is gedaan.</Alert>
-        {returnToListLink}
+        {properties.returnToListLink}
       </PanelBody>
     );
   }
@@ -97,7 +97,7 @@ export function Register(properties: IRegister) {
     return (
       <PanelBody>
         <Alert type="warning">{mutationData.registerForCourse.message}</Alert>
-        {returnToListLink}
+        {properties.returnToListLink}
       </PanelBody>
     );
   }
@@ -134,7 +134,7 @@ export function Register(properties: IRegister) {
         }}
         validationSchema={RegisterSchema}
         onSubmit={(values) => {
-          const input: IRegisterForCourseInput = {
+          const input: RegisterForCourseInput = {
             licenseId,
             code: registerCourseDetails.code,
             courseDateTime: registerCourseDetails.courseDateTime,
@@ -204,7 +204,7 @@ export function Register(properties: IRegister) {
               <FormSelect
                 id="country"
                 label="Land"
-                options={data.Landen.map((item: ILand) => ({
+                options={data.Landen.map((item: Landen) => ({
                   value: item.Value,
                   label: item.Text,
                 }))}
@@ -283,7 +283,7 @@ export function Register(properties: IRegister) {
                     icon="pi pi-check"
                     disabled={props.isSubmitting}
                   />
-                  {returnToListLink}
+                  {properties.returnToListLink}
                 </div>
               </div>
             </form>

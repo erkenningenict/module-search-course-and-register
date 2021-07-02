@@ -1,6 +1,6 @@
-import { PanelBody, Panel} from '@erkenningen/ui/layout/panel';
-import { LinkButtonContainer } from '@erkenningen/ui/components/link-button';
 import React from 'react';
+import { PanelBody, Panel } from '@erkenningen/ui/layout/panel';
+import { LinkButtonContainer } from '@erkenningen/ui/components/link-button';
 import { Route, Switch } from 'react-router';
 import { SignedUpParticipationDetails } from '../../SignedUpParticipations/SignedUpParticipationsDetails';
 import SignedUpParticipationsTable from '../../SignedUpParticipations/SignedUpParticipationsTable';

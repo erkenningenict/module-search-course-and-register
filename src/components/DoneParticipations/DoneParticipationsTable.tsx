@@ -1,16 +1,16 @@
-import {Alert} from '@erkenningen/ui/components/alert';
-import {Spinner} from '@erkenningen/ui/components/spinner';
-import {PanelBody} from '@erkenningen/ui/layout/panel';
-import {TableResponsive} from '@erkenningen/ui/layout/table';
 import React from 'react';
-import {  useGetCursusDeelnamesQuery } from '../../generated/graphql';
+import { Alert } from '@erkenningen/ui/components/alert';
+import { Spinner } from '@erkenningen/ui/components/spinner';
+import { PanelBody } from '@erkenningen/ui/layout/panel';
+import { TableResponsive } from '@erkenningen/ui/layout/table';
+import { useGetCursusDeelnamesQuery } from '../../generated/graphql';
 import DoneParticipationsRow from './DoneParticipationsRow';
 
-interface IDoneParticipationsTableProps {
+interface DoneParticipationsTableProps {
   licenseId: number;
 }
 
-export default function DoneParticipationsTable(props: IDoneParticipationsTableProps) {
+export default function DoneParticipationsTable(props: DoneParticipationsTableProps) {
   const { loading, data, error } = useGetCursusDeelnamesQuery({
     variables: {
       licenseId: props.licenseId,
@@ -64,8 +64,8 @@ export default function DoneParticipationsTable(props: IDoneParticipationsTableP
       </TableResponsive>
       <PanelBody>
         <p>
-          * Status &apos;voorlopig&apos; kan betekenen dat de deelnamelijst nog niet compleet is of dat de
-          kennisaanbieder nog niet betaald heeft.
+          * Status &apos;voorlopig&apos; kan betekenen dat de deelnamelijst nog niet compleet is of
+          dat de kennisaanbieder nog niet betaald heeft.
         </p>
       </PanelBody>
     </>

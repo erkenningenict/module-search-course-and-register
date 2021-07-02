@@ -1,6 +1,6 @@
+import React, { useContext, useEffect, useState } from 'react';
 import { Alert } from '@erkenningen/ui/components/alert';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
-import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../shared/Auth';
 import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
 import FormSelect from '../ui/FormSelect';

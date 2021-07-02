@@ -1,13 +1,13 @@
-import {Alert} from '@erkenningen/ui/components/alert';
-import {Spinner} from '@erkenningen/ui/components/spinner';
-import {PanelBody} from '@erkenningen/ui/layout/panel';
-import {TableResponsive} from '@erkenningen/ui/layout/table';
 import React from 'react';
+import { Alert } from '@erkenningen/ui/components/alert';
+import { Spinner } from '@erkenningen/ui/components/spinner';
+import { PanelBody } from '@erkenningen/ui/layout/panel';
+import { TableResponsive } from '@erkenningen/ui/layout/table';
 import { RouteComponentProps } from 'react-router-dom';
 import { useGetSearchSpecialtiesQuery } from '../../generated/graphql';
 import { OnlineCoursesRow } from './OnlineCoursesRow';
 
-interface IOnlineCoursesTable extends RouteComponentProps {
+interface OnlineCoursesTableProps extends RouteComponentProps {
   searchData: {
     licenseId: string;
     knowledgeAreaId: string;
@@ -16,7 +16,7 @@ interface IOnlineCoursesTable extends RouteComponentProps {
   };
 }
 
-export function OnlineCoursesTable(props: IOnlineCoursesTable) {
+export function OnlineCoursesTable(props: OnlineCoursesTableProps) {
   const searchData = props.searchData && {
     ...props.searchData,
     licenseId: parseInt(props.searchData.licenseId, 10),
@@ -25,7 +25,7 @@ export function OnlineCoursesTable(props: IOnlineCoursesTable) {
     isOnlineCourse: props.searchData.isOnlineCourse,
   };
   // eslint-disable-next-line
-  const {licenseId, ...searchInput} = searchData;
+  const { licenseId, ...searchInput } = searchData;
 
   const { loading, data, error } = useGetSearchSpecialtiesQuery({
     variables: {

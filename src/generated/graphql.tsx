@@ -11,16 +11,15 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** Date custom scalar type */
-  Date: any;
   /** Safe string custom scalar type that does not allow xss attacks */
   SafeString: any;
+  /** Date custom scalar type */
+  Date: any;
   /** The Email scalar type represents E-Mail addresses compliant to RFC 822. */
   Email: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
-
 
 export type AangemeldeCursusDeelname = {
   __typename?: 'AangemeldeCursusDeelname';
@@ -34,6 +33,11 @@ export type AangemeldeCursusDeelname = {
   Locatie: Scalars['String'];
   Status: Scalars['String'];
   IsDigitaalAanbod: Scalars['Boolean'];
+};
+
+export type AddVisitationCommentInput = {
+  visitatieId: Scalars['Int'];
+  commentaar: Scalars['SafeString'];
 };
 
 export type BasicPersonData = {
@@ -84,6 +88,7 @@ export type Certificering = {
   Certificaat?: Maybe<Certificaat>;
   CertificeringAantekeningen?: Maybe<Array<Maybe<CertificeringAantekening>>>;
   Passen?: Maybe<Array<Maybe<Pas>>>;
+  Persoon?: Maybe<Persoon>;
 };
 
 export type CertificeringAantekening = {
@@ -187,6 +192,15 @@ export type CreateCourseInput = {
   Docent?: Maybe<Scalars['SafeString']>;
 };
 
+export type CreateDeclarationInvoiceInput = {
+  VisitatieID: Scalars['Int'];
+  NrOfKilometers?: Maybe<Scalars['Int']>;
+  NrOfDayParts?: Maybe<Scalars['Int']>;
+  PublicTransport?: Maybe<Scalars['Float']>;
+  Other?: Maybe<Scalars['Float']>;
+  OtherDescription?: Maybe<Scalars['SafeString']>;
+};
+
 export type CreateInvoiceCollectionInput = {
   invoiceIds?: Maybe<Array<Scalars['Int']>>;
 };
@@ -267,7 +281,7 @@ export type Cursus = {
   IsBesloten?: Maybe<Scalars['Boolean']>;
   MaximumCursisten?: Maybe<Scalars['Int']>;
   Opmerkingen?: Maybe<Scalars['String']>;
-  Status?: Maybe<Scalars['String']>;
+  Status?: Maybe<CursusStatusEnum>;
   CursusCode?: Maybe<Scalars['String']>;
   AocKenmerk?: Maybe<Scalars['String']>;
   ExamenCursusID?: Maybe<Scalars['Int']>;
@@ -277,6 +291,9 @@ export type Cursus = {
   PersoonIDGewijzigd?: Maybe<Scalars['Int']>;
   Sessies?: Maybe<Array<Maybe<Sessie>>>;
   Vak: Vak;
+  CursusDeelnames?: Maybe<Array<Maybe<CursusDeelname>>>;
+  /**  Only available when sub query is available  */
+  AantalCursusDeelnames?: Maybe<Scalars['Int']>;
 };
 
 export type CursusDeelname = {
@@ -290,6 +307,14 @@ export type CursusDeelname = {
   DatumAangemaakt?: Maybe<Scalars['Date']>;
   Cursus: Cursus;
   Certificering?: Maybe<Certificering>;
+  Persoon?: Maybe<Persoon>;
+};
+
+export type CursusNodes = {
+  __typename?: 'CursusNodes';
+  totalCount: Scalars['Int'];
+  nodes?: Maybe<Array<Maybe<Cursus>>>;
+  pageInfo?: Maybe<PageInfo>;
 };
 
 export type CursusSessie = {
@@ -315,20 +340,33 @@ export type CursusSessie = {
   Registered: Scalars['Boolean'];
   RegisteredDate?: Maybe<Scalars['Date']>;
   CanUnRegister: Scalars['Boolean'];
+  SpecialtyWebsite?: Maybe<Scalars['String']>;
 };
 
+export enum CursusStatusEnum {
+  Voorlopig = 'Voorlopig',
+  Goedgekeurd = 'Goedgekeurd',
+  Betaald = 'Betaald',
+  ExamenAangemeld = 'ExamenAangemeld',
+}
 
 export enum DebiteurTypeEnum {
   Vakgroep = 'vakgroep',
   Universiteit = 'universiteit',
   Persoon = 'persoon',
-  Exameninstelling = 'exameninstelling'
+  Exameninstelling = 'exameninstelling',
 }
+
+export type DeclarationInvoiceCreatedResult = {
+  __typename?: 'DeclarationInvoiceCreatedResult';
+  InvoiceLink: Scalars['String'];
+  FactuurNummer: Scalars['String'];
+};
 
 export type DecoupleLicenseInput = {
   /** Current XX + KBA license which should be decoupled */
   licenseId: Scalars['Int'];
-  confirmationEmail?: Maybe<Scalars['Email']>;
+  confirmationEmail?: Maybe<Scalars['String']>;
 };
 
 export type DecoupleLicenseResult = {
@@ -337,6 +375,36 @@ export type DecoupleLicenseResult = {
   kbaLicense?: Maybe<Certificering>;
 };
 
+export type DeleteExamInput = {
+  CursusID?: Maybe<Scalars['Int']>;
+};
+
+export type DigitaalExamen = {
+  __typename?: 'DigitaalExamen';
+  DigitaalExamenId: Scalars['Int'];
+  ExamenType: Scalars['String'];
+  AssementId: Scalars['String'];
+  ExamenNaam: Scalars['String'];
+};
+
+export type DiscussieVisitatie = {
+  __typename?: 'DiscussieVisitatie';
+  DiscussieVisitatieID: Scalars['Int'];
+  VisitatieID: Scalars['Int'];
+  PersoonID?: Maybe<Scalars['Int']>;
+  VakgroepID?: Maybe<Scalars['Int']>;
+  Commentaar?: Maybe<Scalars['String']>;
+  DatumTijd?: Maybe<Scalars['Date']>;
+  IsAuteurVakgroep?: Maybe<Scalars['Boolean']>;
+  IsAuteurInspecteur?: Maybe<Scalars['Boolean']>;
+  Persoon?: Maybe<Persoon>;
+};
+
+export type Exam = {
+  __typename?: 'Exam';
+  Cursus?: Maybe<Cursus>;
+  Vaknorm?: Maybe<Vaknorm>;
+};
 
 export type ExamenInstelling = {
   __typename?: 'ExamenInstelling';
@@ -346,6 +414,7 @@ export type ExamenInstelling = {
   IsActief: Scalars['Boolean'];
   Code: Scalars['String'];
   Contactgegevens: Contactgegevens;
+  Examinator: Examinator;
 };
 
 export type ExamenInstellingLink = {
@@ -355,6 +424,40 @@ export type ExamenInstellingLink = {
   PersoonID: Scalars['Int'];
   Actief: Scalars['Boolean'];
   ExamenInstelling?: Maybe<ExamenInstelling>;
+};
+
+export type Examinator = {
+  __typename?: 'Examinator';
+  ExaminatorID: Scalars['Int'];
+  ExamenInstellingID: Scalars['Int'];
+  PersoonID: Scalars['Int'];
+  Actief: Scalars['Boolean'];
+  Persoon?: Maybe<Persoon>;
+  ExamenInstelling?: Maybe<ExamenInstelling>;
+};
+
+export type ExamsInput = {
+  /** Filter on part of exam code */
+  examCode?: Maybe<Scalars['SafeString']>;
+  /** Filter on part of title */
+  title?: Maybe<Scalars['SafeString']>;
+  /** Filter on status */
+  status?: Maybe<CursusStatusEnum>;
+  /** Date range, from */
+  from?: Maybe<Scalars['Date']>;
+  /** Date range, to */
+  to?: Maybe<Scalars['Date']>;
+  /** Filter on LocatieID */
+  locationId?: Maybe<Scalars['Int']>;
+  pageSize: Scalars['Int'];
+  pageNumber: Scalars['Int'];
+  orderBy: OrderByArgs;
+};
+
+export type ExamSpecialtiesInput = {
+  /** ExamenInstellingID to filter on organizers */
+  examenInstellingId?: Maybe<Scalars['Int']>;
+  validOnly?: Maybe<Scalars['Boolean']>;
 };
 
 export type ExemptionRequestResult = {
@@ -370,7 +473,7 @@ export enum FactuurHistorieStatusEnum {
   DoorBeAfgehandeld = 'Door_BE_Afgehandeld',
   OnjuistAangemaakt = 'OnjuistAangemaakt',
   Oninbaar = 'Oninbaar',
-  Creditfactuur = 'Creditfactuur'
+  Creditfactuur = 'Creditfactuur',
 }
 
 export type FactuurNodes = {
@@ -419,6 +522,11 @@ export type GetInspectionPlanningInput = {
   isInspector: Scalars['Boolean'];
   isRector: Scalars['Boolean'];
 };
+
+export enum InkoopVerkoopEnum {
+  Inkoop = 'INKOOP',
+  Verkoop = 'VERKOOP',
+}
 
 export type InspectionPlanningData = {
   __typename?: 'InspectionPlanningData';
@@ -486,7 +594,7 @@ export type Invoice = {
 export enum InvoiceCollectionsFilterEnum {
   Both = 'BOTH',
   InvoiceCollections = 'INVOICE_COLLECTIONS',
-  NormalInvoices = 'NORMAL_INVOICES'
+  NormalInvoices = 'NORMAL_INVOICES',
 }
 
 export type IsLicenseValidForSpecialtyInput = {
@@ -558,6 +666,8 @@ export type Mutation = {
    * are not required to have the personInput entered.
    */
   requestAdviseCertificate?: Maybe<ExemptionRequestResult>;
+  registerCardReturn: Scalars['Boolean'];
+  createDuplicateCardWithoutInvoice: Scalars['Boolean'];
   /** Register for course */
   registerForCourse: RegisterResult;
   /** Un-register for course. Input is CursusDeelnameID */
@@ -567,6 +677,8 @@ export type Mutation = {
   decoupleLicense: DecoupleLicenseResult;
   /** The `requestDuplicate` can be used to request a license card duplicate */
   requestDuplicate: RequestDuplicateResult;
+  saveExam?: Maybe<Cursus>;
+  deleteExam?: Maybe<Scalars['Boolean']>;
   updatePlanning: UpdatePlanningResult;
   updateInvoiceStatus: UpdateInvoiceStatusResult;
   createInvoiceCollection: CreateInvoiceCollectionResult;
@@ -586,39 +698,51 @@ export type Mutation = {
   singleUpload: File;
   multipleUpload: Array<File>;
   multiUpload: MultiUploadResult;
+  addVisitationComment?: Maybe<DiscussieVisitatie>;
+  updateVisitationReport: Visitatie;
+  createDeclarationInvoice: DeclarationInvoiceCreatedResult;
 };
-
 
 export type MutationRequestAdviseCertificateArgs = {
   input: RequestAdviseCertificateInput;
   personDataInput?: Maybe<RequestAdviseCertificatePersonDataInput>;
 };
 
+export type MutationRegisterCardReturnArgs = {
+  input: RegisterCardReturnInput;
+};
+
+export type MutationCreateDuplicateCardWithoutInvoiceArgs = {
+  pasId: Scalars['Int'];
+};
 
 export type MutationRegisterForCourseArgs = {
   input: RegisterForCourseInput;
 };
 
-
 export type MutationUnRegisterForCourseArgs = {
   CursusDeelnameID: Scalars['Int'];
 };
-
 
 export type MutationCreateCourseArgs = {
   input: CreateCourseInput;
 };
 
-
 export type MutationDecoupleLicenseArgs = {
   input: DecoupleLicenseInput;
 };
-
 
 export type MutationRequestDuplicateArgs = {
   input: RequestDuplicateInput;
 };
 
+export type MutationSaveExamArgs = {
+  input: SaveExamInput;
+};
+
+export type MutationDeleteExamArgs = {
+  input: DeleteExamInput;
+};
 
 export type MutationUpdatePlanningArgs = {
   sessieId: Scalars['Int'];
@@ -626,34 +750,28 @@ export type MutationUpdatePlanningArgs = {
   visitDate: Scalars['Date'];
 };
 
-
 export type MutationUpdateInvoiceStatusArgs = {
   input: UpdateInvoiceStatusInput;
 };
-
 
 export type MutationCreateInvoiceCollectionArgs = {
   input: CreateInvoiceCollectionInput;
 };
 
-
 export type MutationSaveLocationArgs = {
   input: SaveLocationInput;
 };
-
 
 export type MutationCheckForExistingPersonByBsnArgs = {
   bsn: Scalars['Int'];
   birthDate: Scalars['Date'];
 };
 
-
 export type MutationCheckForExistingPersonByPersonDataArgs = {
   initials: Scalars['String'];
   lastName: Scalars['String'];
   birthDate: Scalars['Date'];
 };
-
 
 export type MutationRequestLicenseArgs = {
   input: RequestLicenseInput;
@@ -662,25 +780,33 @@ export type MutationRequestLicenseArgs = {
   personDataInput?: Maybe<BasicPersonData>;
 };
 
-
 export type MutationCreateLicenseArgs = {
   input: CreateLicenseInput;
 };
-
 
 export type MutationSingleUploadArgs = {
   file: Scalars['Upload'];
 };
 
-
 export type MutationMultipleUploadArgs = {
   files: Array<Scalars['Upload']>;
 };
 
-
 export type MutationMultiUploadArgs = {
   file1: Scalars['Upload'];
   file2: Scalars['Upload'];
+};
+
+export type MutationAddVisitationCommentArgs = {
+  input: AddVisitationCommentInput;
+};
+
+export type MutationUpdateVisitationReportArgs = {
+  input: UpdateVisitationReportInput;
+};
+
+export type MutationCreateDeclarationInvoiceArgs = {
+  input: CreateDeclarationInvoiceInput;
 };
 
 export type My = {
@@ -702,29 +828,24 @@ export type My = {
   ExamenInstellingLinks?: Maybe<Array<Maybe<ExamenInstellingLink>>>;
 };
 
-
 export type MyCertificeringenArgs = {
   alleenGeldig?: Maybe<Scalars['Boolean']>;
   perDatum?: Maybe<Scalars['Date']>;
   inclusiefPassen?: Maybe<Scalars['Boolean']>;
 };
 
-
 export type MyStudieresultatenArgs = {
   isExamen?: Maybe<Scalars['Boolean']>;
   certificeringId?: Maybe<Scalars['Int']>;
 };
 
-
 export type MyCursusDeelnamesArgs = {
   certificeringId?: Maybe<Scalars['Int']>;
 };
 
-
 export type MyVakgroepLinksArgs = {
   activeOnly?: Maybe<Scalars['Boolean']>;
 };
-
 
 export type MyExamenInstellingLinksArgs = {
   activeOnly?: Maybe<Scalars['Boolean']>;
@@ -772,6 +893,8 @@ export type Pas = {
   ContactgegevensID?: Maybe<Scalars['Int']>;
   Geadresseerde?: Maybe<Scalars['String']>;
   PasRetouren?: Maybe<Array<Maybe<PasRetour>>>;
+  Licentie?: Maybe<Certificering>;
+  PasAdres?: Maybe<Contactgegevens>;
 };
 
 export type PasRetour = {
@@ -786,7 +909,7 @@ export type PasRetour = {
 export enum PaymentStatusEnum {
   All = 'ALL',
   NotPaid = 'NOT_PAID',
-  Paid = 'PAID'
+  Paid = 'PAID',
 }
 
 export type Persoon = {
@@ -813,7 +936,6 @@ export type Persoon = {
   /** Name in format 'Voorletters [tussenvoegsel] Achternaam */
   FullName?: Maybe<Scalars['String']>;
 };
-
 
 export type PersoonCertificeringenArgs = {
   alleenGeldig?: Maybe<Scalars['Boolean']>;
@@ -849,8 +971,16 @@ export type PlanningData = {
   VolgensIntentieAanbod?: Maybe<Scalars['Boolean']>;
 };
 
+export enum ProductEnum {
+  D1 = 'D1',
+  D2 = 'D2',
+  D3 = 'D3',
+  D4 = 'D4',
+}
+
 export type Query = {
   __typename?: 'Query';
+  searchCard?: Maybe<Certificering>;
   Certificaten?: Maybe<Array<Maybe<Certificaat>>>;
   Certificeringen?: Maybe<Array<Maybe<Certificering>>>;
   Competenties: Array<Maybe<Competentie>>;
@@ -858,7 +988,10 @@ export type Query = {
   /** In the input, either specialtyId or courseId must be supplied */
   isLicenseValidForSpecialty: IsLicenseValidForSpecialtyResult;
   CursusSessies?: Maybe<Array<Maybe<CursusSessie>>>;
+  hasDuplicatePending: Scalars['Boolean'];
   ExamenInstellingen: Array<Maybe<ExamenInstelling>>;
+  ExamDetails?: Maybe<Exam>;
+  Exams?: Maybe<CursusNodes>;
   getInspectionPlanning?: Maybe<InspectionResult>;
   getInspectors?: Maybe<Array<Maybe<Inspector>>>;
   /**
@@ -873,18 +1006,23 @@ export type Query = {
   my?: Maybe<My>;
   Nationaliteiten: Array<Maybe<Nationaliteiten>>;
   SearchOrganizers?: Maybe<Array<Maybe<SearchOrganizerResult>>>;
+  SearchExamOrganizers?: Maybe<Array<Maybe<SearchExamOrganizerResult>>>;
   CursusDeelnames?: Maybe<Array<Maybe<CursusDeelname>>>;
   CursusDeelnameDetails?: Maybe<CursusDeelname>;
   Persoon?: Maybe<Persoon>;
   Sessie?: Maybe<Sessie>;
   SearchSpecialties?: Maybe<Array<Maybe<SearchSpecialtyResult>>>;
   Specialties?: Maybe<Array<Maybe<Vak>>>;
+  ExamSpecialties?: Maybe<Array<Maybe<Vak>>>;
   Specialty?: Maybe<Vak>;
   tariefByCertificaatCode?: Maybe<TotaalExtBtwTarief>;
   tariefDuplicaat?: Maybe<TotaalExtBtwTarief>;
   Themas: Array<Maybe<Thema>>;
   uploads?: Maybe<Array<Maybe<File>>>;
   Vakgroepen: Array<Maybe<Vakgroep>>;
+  Visitations?: Maybe<VisitationInfoNodes>;
+  Visitation?: Maybe<Visitatie>;
+  VisitationDeclaration?: Maybe<VisitationDeclaration>;
   /**
    * Gets a list of all available pre educations (vooropleidingen)
    * Optionally pass a array of codes (similar in vooropleiding.code) to filter the list (i.e. ["30.00", "30.01"])
@@ -896,42 +1034,50 @@ export type Query = {
   certificatesByPreEducation: Array<Maybe<Certificaat>>;
 };
 
+export type QuerySearchCardArgs = {
+  licenseNumber: Scalars['SafeString'];
+};
 
 export type QueryCertificatenArgs = {
   idList?: Maybe<Array<Scalars['Int']>>;
 };
 
-
 export type QueryCertificeringenArgs = {
   personId: Scalars['Int'];
 };
-
 
 export type QueryContactgegevensArgs = {
   ContactgegevensID: Scalars['Int'];
 };
 
-
 export type QueryIsLicenseValidForSpecialtyArgs = {
   input: IsLicenseValidForSpecialtyInput;
 };
-
 
 export type QueryCursusSessiesArgs = {
   input: SearchCourseSessionsInput;
 };
 
+export type QueryHasDuplicatePendingArgs = {
+  licenseId: Scalars['Int'];
+};
 
 export type QueryExamenInstellingenArgs = {
   isActive?: Maybe<Scalars['Boolean']>;
   findById?: Maybe<Scalars['Int']>;
 };
 
+export type QueryExamDetailsArgs = {
+  input: SearchExamInput;
+};
+
+export type QueryExamsArgs = {
+  input: ExamsInput;
+};
 
 export type QueryGetInspectionPlanningArgs = {
   input: GetInspectionPlanningInput;
 };
-
 
 export type QueryInvoicesArgs = {
   pageSize: Scalars['Int'];
@@ -940,67 +1086,76 @@ export type QueryInvoicesArgs = {
   filterInvoices?: Maybe<FilterInvoicesInput>;
 };
 
-
 export type QuerySearchLocationsArgs = {
   input: SearchLocationsInput;
 };
-
 
 export type QueryCursusDeelnamesArgs = {
   certificeringId?: Maybe<Scalars['Int']>;
 };
 
-
 export type QueryCursusDeelnameDetailsArgs = {
   cursusDeelnameId: Scalars['Int'];
 };
-
 
 export type QueryPersoonArgs = {
   PersoonID: Scalars['Int'];
 };
 
-
 export type QuerySessieArgs = {
   sessieId: Scalars['Int'];
 };
-
 
 export type QuerySearchSpecialtiesArgs = {
   input: SearchSpecialtyInput;
 };
 
-
 export type QuerySpecialtiesArgs = {
   input: SpecialtiesInput;
 };
 
+export type QueryExamSpecialtiesArgs = {
+  input: ExamSpecialtiesInput;
+};
 
 export type QuerySpecialtyArgs = {
   vakId: Scalars['Int'];
   fullDetails?: Maybe<Scalars['Boolean']>;
 };
 
-
 export type QueryTariefByCertificaatCodeArgs = {
   certificaatCode: Scalars['String'];
   individueleAanvraag?: Maybe<Scalars['Boolean']>;
 };
-
 
 export type QueryVakgroepenArgs = {
   isActive?: Maybe<Scalars['Boolean']>;
   findById?: Maybe<Scalars['Int']>;
 };
 
+export type QueryVisitationsArgs = {
+  input: VisitationsInput;
+};
+
+export type QueryVisitationArgs = {
+  input: VisitationInput;
+};
+
+export type QueryVisitationDeclarationArgs = {
+  input: VisitationInput;
+};
 
 export type QueryVooropleidingenArgs = {
   codes?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
-
 export type QueryCertificatesByPreEducationArgs = {
   code: Scalars['String'];
+};
+
+export type RegisterCardReturnInput = {
+  PasID: Scalars['Int'];
+  DatumRetour: Scalars['Date'];
 };
 
 export type RegisterForCourseInput = {
@@ -1146,6 +1301,22 @@ export type RequestLicenseResult = {
   requestFormPdfLink: Scalars['String'];
 };
 
+export type SaveExamInput = {
+  CursusID?: Maybe<Scalars['Int']>;
+  SessieID?: Maybe<Scalars['Int']>;
+  VakID: Scalars['Int'];
+  LokatieID: Scalars['Int'];
+  Titel: Scalars['SafeString'];
+  Promotietekst: Scalars['SafeString'];
+  Prijs: Scalars['Float'];
+  MaximumCursisten: Scalars['Int'];
+  Opmerkingen?: Maybe<Scalars['SafeString']>;
+  Datum: Scalars['Date'];
+  Begintijd: Scalars['Date'];
+  Eindtijd: Scalars['Date'];
+  IsBesloten?: Maybe<Scalars['Boolean']>;
+  Docent?: Maybe<Scalars['SafeString']>;
+};
 
 export type SaveLocationInput = {
   LokatieID?: Maybe<Scalars['Int']>;
@@ -1177,6 +1348,16 @@ export type SearchCourseSessionsInput = {
   zipcodeNumbers?: Maybe<Scalars['Int']>;
   /** Radius in Kilometers */
   distanceRadius?: Maybe<Scalars['Int']>;
+};
+
+export type SearchExamInput = {
+  examId: Scalars['Int'];
+};
+
+export type SearchExamOrganizerResult = {
+  __typename?: 'SearchExamOrganizerResult';
+  ExamenInstellingID: Scalars['Int'];
+  Naam?: Maybe<Scalars['String']>;
 };
 
 export type SearchLocationsInput = {
@@ -1216,6 +1397,7 @@ export type SearchSpecialtyResult = {
   OrganizerPhone?: Maybe<Scalars['String']>;
   OrganizerWebsite?: Maybe<Scalars['String']>;
   PromoText?: Maybe<Scalars['String']>;
+  SpecialtyWebsite?: Maybe<Scalars['String']>;
 };
 
 export type Sessie = {
@@ -1240,16 +1422,17 @@ export type Sessie = {
   DatumEindtijd: Scalars['Date'];
   Visitatie?: Maybe<Visitatie>;
   Cursus?: Maybe<Cursus>;
+  DigitaalExamen?: Maybe<DigitaalExamen>;
 };
 
 export enum SortDirectionEnum {
   Asc = 'ASC',
-  Desc = 'DESC'
+  Desc = 'DESC',
 }
 
 export type SpecialtiesInput = {
   /** VakgroepID to filter on organizers */
-  vakgroepId: Scalars['Int'];
+  vakgroepId?: Maybe<Scalars['Int']>;
 };
 
 export type StatisticsPerOrganizer = {
@@ -1328,6 +1511,18 @@ export type UpdatePlanningResult = {
   planned: Scalars['Boolean'];
 };
 
+export type UpdateVisitationReportInput = {
+  VisitatieID: Scalars['Int'];
+  Rapport: Scalars['SafeString'];
+  Rapportcijfer: Scalars['Int'];
+  DatumRapport?: Maybe<Scalars['Date']>;
+  VolgensIntentieAanbod: Scalars['Boolean'];
+  /** JSON string with ratings */
+  VragenJson: Scalars['SafeString'];
+  /** JSON string with ratings */
+  ratings?: Maybe<Array<VisitatieBeoordelingCategorieInput>>;
+  Status: VisitatieStatusEnum;
+};
 
 export type Vaardigheid = {
   __typename?: 'Vaardigheid';
@@ -1367,11 +1562,16 @@ export type Vak = {
   IsExamenVak?: Maybe<Scalars['Boolean']>;
   ExamenType?: Maybe<Scalars['String']>;
   Competenties?: Maybe<Array<Maybe<Competentie>>>;
+  CompetentieID?: Maybe<Scalars['Int']>;
+  CompetentieNaam?: Maybe<Scalars['String']>;
   Themas?: Maybe<Array<Maybe<Thema>>>;
+  ThemaID?: Maybe<Scalars['Int']>;
+  ThemaNaam?: Maybe<Scalars['String']>;
   Vakgroep?: Maybe<Vakgroep>;
   Status?: Maybe<Scalars['String']>;
   Website?: Maybe<Scalars['String']>;
   ExamenInstelling?: Maybe<ExamenInstelling>;
+  BeoordelaarNaam?: Maybe<Scalars['String']>;
   Beoordelingen?: Maybe<Array<Maybe<Beoordeling>>>;
   VakVaardigheden?: Maybe<Array<Maybe<Vaardigheid>>>;
   VakKennisgebieden?: Maybe<Array<Maybe<Kennisgebied>>>;
@@ -1407,17 +1607,151 @@ export type VakgroepLink = {
   Vakgroep?: Maybe<Vakgroep>;
 };
 
+export type Vaknorm = {
+  __typename?: 'Vaknorm';
+  VaknormID: Scalars['Int'];
+  NormVersieID: Scalars['Int'];
+  ThemaID: Scalars['Int'];
+  CompetentieID: Scalars['Int'];
+  MinimumPunten: Scalars['Int'];
+};
+
 export type Visitatie = {
   __typename?: 'Visitatie';
   VisitatieID: Scalars['Int'];
   SessieID: Scalars['Int'];
   PersoonID: Scalars['Int'];
   Rapport?: Maybe<Scalars['String']>;
-  RapportCijfer: Scalars['Int'];
-  Status: Scalars['String'];
+  VragenJson?: Maybe<Scalars['SafeString']>;
+  Rapportcijfer?: Maybe<Scalars['Int']>;
+  Status: VisitatieStatusEnum;
   DatumVisitatie?: Maybe<Scalars['Date']>;
   DatumRapport?: Maybe<Scalars['Date']>;
   VolgensIntentieAanbod: Scalars['Boolean'];
+  Sessie?: Maybe<Sessie>;
+  Cursus?: Maybe<Cursus>;
+  DiscussieVisitaties?: Maybe<Array<Maybe<DiscussieVisitatie>>>;
+  Inspecteur?: Maybe<Persoon>;
+  DatumAangemaakt?: Maybe<Scalars['Date']>;
+  AangemaaktDoor?: Maybe<Scalars['String']>;
+  DatumGewijzigd?: Maybe<Scalars['Date']>;
+  GewijzigdDoor?: Maybe<Scalars['String']>;
+  /** Only available when sub-query is available */
+  IsDeclarationPossible?: Maybe<Scalars['Boolean']>;
+  /** Only available when sub-query is available */
+  IsDeclarationSubmitted?: Maybe<Scalars['Boolean']>;
+  /** Only available when sub-query is available */
+  LastChangeDate?: Maybe<Scalars['Date']>;
+  /** Only available when sub-query is available */
+  LastChangeBy?: Maybe<Scalars['String']>;
+  VisitatieBeoordelingCategorieen?: Maybe<Array<Maybe<VisitatieBeoordelingCategorie>>>;
+};
+
+export type VisitatieBeoordelingCategorie = {
+  __typename?: 'VisitatieBeoordelingCategorie';
+  VisitatieBeoordelingCategorieID: Scalars['ID'];
+  VisitatieID: Scalars['Int'];
+  CategorieTemplateID: Scalars['Int'];
+  CategorieNaam: Scalars['String'];
+  Weging: Scalars['Float'];
+  TotaalPunten?: Maybe<Scalars['Float']>;
+  Cijfer?: Maybe<Scalars['Float']>;
+  Versie: Scalars['String'];
+  VanafDatum: Scalars['Date'];
+  DatumAangemaakt: Scalars['Date'];
+  AangemaaktDoor?: Maybe<Scalars['String']>;
+  DatumGewijzigd: Scalars['Date'];
+  GewijzigdDoor?: Maybe<Scalars['String']>;
+  Vragen?: Maybe<Array<Maybe<VisitatieBeoordelingCategorieVraag>>>;
+};
+
+export type VisitatieBeoordelingCategorieInput = {
+  VisitatieBeoordelingCategorieID: Scalars['ID'];
+  VisitatieID: Scalars['Int'];
+  CategorieTemplateID: Scalars['Int'];
+  CategorieNaam: Scalars['String'];
+  Weging: Scalars['Float'];
+  TotaalPunten?: Maybe<Scalars['Float']>;
+  Cijfer?: Maybe<Scalars['Float']>;
+  Versie: Scalars['String'];
+  VanafDatum: Scalars['Date'];
+  Vragen?: Maybe<Array<Maybe<VisitatieBeoordelingCategorieVraagInput>>>;
+};
+
+export type VisitatieBeoordelingCategorieVraag = {
+  __typename?: 'VisitatieBeoordelingCategorieVraag';
+  VisitatieBeoordelingCategorieVraagID: Scalars['ID'];
+  VisitatieBeoordelingCategorieID: Scalars['ID'];
+  CategorieTemplateID: Scalars['Int'];
+  VraagTemplateID: Scalars['Int'];
+  Naam: Scalars['String'];
+  Weging: Scalars['Float'];
+  TotaalPunten?: Maybe<Scalars['Float']>;
+  Cijfer?: Maybe<Scalars['Float']>;
+  Toelichting?: Maybe<Scalars['String']>;
+  Versie: Scalars['String'];
+  VanafDatum: Scalars['Date'];
+  DatumAangemaakt: Scalars['Date'];
+  AangemaaktDoor?: Maybe<Scalars['String']>;
+  DatumGewijzigd: Scalars['Date'];
+  GewijzigdDoor?: Maybe<Scalars['String']>;
+};
+
+export type VisitatieBeoordelingCategorieVraagInput = {
+  VisitatieBeoordelingCategorieVraagID: Scalars['ID'];
+  VisitatieBeoordelingCategorieID: Scalars['ID'];
+  CategorieTemplateID: Scalars['Int'];
+  VraagTemplateID: Scalars['Int'];
+  Naam: Scalars['String'];
+  Weging: Scalars['Float'];
+  TotaalPunten?: Maybe<Scalars['Float']>;
+  Cijfer?: Maybe<Scalars['Float']>;
+  Toelichting?: Maybe<Scalars['String']>;
+  Versie: Scalars['String'];
+  VanafDatum: Scalars['Date'];
+};
+
+export enum VisitatieStatusEnum {
+  Ingepland = 'Ingepland',
+  RapportWordtOpgesteld = 'RapportWordtOpgesteld',
+  Ingediend = 'Ingediend',
+}
+
+export type VisitationDeclaration = {
+  __typename?: 'VisitationDeclaration';
+  Visitatie?: Maybe<Visitatie>;
+  TariffDayPart: Scalars['Float'];
+  TariffKm: Scalars['Float'];
+  HasInvoice: Scalars['Boolean'];
+  InvoiceLink?: Maybe<Scalars['String']>;
+  FactuurNummer?: Maybe<Scalars['String']>;
+};
+
+export type VisitationInfoNodes = {
+  __typename?: 'VisitationInfoNodes';
+  totalCount: Scalars['Int'];
+  nodes?: Maybe<Array<Maybe<Visitatie>>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export type VisitationInput = {
+  visitatieId: Scalars['Int'];
+};
+
+export type VisitationsInput = {
+  /** Filter on part of course code */
+  courseCode?: Maybe<Scalars['SafeString']>;
+  /** Filter on part of title */
+  title?: Maybe<Scalars['SafeString']>;
+  /** Filter on status */
+  status?: Maybe<VisitatieStatusEnum>;
+  /** Date range, from */
+  from?: Maybe<Scalars['Date']>;
+  /** Date range, to */
+  to?: Maybe<Scalars['Date']>;
+  pageSize: Scalars['Int'];
+  pageNumber: Scalars['Int'];
+  orderBy: OrderByArgs;
 };
 
 export type VisitingData = {
@@ -1454,309 +1788,533 @@ export type GetMyQueryVariables = Exact<{
   input: Scalars['Boolean'];
 }>;
 
+export type GetMyQuery = { __typename?: 'Query' } & {
+  my?: Maybe<
+    { __typename?: 'My' } & Pick<My, 'Roles'> & {
+        Persoon: { __typename?: 'Persoon' } & Pick<
+          Persoon,
+          | 'PersoonID'
+          | 'BSN'
+          | 'Voorletters'
+          | 'Tussenvoegsel'
+          | 'Achternaam'
+          | 'Geboortedatum'
+          | 'IsGbaGeregistreerd'
+        > & {
+            Contactgegevens: { __typename?: 'Contactgegevens' } & Pick<
+              Contactgegevens,
+              | 'Adresregel1'
+              | 'Adresregel2'
+              | 'Huisnummer'
+              | 'HuisnummerToevoeging'
+              | 'Postcode'
+              | 'Woonplaats'
+              | 'Land'
+              | 'Email'
+              | 'Telefoon'
+            >;
+          };
+        Certificeringen?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'Certificering' } & Pick<
+                Certificering,
+                | 'CertificeringID'
+                | 'Nummer'
+                | 'NummerWeergave'
+                | 'BeginDatum'
+                | 'EindDatum'
+                | 'Opmerkingen'
+                | 'Status'
+                | 'DatumVoldaan'
+              > & {
+                  Certificaat?: Maybe<
+                    { __typename?: 'Certificaat' } & Pick<
+                      Certificaat,
+                      'CertificaatID' | 'Code' | 'Naam'
+                    >
+                  >;
+                }
+            >
+          >
+        >;
+      }
+  >;
+};
 
-export type GetMyQuery = (
-  { __typename?: 'Query' }
-  & { my?: Maybe<(
-    { __typename?: 'My' }
-    & Pick<My, 'Roles'>
-    & { Persoon: (
-      { __typename?: 'Persoon' }
-      & Pick<Persoon, 'PersoonID' | 'BSN' | 'Voorletters' | 'Tussenvoegsel' | 'Achternaam' | 'Geboortedatum' | 'IsGbaGeregistreerd'>
-      & { Contactgegevens: (
-        { __typename?: 'Contactgegevens' }
-        & Pick<Contactgegevens, 'Adresregel1' | 'Adresregel2' | 'Huisnummer' | 'HuisnummerToevoeging' | 'Postcode' | 'Woonplaats' | 'Land' | 'Email' | 'Telefoon'>
-      ) }
-    ), Certificeringen?: Maybe<Array<Maybe<(
-      { __typename?: 'Certificering' }
-      & Pick<Certificering, 'CertificeringID' | 'Nummer' | 'NummerWeergave' | 'BeginDatum' | 'EindDatum' | 'Opmerkingen' | 'Status' | 'DatumVoldaan'>
-      & { Certificaat?: Maybe<(
-        { __typename?: 'Certificaat' }
-        & Pick<Certificaat, 'CertificaatID' | 'Code' | 'Naam'>
-      )> }
-    )>>> }
-  )> }
-);
+export type GetMySignedUpParticipationsListQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetMySignedUpParticipationsListQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetMySignedUpParticipationsListQuery = { __typename?: 'Query' } & {
+  my?: Maybe<
+    { __typename?: 'My' } & Pick<My, 'Roles'> & {
+        AangemeldeCursusDeelnames?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'AangemeldeCursusDeelname' } & AangemeldeCursusDeelnameFieldsFragment
+            >
+          >
+        >;
+      }
+  >;
+};
 
-
-export type GetMySignedUpParticipationsListQuery = (
-  { __typename?: 'Query' }
-  & { my?: Maybe<(
-    { __typename?: 'My' }
-    & Pick<My, 'Roles'>
-    & { AangemeldeCursusDeelnames?: Maybe<Array<Maybe<(
-      { __typename?: 'AangemeldeCursusDeelname' }
-      & Pick<AangemeldeCursusDeelname, 'CursusDeelnameID' | 'CursusID' | 'Titel' | 'Prijs' | 'Status' | 'Datum' | 'Begintijd' | 'Eindtijd' | 'Locatie'>
-    )>>> }
-  )> }
-);
+export type AangemeldeCursusDeelnameFieldsFragment = {
+  __typename?: 'AangemeldeCursusDeelname';
+} & Pick<
+  AangemeldeCursusDeelname,
+  | 'CursusDeelnameID'
+  | 'CursusID'
+  | 'Titel'
+  | 'Prijs'
+  | 'Status'
+  | 'Datum'
+  | 'Begintijd'
+  | 'Eindtijd'
+  | 'Locatie'
+>;
 
 export type GetMySignedUpParticipationsDetailsQueryVariables = Exact<{
   input: Scalars['Boolean'];
 }>;
 
+export type GetMySignedUpParticipationsDetailsQuery = { __typename?: 'Query' } & {
+  my?: Maybe<
+    { __typename?: 'My' } & Pick<My, 'Roles'> & {
+        AangemeldeCursusDeelnames?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: 'AangemeldeCursusDeelname' } & Pick<
+                AangemeldeCursusDeelname,
+                | 'CursusDeelnameID'
+                | 'CursusID'
+                | 'Titel'
+                | 'Prijs'
+                | 'Status'
+                | 'Datum'
+                | 'Begintijd'
+                | 'Eindtijd'
+                | 'Locatie'
+              >
+            >
+          >
+        >;
+      }
+  >;
+};
 
-export type GetMySignedUpParticipationsDetailsQuery = (
-  { __typename?: 'Query' }
-  & { my?: Maybe<(
-    { __typename?: 'My' }
-    & Pick<My, 'Roles'>
-    & { AangemeldeCursusDeelnames?: Maybe<Array<Maybe<(
-      { __typename?: 'AangemeldeCursusDeelname' }
-      & Pick<AangemeldeCursusDeelname, 'CursusDeelnameID' | 'CursusID' | 'Titel' | 'Prijs' | 'Status' | 'Datum' | 'Begintijd' | 'Eindtijd' | 'Locatie'>
-    )>>> }
-  )> }
-);
+export type GetListsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetListsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetListsQuery = (
-  { __typename?: 'Query' }
-  & { Themas: Array<Maybe<(
-    { __typename?: 'Thema' }
-    & Pick<Thema, 'ThemaID' | 'Naam'>
-  )>>, Competenties: Array<Maybe<(
-    { __typename?: 'Competentie' }
-    & Pick<Competentie, 'CompetentieID' | 'Naam'>
-  )>>, Kennisgebieden: Array<Maybe<(
-    { __typename?: 'Kennisgebied' }
-    & Pick<Kennisgebied, 'KennisgebiedID' | 'Naam'>
-  )>>, Landen: Array<Maybe<(
-    { __typename?: 'Landen' }
-    & Pick<Landen, 'Value' | 'Text'>
-  )>> }
-);
+export type GetListsQuery = { __typename?: 'Query' } & {
+  Themas: Array<Maybe<{ __typename?: 'Thema' } & Pick<Thema, 'ThemaID' | 'Naam'>>>;
+  Competenties: Array<
+    Maybe<{ __typename?: 'Competentie' } & Pick<Competentie, 'CompetentieID' | 'Naam'>>
+  >;
+  Kennisgebieden: Array<
+    Maybe<{ __typename?: 'Kennisgebied' } & Pick<Kennisgebied, 'KennisgebiedID' | 'Naam'>>
+  >;
+  Landen: Array<Maybe<{ __typename?: 'Landen' } & Pick<Landen, 'Value' | 'Text'>>>;
+};
 
 export type GetCursusSessiesQueryVariables = Exact<{
   input: SearchCourseSessionsInput;
 }>;
 
-
-export type GetCursusSessiesQuery = (
-  { __typename?: 'Query' }
-  & { CursusSessies?: Maybe<Array<Maybe<(
-    { __typename?: 'CursusSessie' }
-    & Pick<CursusSessie, 'CanUnRegister' | 'CourseId' | 'SpecialtyId' | 'CourseCode' | 'Title' | 'Date' | 'StartTime' | 'EndTime' | 'Price' | 'LocationName' | 'Distance' | 'Competence' | 'Theme' | 'Organizer' | 'OrganizerEmail' | 'OrganizerPhone' | 'OrganizerWebsite' | 'PromoText' | 'Registered' | 'RegisteredDate'>
-    & { LocationAddress?: Maybe<(
-      { __typename?: 'LocationAddress' }
-      & Pick<LocationAddress, 'Street' | 'HouseNr' | 'HouseNrExtension' | 'Zipcode' | 'City' | 'Email' | 'Website'>
-    )> }
-  )>>> }
-);
+export type GetCursusSessiesQuery = { __typename?: 'Query' } & {
+  CursusSessies?: Maybe<
+    Array<
+      Maybe<
+        { __typename?: 'CursusSessie' } & Pick<
+          CursusSessie,
+          | 'CanUnRegister'
+          | 'CourseId'
+          | 'SpecialtyId'
+          | 'CourseCode'
+          | 'Title'
+          | 'Date'
+          | 'StartTime'
+          | 'EndTime'
+          | 'Price'
+          | 'LocationName'
+          | 'Distance'
+          | 'Competence'
+          | 'Theme'
+          | 'Organizer'
+          | 'OrganizerEmail'
+          | 'OrganizerPhone'
+          | 'OrganizerWebsite'
+          | 'PromoText'
+          | 'Registered'
+          | 'RegisteredDate'
+          | 'SpecialtyWebsite'
+        > & {
+            LocationAddress?: Maybe<
+              { __typename?: 'LocationAddress' } & Pick<
+                LocationAddress,
+                'Street' | 'HouseNr' | 'HouseNrExtension' | 'Zipcode' | 'City' | 'Email' | 'Website'
+              >
+            >;
+          }
+      >
+    >
+  >;
+};
 
 export type GetCursusSessiesDetailsQueryVariables = Exact<{
   input: SearchCourseSessionsInput;
   inputCheck: IsLicenseValidForSpecialtyInput;
 }>;
 
-
-export type GetCursusSessiesDetailsQuery = (
-  { __typename?: 'Query' }
-  & { CursusSessies?: Maybe<Array<Maybe<(
-    { __typename?: 'CursusSessie' }
-    & Pick<CursusSessie, 'CanUnRegister' | 'CourseId' | 'SpecialtyId' | 'CourseCode' | 'Title' | 'Date' | 'StartTime' | 'EndTime' | 'Price' | 'LocationName' | 'Distance' | 'Competence' | 'Theme' | 'Organizer' | 'OrganizerEmail' | 'OrganizerPhone' | 'OrganizerWebsite' | 'PromoText' | 'Registered' | 'RegisteredDate'>
-    & { LocationAddress?: Maybe<(
-      { __typename?: 'LocationAddress' }
-      & Pick<LocationAddress, 'Street' | 'HouseNr' | 'HouseNrExtension' | 'Zipcode' | 'City' | 'Email' | 'Website'>
-    )> }
-  )>>>, isLicenseValidForSpecialty: (
-    { __typename?: 'isLicenseValidForSpecialtyResult' }
-    & Pick<IsLicenseValidForSpecialtyResult, 'success'>
-  ) }
-);
+export type GetCursusSessiesDetailsQuery = { __typename?: 'Query' } & {
+  CursusSessies?: Maybe<
+    Array<
+      Maybe<
+        { __typename?: 'CursusSessie' } & Pick<
+          CursusSessie,
+          | 'CanUnRegister'
+          | 'CourseId'
+          | 'SpecialtyId'
+          | 'CourseCode'
+          | 'Title'
+          | 'Date'
+          | 'StartTime'
+          | 'EndTime'
+          | 'Price'
+          | 'LocationName'
+          | 'Distance'
+          | 'Competence'
+          | 'Theme'
+          | 'Organizer'
+          | 'OrganizerEmail'
+          | 'OrganizerPhone'
+          | 'OrganizerWebsite'
+          | 'PromoText'
+          | 'Registered'
+          | 'RegisteredDate'
+          | 'SpecialtyWebsite'
+        > & {
+            LocationAddress?: Maybe<
+              { __typename?: 'LocationAddress' } & Pick<
+                LocationAddress,
+                'Street' | 'HouseNr' | 'HouseNrExtension' | 'Zipcode' | 'City' | 'Email' | 'Website'
+              >
+            >;
+          }
+      >
+    >
+  >;
+  isLicenseValidForSpecialty: { __typename?: 'isLicenseValidForSpecialtyResult' } & Pick<
+    IsLicenseValidForSpecialtyResult,
+    'success'
+  >;
+};
 
 export type GetSearchSpecialtiesQueryVariables = Exact<{
   input: SearchSpecialtyInput;
 }>;
 
-
-export type GetSearchSpecialtiesQuery = (
-  { __typename?: 'Query' }
-  & { SearchSpecialties?: Maybe<Array<Maybe<(
-    { __typename?: 'SearchSpecialtyResult' }
-    & Pick<SearchSpecialtyResult, 'SpecialtyId' | 'Code' | 'Title' | 'Price' | 'Competence' | 'Theme' | 'Organizer' | 'OrganizerEmail' | 'OrganizerPhone' | 'OrganizerWebsite' | 'PromoText'>
-  )>>> }
-);
+export type GetSearchSpecialtiesQuery = { __typename?: 'Query' } & {
+  SearchSpecialties?: Maybe<
+    Array<
+      Maybe<
+        { __typename?: 'SearchSpecialtyResult' } & Pick<
+          SearchSpecialtyResult,
+          | 'SpecialtyId'
+          | 'Code'
+          | 'Title'
+          | 'Price'
+          | 'Competence'
+          | 'Theme'
+          | 'Organizer'
+          | 'OrganizerEmail'
+          | 'OrganizerPhone'
+          | 'OrganizerWebsite'
+          | 'PromoText'
+          | 'SpecialtyWebsite'
+        >
+      >
+    >
+  >;
+};
 
 export type GetSpecialtyDetailsQueryVariables = Exact<{
   input: SearchSpecialtyInput;
   inputCheck: IsLicenseValidForSpecialtyInput;
 }>;
 
-
-export type GetSpecialtyDetailsQuery = (
-  { __typename?: 'Query' }
-  & { SearchSpecialties?: Maybe<Array<Maybe<(
-    { __typename?: 'SearchSpecialtyResult' }
-    & Pick<SearchSpecialtyResult, 'SpecialtyId' | 'Code' | 'Title' | 'Price' | 'Competence' | 'Theme' | 'Organizer' | 'OrganizerEmail' | 'OrganizerPhone' | 'OrganizerWebsite' | 'PromoText'>
-  )>>>, isLicenseValidForSpecialty: (
-    { __typename?: 'isLicenseValidForSpecialtyResult' }
-    & Pick<IsLicenseValidForSpecialtyResult, 'success'>
-  ) }
-);
+export type GetSpecialtyDetailsQuery = { __typename?: 'Query' } & {
+  SearchSpecialties?: Maybe<
+    Array<
+      Maybe<
+        { __typename?: 'SearchSpecialtyResult' } & Pick<
+          SearchSpecialtyResult,
+          | 'SpecialtyId'
+          | 'Code'
+          | 'Title'
+          | 'Price'
+          | 'Competence'
+          | 'Theme'
+          | 'Organizer'
+          | 'OrganizerEmail'
+          | 'OrganizerPhone'
+          | 'OrganizerWebsite'
+          | 'PromoText'
+          | 'SpecialtyWebsite'
+        >
+      >
+    >
+  >;
+  isLicenseValidForSpecialty: { __typename?: 'isLicenseValidForSpecialtyResult' } & Pick<
+    IsLicenseValidForSpecialtyResult,
+    'success'
+  >;
+};
 
 export type GetCursusDeelnamesQueryVariables = Exact<{
   licenseId?: Maybe<Scalars['Int']>;
 }>;
 
-
-export type GetCursusDeelnamesQuery = (
-  { __typename?: 'Query' }
-  & { CursusDeelnames?: Maybe<Array<Maybe<(
-    { __typename?: 'CursusDeelname' }
-    & Pick<CursusDeelname, 'CursusDeelnameID' | 'Status'>
-    & { Certificering?: Maybe<(
-      { __typename?: 'Certificering' }
-      & Pick<Certificering, 'CertificeringID' | 'NummerWeergave'>
-    )>, Cursus: (
-      { __typename?: 'Cursus' }
-      & Pick<Cursus, 'CursusID' | 'Titel' | 'Prijs' | 'Promotietekst'>
-      & { Sessies?: Maybe<Array<Maybe<(
-        { __typename?: 'Sessie' }
-        & Pick<Sessie, 'Datum' | 'Begintijd' | 'Eindtijd'>
-      )>>>, Vak: (
-        { __typename?: 'Vak' }
-        & Pick<Vak, 'Titel' | 'Kosten'>
-        & { Themas?: Maybe<Array<Maybe<(
-          { __typename?: 'Thema' }
-          & Pick<Thema, 'Naam'>
-        )>>>, Competenties?: Maybe<Array<Maybe<(
-          { __typename?: 'Competentie' }
-          & Pick<Competentie, 'Naam'>
-        )>>> }
-      ) }
-    ) }
-  )>>> }
-);
+export type GetCursusDeelnamesQuery = { __typename?: 'Query' } & {
+  CursusDeelnames?: Maybe<
+    Array<
+      Maybe<
+        { __typename?: 'CursusDeelname' } & Pick<CursusDeelname, 'CursusDeelnameID' | 'Status'> & {
+            Certificering?: Maybe<
+              { __typename?: 'Certificering' } & Pick<
+                Certificering,
+                'CertificeringID' | 'NummerWeergave'
+              >
+            >;
+            Cursus: { __typename?: 'Cursus' } & Pick<
+              Cursus,
+              'CursusID' | 'Titel' | 'Prijs' | 'Promotietekst'
+            > & {
+                Sessies?: Maybe<
+                  Array<
+                    Maybe<
+                      { __typename?: 'Sessie' } & Pick<Sessie, 'Datum' | 'Begintijd' | 'Eindtijd'>
+                    >
+                  >
+                >;
+                Vak: { __typename?: 'Vak' } & Pick<Vak, 'Titel' | 'Kosten'> & {
+                    Themas?: Maybe<Array<Maybe<{ __typename?: 'Thema' } & Pick<Thema, 'Naam'>>>>;
+                    Competenties?: Maybe<
+                      Array<Maybe<{ __typename?: 'Competentie' } & Pick<Competentie, 'Naam'>>>
+                    >;
+                  };
+              };
+          }
+      >
+    >
+  >;
+};
 
 export type GetCursusDeelnameDetailsQueryVariables = Exact<{
   participationId: Scalars['Int'];
 }>;
 
+export type GetCursusDeelnameDetailsQuery = { __typename?: 'Query' } & {
+  CursusDeelnameDetails?: Maybe<
+    { __typename?: 'CursusDeelname' } & Pick<CursusDeelname, 'CursusDeelnameID' | 'Status'> & {
+        Certificering?: Maybe<
+          { __typename?: 'Certificering' } & Pick<
+            Certificering,
+            'CertificeringID' | 'NummerWeergave'
+          >
+        >;
+        Cursus: { __typename?: 'Cursus' } & Pick<
+          Cursus,
+          'CursusID' | 'Titel' | 'Promotietekst' | 'Prijs' | 'CursusCode'
+        > & {
+            Sessies?: Maybe<
+              Array<
+                Maybe<
+                  { __typename?: 'Sessie' } & Pick<Sessie, 'Datum' | 'Begintijd' | 'Eindtijd'> & {
+                      Lokatie?: Maybe<
+                        { __typename?: 'Lokatie' } & Pick<Lokatie, 'Naam'> & {
+                            Contactgegevens: {
+                              __typename?: 'Contactgegevens';
+                            } & LocationContactDataFieldsFragment;
+                          }
+                      >;
+                    }
+                >
+              >
+            >;
+            Vak: { __typename?: 'Vak' } & Pick<
+              Vak,
+              | 'VakID'
+              | 'Titel'
+              | 'Kosten'
+              | 'Promotietekst'
+              | 'DigitaalAanbod'
+              | 'Website'
+              | 'ThemaNaam'
+              | 'CompetentieNaam'
+              | 'VakgroepID'
+              | 'ExamenInstellingID'
+            > & {
+                Vakgroep?: Maybe<{ __typename?: 'Vakgroep' } & VakgroepFieldsFragment>;
+                ExamenInstelling?: Maybe<
+                  { __typename?: 'ExamenInstelling' } & ExamenInstellingFieldsFragment
+                >;
+              };
+          };
+      }
+  >;
+};
 
-export type GetCursusDeelnameDetailsQuery = (
-  { __typename?: 'Query' }
-  & { CursusDeelnameDetails?: Maybe<(
-    { __typename?: 'CursusDeelname' }
-    & Pick<CursusDeelname, 'CursusDeelnameID' | 'Status'>
-    & { Certificering?: Maybe<(
-      { __typename?: 'Certificering' }
-      & Pick<Certificering, 'CertificeringID' | 'NummerWeergave'>
-    )>, Cursus: (
-      { __typename?: 'Cursus' }
-      & Pick<Cursus, 'CursusID' | 'Titel' | 'Promotietekst' | 'Prijs' | 'CursusCode'>
-      & { Sessies?: Maybe<Array<Maybe<(
-        { __typename?: 'Sessie' }
-        & Pick<Sessie, 'Datum' | 'Begintijd' | 'Eindtijd'>
-        & { Lokatie?: Maybe<(
-          { __typename?: 'Lokatie' }
-          & Pick<Lokatie, 'Naam'>
-          & { Contactgegevens: (
-            { __typename?: 'Contactgegevens' }
-            & Pick<Contactgegevens, 'Adresregel1' | 'Huisnummer' | 'HuisnummerToevoeging' | 'Postcode' | 'Woonplaats'>
-          ) }
-        )> }
-      )>>>, Vak: (
-        { __typename?: 'Vak' }
-        & Pick<Vak, 'VakID' | 'Titel' | 'Kosten' | 'Promotietekst' | 'DigitaalAanbod' | 'VakgroepID' | 'ExamenInstellingID'>
-        & { Themas?: Maybe<Array<Maybe<(
-          { __typename?: 'Thema' }
-          & Pick<Thema, 'Naam'>
-        )>>>, Competenties?: Maybe<Array<Maybe<(
-          { __typename?: 'Competentie' }
-          & Pick<Competentie, 'Naam'>
-        )>>>, Vakgroep?: Maybe<(
-          { __typename?: 'Vakgroep' }
-          & Pick<Vakgroep, 'Naam'>
-          & { Contactgegevens: (
-            { __typename?: 'Contactgegevens' }
-            & Pick<Contactgegevens, 'Adresregel1' | 'Huisnummer' | 'HuisnummerToevoeging' | 'Postcode' | 'Woonplaats' | 'Telefoon' | 'Email' | 'Website'>
-          ) }
-        )>, ExamenInstelling?: Maybe<(
-          { __typename?: 'ExamenInstelling' }
-          & Pick<ExamenInstelling, 'Naam'>
-          & { Contactgegevens: (
-            { __typename?: 'Contactgegevens' }
-            & Pick<Contactgegevens, 'Adresregel1' | 'Huisnummer' | 'HuisnummerToevoeging' | 'Postcode' | 'Woonplaats' | 'Telefoon' | 'Email' | 'Website'>
-          ) }
-        )> }
-      ) }
-    ) }
-  )> }
-);
+export type VakgroepFieldsFragment = { __typename?: 'Vakgroep' } & Pick<Vakgroep, 'Naam'> & {
+    Contactgegevens: { __typename?: 'Contactgegevens' } & OrganizerContactDataFieldsFragment;
+  };
+
+export type ExamenInstellingFieldsFragment = { __typename?: 'ExamenInstelling' } & Pick<
+  ExamenInstelling,
+  'Naam'
+> & { Contactgegevens: { __typename?: 'Contactgegevens' } & OrganizerContactDataFieldsFragment };
+
+export type OrganizerContactDataFieldsFragment = { __typename?: 'Contactgegevens' } & Pick<
+  Contactgegevens,
+  | 'Adresregel1'
+  | 'Huisnummer'
+  | 'HuisnummerToevoeging'
+  | 'Postcode'
+  | 'Woonplaats'
+  | 'Telefoon'
+  | 'Email'
+  | 'Website'
+>;
+
+export type LocationContactDataFieldsFragment = { __typename?: 'Contactgegevens' } & Pick<
+  Contactgegevens,
+  | 'Adresregel1'
+  | 'Huisnummer'
+  | 'HuisnummerToevoeging'
+  | 'Postcode'
+  | 'Woonplaats'
+  | 'Telefoon'
+  | 'Email'
+  | 'Website'
+>;
 
 export type RegisterForCourseMutationVariables = Exact<{
   input: RegisterForCourseInput;
 }>;
 
-
-export type RegisterForCourseMutation = (
-  { __typename?: 'Mutation' }
-  & { registerForCourse: (
-    { __typename?: 'RegisterResult' }
-    & Pick<RegisterResult, 'success' | 'message'>
-  ) }
-);
+export type RegisterForCourseMutation = { __typename?: 'Mutation' } & {
+  registerForCourse: { __typename?: 'RegisterResult' } & Pick<
+    RegisterResult,
+    'success' | 'message'
+  >;
+};
 
 export type UnRegisterForCourseMutationVariables = Exact<{
   CursusDeelnameID: Scalars['Int'];
 }>;
 
+export type UnRegisterForCourseMutation = { __typename?: 'Mutation' } & {
+  unRegisterForCourse: { __typename?: 'UnRegisterResult' } & Pick<
+    UnRegisterResult,
+    'success' | 'message'
+  >;
+};
 
-export type UnRegisterForCourseMutation = (
-  { __typename?: 'Mutation' }
-  & { unRegisterForCourse: (
-    { __typename?: 'UnRegisterResult' }
-    & Pick<UnRegisterResult, 'success' | 'message'>
-  ) }
-);
-
-
-export const GetMyDocument = gql`
-    query getMy($input: Boolean!) {
-  my {
-    Roles
-    Persoon {
-      PersoonID
-      BSN
-      Voorletters
-      Tussenvoegsel
-      Achternaam
-      Geboortedatum
-      IsGbaGeregistreerd
-      Contactgegevens {
-        Adresregel1
-        Adresregel2
-        Huisnummer
-        HuisnummerToevoeging
-        Postcode
-        Woonplaats
-        Land
-        Email
-        Telefoon
-      }
+export const AangemeldeCursusDeelnameFieldsFragmentDoc = gql`
+  fragment AangemeldeCursusDeelnameFields on AangemeldeCursusDeelname {
+    CursusDeelnameID
+    CursusID
+    Titel
+    Prijs
+    Status
+    Datum
+    Begintijd
+    Eindtijd
+    Locatie
+  }
+`;
+export const OrganizerContactDataFieldsFragmentDoc = gql`
+  fragment OrganizerContactDataFields on Contactgegevens {
+    Adresregel1
+    Huisnummer
+    HuisnummerToevoeging
+    Postcode
+    Woonplaats
+    Telefoon
+    Email
+    Website
+  }
+`;
+export const VakgroepFieldsFragmentDoc = gql`
+  fragment VakgroepFields on Vakgroep {
+    Naam
+    Contactgegevens {
+      ...OrganizerContactDataFields
     }
-    Certificeringen(alleenGeldig: $input) {
-      CertificeringID
-      Nummer
-      NummerWeergave
-      BeginDatum
-      EindDatum
-      Opmerkingen
-      Status
-      DatumVoldaan
-      Certificaat {
-        CertificaatID
-        Code
-        Naam
+  }
+  ${OrganizerContactDataFieldsFragmentDoc}
+`;
+export const ExamenInstellingFieldsFragmentDoc = gql`
+  fragment ExamenInstellingFields on ExamenInstelling {
+    Naam
+    Contactgegevens {
+      ...OrganizerContactDataFields
+    }
+  }
+  ${OrganizerContactDataFieldsFragmentDoc}
+`;
+export const LocationContactDataFieldsFragmentDoc = gql`
+  fragment LocationContactDataFields on Contactgegevens {
+    Adresregel1
+    Huisnummer
+    HuisnummerToevoeging
+    Postcode
+    Woonplaats
+    Telefoon
+    Email
+    Website
+  }
+`;
+export const GetMyDocument = gql`
+  query getMy($input: Boolean!) {
+    my {
+      Roles
+      Persoon {
+        PersoonID
+        BSN
+        Voorletters
+        Tussenvoegsel
+        Achternaam
+        Geboortedatum
+        IsGbaGeregistreerd
+        Contactgegevens {
+          Adresregel1
+          Adresregel2
+          Huisnummer
+          HuisnummerToevoeging
+          Postcode
+          Woonplaats
+          Land
+          Email
+          Telefoon
+        }
+      }
+      Certificeringen(alleenGeldig: $input) {
+        CertificeringID
+        Nummer
+        NummerWeergave
+        BeginDatum
+        EindDatum
+        Opmerkingen
+        Status
+        DatumVoldaan
+        Certificaat {
+          CertificaatID
+          Code
+          Naam
+        }
       }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useGetMyQuery__
@@ -1774,33 +2332,30 @@ export const GetMyDocument = gql`
  *   },
  * });
  */
-export function useGetMyQuery(baseOptions: Apollo.QueryHookOptions<GetMyQuery, GetMyQueryVariables>) {
-        return Apollo.useQuery<GetMyQuery, GetMyQueryVariables>(GetMyDocument, baseOptions);
-      }
-export function useGetMyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyQuery, GetMyQueryVariables>) {
-          return Apollo.useLazyQuery<GetMyQuery, GetMyQueryVariables>(GetMyDocument, baseOptions);
-        }
+export function useGetMyQuery(
+  baseOptions: Apollo.QueryHookOptions<GetMyQuery, GetMyQueryVariables>,
+) {
+  return Apollo.useQuery<GetMyQuery, GetMyQueryVariables>(GetMyDocument, baseOptions);
+}
+export function useGetMyLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetMyQuery, GetMyQueryVariables>,
+) {
+  return Apollo.useLazyQuery<GetMyQuery, GetMyQueryVariables>(GetMyDocument, baseOptions);
+}
 export type GetMyQueryHookResult = ReturnType<typeof useGetMyQuery>;
 export type GetMyLazyQueryHookResult = ReturnType<typeof useGetMyLazyQuery>;
 export type GetMyQueryResult = Apollo.QueryResult<GetMyQuery, GetMyQueryVariables>;
 export const GetMySignedUpParticipationsListDocument = gql`
-    query getMySignedUpParticipationsList {
-  my {
-    Roles
-    AangemeldeCursusDeelnames {
-      CursusDeelnameID
-      CursusID
-      Titel
-      Prijs
-      Status
-      Datum
-      Begintijd
-      Eindtijd
-      Locatie
+  query getMySignedUpParticipationsList {
+    my {
+      Roles
+      AangemeldeCursusDeelnames {
+        ...AangemeldeCursusDeelnameFields
+      }
     }
   }
-}
-    `;
+  ${AangemeldeCursusDeelnameFieldsFragmentDoc}
+`;
 
 /**
  * __useGetMySignedUpParticipationsListQuery__
@@ -1817,33 +2372,56 @@ export const GetMySignedUpParticipationsListDocument = gql`
  *   },
  * });
  */
-export function useGetMySignedUpParticipationsListQuery(baseOptions?: Apollo.QueryHookOptions<GetMySignedUpParticipationsListQuery, GetMySignedUpParticipationsListQueryVariables>) {
-        return Apollo.useQuery<GetMySignedUpParticipationsListQuery, GetMySignedUpParticipationsListQueryVariables>(GetMySignedUpParticipationsListDocument, baseOptions);
-      }
-export function useGetMySignedUpParticipationsListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMySignedUpParticipationsListQuery, GetMySignedUpParticipationsListQueryVariables>) {
-          return Apollo.useLazyQuery<GetMySignedUpParticipationsListQuery, GetMySignedUpParticipationsListQueryVariables>(GetMySignedUpParticipationsListDocument, baseOptions);
-        }
-export type GetMySignedUpParticipationsListQueryHookResult = ReturnType<typeof useGetMySignedUpParticipationsListQuery>;
-export type GetMySignedUpParticipationsListLazyQueryHookResult = ReturnType<typeof useGetMySignedUpParticipationsListLazyQuery>;
-export type GetMySignedUpParticipationsListQueryResult = Apollo.QueryResult<GetMySignedUpParticipationsListQuery, GetMySignedUpParticipationsListQueryVariables>;
+export function useGetMySignedUpParticipationsListQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetMySignedUpParticipationsListQuery,
+    GetMySignedUpParticipationsListQueryVariables
+  >,
+) {
+  return Apollo.useQuery<
+    GetMySignedUpParticipationsListQuery,
+    GetMySignedUpParticipationsListQueryVariables
+  >(GetMySignedUpParticipationsListDocument, baseOptions);
+}
+export function useGetMySignedUpParticipationsListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMySignedUpParticipationsListQuery,
+    GetMySignedUpParticipationsListQueryVariables
+  >,
+) {
+  return Apollo.useLazyQuery<
+    GetMySignedUpParticipationsListQuery,
+    GetMySignedUpParticipationsListQueryVariables
+  >(GetMySignedUpParticipationsListDocument, baseOptions);
+}
+export type GetMySignedUpParticipationsListQueryHookResult = ReturnType<
+  typeof useGetMySignedUpParticipationsListQuery
+>;
+export type GetMySignedUpParticipationsListLazyQueryHookResult = ReturnType<
+  typeof useGetMySignedUpParticipationsListLazyQuery
+>;
+export type GetMySignedUpParticipationsListQueryResult = Apollo.QueryResult<
+  GetMySignedUpParticipationsListQuery,
+  GetMySignedUpParticipationsListQueryVariables
+>;
 export const GetMySignedUpParticipationsDetailsDocument = gql`
-    query getMySignedUpParticipationsDetails($input: Boolean!) {
-  my {
-    Roles
-    AangemeldeCursusDeelnames {
-      CursusDeelnameID
-      CursusID
-      Titel
-      Prijs
-      Status
-      Datum
-      Begintijd
-      Eindtijd
-      Locatie
+  query getMySignedUpParticipationsDetails($input: Boolean!) {
+    my {
+      Roles
+      AangemeldeCursusDeelnames {
+        CursusDeelnameID
+        CursusID
+        Titel
+        Prijs
+        Status
+        Datum
+        Begintijd
+        Eindtijd
+        Locatie
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useGetMySignedUpParticipationsDetailsQuery__
@@ -1861,35 +2439,58 @@ export const GetMySignedUpParticipationsDetailsDocument = gql`
  *   },
  * });
  */
-export function useGetMySignedUpParticipationsDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetMySignedUpParticipationsDetailsQuery, GetMySignedUpParticipationsDetailsQueryVariables>) {
-        return Apollo.useQuery<GetMySignedUpParticipationsDetailsQuery, GetMySignedUpParticipationsDetailsQueryVariables>(GetMySignedUpParticipationsDetailsDocument, baseOptions);
-      }
-export function useGetMySignedUpParticipationsDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMySignedUpParticipationsDetailsQuery, GetMySignedUpParticipationsDetailsQueryVariables>) {
-          return Apollo.useLazyQuery<GetMySignedUpParticipationsDetailsQuery, GetMySignedUpParticipationsDetailsQueryVariables>(GetMySignedUpParticipationsDetailsDocument, baseOptions);
-        }
-export type GetMySignedUpParticipationsDetailsQueryHookResult = ReturnType<typeof useGetMySignedUpParticipationsDetailsQuery>;
-export type GetMySignedUpParticipationsDetailsLazyQueryHookResult = ReturnType<typeof useGetMySignedUpParticipationsDetailsLazyQuery>;
-export type GetMySignedUpParticipationsDetailsQueryResult = Apollo.QueryResult<GetMySignedUpParticipationsDetailsQuery, GetMySignedUpParticipationsDetailsQueryVariables>;
-export const GetListsDocument = gql`
-    query getLists {
-  Themas {
-    ThemaID
-    Naam
-  }
-  Competenties {
-    CompetentieID
-    Naam
-  }
-  Kennisgebieden {
-    KennisgebiedID
-    Naam
-  }
-  Landen {
-    Value
-    Text
-  }
+export function useGetMySignedUpParticipationsDetailsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetMySignedUpParticipationsDetailsQuery,
+    GetMySignedUpParticipationsDetailsQueryVariables
+  >,
+) {
+  return Apollo.useQuery<
+    GetMySignedUpParticipationsDetailsQuery,
+    GetMySignedUpParticipationsDetailsQueryVariables
+  >(GetMySignedUpParticipationsDetailsDocument, baseOptions);
 }
-    `;
+export function useGetMySignedUpParticipationsDetailsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMySignedUpParticipationsDetailsQuery,
+    GetMySignedUpParticipationsDetailsQueryVariables
+  >,
+) {
+  return Apollo.useLazyQuery<
+    GetMySignedUpParticipationsDetailsQuery,
+    GetMySignedUpParticipationsDetailsQueryVariables
+  >(GetMySignedUpParticipationsDetailsDocument, baseOptions);
+}
+export type GetMySignedUpParticipationsDetailsQueryHookResult = ReturnType<
+  typeof useGetMySignedUpParticipationsDetailsQuery
+>;
+export type GetMySignedUpParticipationsDetailsLazyQueryHookResult = ReturnType<
+  typeof useGetMySignedUpParticipationsDetailsLazyQuery
+>;
+export type GetMySignedUpParticipationsDetailsQueryResult = Apollo.QueryResult<
+  GetMySignedUpParticipationsDetailsQuery,
+  GetMySignedUpParticipationsDetailsQueryVariables
+>;
+export const GetListsDocument = gql`
+  query getLists {
+    Themas {
+      ThemaID
+      Naam
+    }
+    Competenties {
+      CompetentieID
+      Naam
+    }
+    Kennisgebieden {
+      KennisgebiedID
+      Naam
+    }
+    Landen {
+      Value
+      Text
+    }
+  }
+`;
 
 /**
  * __useGetListsQuery__
@@ -1906,50 +2507,55 @@ export const GetListsDocument = gql`
  *   },
  * });
  */
-export function useGetListsQuery(baseOptions?: Apollo.QueryHookOptions<GetListsQuery, GetListsQueryVariables>) {
-        return Apollo.useQuery<GetListsQuery, GetListsQueryVariables>(GetListsDocument, baseOptions);
-      }
-export function useGetListsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetListsQuery, GetListsQueryVariables>) {
-          return Apollo.useLazyQuery<GetListsQuery, GetListsQueryVariables>(GetListsDocument, baseOptions);
-        }
+export function useGetListsQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetListsQuery, GetListsQueryVariables>,
+) {
+  return Apollo.useQuery<GetListsQuery, GetListsQueryVariables>(GetListsDocument, baseOptions);
+}
+export function useGetListsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetListsQuery, GetListsQueryVariables>,
+) {
+  return Apollo.useLazyQuery<GetListsQuery, GetListsQueryVariables>(GetListsDocument, baseOptions);
+}
 export type GetListsQueryHookResult = ReturnType<typeof useGetListsQuery>;
 export type GetListsLazyQueryHookResult = ReturnType<typeof useGetListsLazyQuery>;
 export type GetListsQueryResult = Apollo.QueryResult<GetListsQuery, GetListsQueryVariables>;
 export const GetCursusSessiesDocument = gql`
-    query getCursusSessies($input: searchCourseSessionsInput!) {
-  CursusSessies(input: $input) {
-    CanUnRegister
-    CourseId
-    SpecialtyId
-    CourseCode
-    Title
-    Date
-    StartTime
-    EndTime
-    Price
-    LocationName
-    LocationAddress {
-      Street
-      HouseNr
-      HouseNrExtension
-      Zipcode
-      City
-      Email
-      Website
+  query getCursusSessies($input: searchCourseSessionsInput!) {
+    CursusSessies(input: $input) {
+      CanUnRegister
+      CourseId
+      SpecialtyId
+      CourseCode
+      Title
+      Date
+      StartTime
+      EndTime
+      Price
+      LocationName
+      LocationAddress {
+        Street
+        HouseNr
+        HouseNrExtension
+        Zipcode
+        City
+        Email
+        Website
+      }
+      Distance
+      Competence
+      Theme
+      Organizer
+      OrganizerEmail
+      OrganizerPhone
+      OrganizerWebsite
+      PromoText
+      Registered
+      RegisteredDate
+      SpecialtyWebsite
     }
-    Distance
-    Competence
-    Theme
-    Organizer
-    OrganizerEmail
-    OrganizerPhone
-    OrganizerWebsite
-    PromoText
-    Registered
-    RegisteredDate
   }
-}
-    `;
+`;
 
 /**
  * __useGetCursusSessiesQuery__
@@ -1967,53 +2573,70 @@ export const GetCursusSessiesDocument = gql`
  *   },
  * });
  */
-export function useGetCursusSessiesQuery(baseOptions: Apollo.QueryHookOptions<GetCursusSessiesQuery, GetCursusSessiesQueryVariables>) {
-        return Apollo.useQuery<GetCursusSessiesQuery, GetCursusSessiesQueryVariables>(GetCursusSessiesDocument, baseOptions);
-      }
-export function useGetCursusSessiesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCursusSessiesQuery, GetCursusSessiesQueryVariables>) {
-          return Apollo.useLazyQuery<GetCursusSessiesQuery, GetCursusSessiesQueryVariables>(GetCursusSessiesDocument, baseOptions);
-        }
+export function useGetCursusSessiesQuery(
+  baseOptions: Apollo.QueryHookOptions<GetCursusSessiesQuery, GetCursusSessiesQueryVariables>,
+) {
+  return Apollo.useQuery<GetCursusSessiesQuery, GetCursusSessiesQueryVariables>(
+    GetCursusSessiesDocument,
+    baseOptions,
+  );
+}
+export function useGetCursusSessiesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetCursusSessiesQuery, GetCursusSessiesQueryVariables>,
+) {
+  return Apollo.useLazyQuery<GetCursusSessiesQuery, GetCursusSessiesQueryVariables>(
+    GetCursusSessiesDocument,
+    baseOptions,
+  );
+}
 export type GetCursusSessiesQueryHookResult = ReturnType<typeof useGetCursusSessiesQuery>;
 export type GetCursusSessiesLazyQueryHookResult = ReturnType<typeof useGetCursusSessiesLazyQuery>;
-export type GetCursusSessiesQueryResult = Apollo.QueryResult<GetCursusSessiesQuery, GetCursusSessiesQueryVariables>;
+export type GetCursusSessiesQueryResult = Apollo.QueryResult<
+  GetCursusSessiesQuery,
+  GetCursusSessiesQueryVariables
+>;
 export const GetCursusSessiesDetailsDocument = gql`
-    query getCursusSessiesDetails($input: searchCourseSessionsInput!, $inputCheck: isLicenseValidForSpecialtyInput!) {
-  CursusSessies(input: $input) {
-    CanUnRegister
-    CourseId
-    SpecialtyId
-    CourseCode
-    Title
-    Date
-    StartTime
-    EndTime
-    Price
-    LocationName
-    LocationAddress {
-      Street
-      HouseNr
-      HouseNrExtension
-      Zipcode
-      City
-      Email
-      Website
+  query getCursusSessiesDetails(
+    $input: searchCourseSessionsInput!
+    $inputCheck: isLicenseValidForSpecialtyInput!
+  ) {
+    CursusSessies(input: $input) {
+      CanUnRegister
+      CourseId
+      SpecialtyId
+      CourseCode
+      Title
+      Date
+      StartTime
+      EndTime
+      Price
+      LocationName
+      LocationAddress {
+        Street
+        HouseNr
+        HouseNrExtension
+        Zipcode
+        City
+        Email
+        Website
+      }
+      Distance
+      Competence
+      Theme
+      Organizer
+      OrganizerEmail
+      OrganizerPhone
+      OrganizerWebsite
+      PromoText
+      Registered
+      RegisteredDate
+      SpecialtyWebsite
     }
-    Distance
-    Competence
-    Theme
-    Organizer
-    OrganizerEmail
-    OrganizerPhone
-    OrganizerWebsite
-    PromoText
-    Registered
-    RegisteredDate
+    isLicenseValidForSpecialty(input: $inputCheck) {
+      success
+    }
   }
-  isLicenseValidForSpecialty(input: $inputCheck) {
-    success
-  }
-}
-    `;
+`;
 
 /**
  * __useGetCursusSessiesDetailsQuery__
@@ -2032,32 +2655,56 @@ export const GetCursusSessiesDetailsDocument = gql`
  *   },
  * });
  */
-export function useGetCursusSessiesDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetCursusSessiesDetailsQuery, GetCursusSessiesDetailsQueryVariables>) {
-        return Apollo.useQuery<GetCursusSessiesDetailsQuery, GetCursusSessiesDetailsQueryVariables>(GetCursusSessiesDetailsDocument, baseOptions);
-      }
-export function useGetCursusSessiesDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCursusSessiesDetailsQuery, GetCursusSessiesDetailsQueryVariables>) {
-          return Apollo.useLazyQuery<GetCursusSessiesDetailsQuery, GetCursusSessiesDetailsQueryVariables>(GetCursusSessiesDetailsDocument, baseOptions);
-        }
-export type GetCursusSessiesDetailsQueryHookResult = ReturnType<typeof useGetCursusSessiesDetailsQuery>;
-export type GetCursusSessiesDetailsLazyQueryHookResult = ReturnType<typeof useGetCursusSessiesDetailsLazyQuery>;
-export type GetCursusSessiesDetailsQueryResult = Apollo.QueryResult<GetCursusSessiesDetailsQuery, GetCursusSessiesDetailsQueryVariables>;
-export const GetSearchSpecialtiesDocument = gql`
-    query getSearchSpecialties($input: searchSpecialtyInput!) {
-  SearchSpecialties(input: $input) {
-    SpecialtyId
-    Code
-    Title
-    Price
-    Competence
-    Theme
-    Organizer
-    OrganizerEmail
-    OrganizerPhone
-    OrganizerWebsite
-    PromoText
-  }
+export function useGetCursusSessiesDetailsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetCursusSessiesDetailsQuery,
+    GetCursusSessiesDetailsQueryVariables
+  >,
+) {
+  return Apollo.useQuery<GetCursusSessiesDetailsQuery, GetCursusSessiesDetailsQueryVariables>(
+    GetCursusSessiesDetailsDocument,
+    baseOptions,
+  );
 }
-    `;
+export function useGetCursusSessiesDetailsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCursusSessiesDetailsQuery,
+    GetCursusSessiesDetailsQueryVariables
+  >,
+) {
+  return Apollo.useLazyQuery<GetCursusSessiesDetailsQuery, GetCursusSessiesDetailsQueryVariables>(
+    GetCursusSessiesDetailsDocument,
+    baseOptions,
+  );
+}
+export type GetCursusSessiesDetailsQueryHookResult = ReturnType<
+  typeof useGetCursusSessiesDetailsQuery
+>;
+export type GetCursusSessiesDetailsLazyQueryHookResult = ReturnType<
+  typeof useGetCursusSessiesDetailsLazyQuery
+>;
+export type GetCursusSessiesDetailsQueryResult = Apollo.QueryResult<
+  GetCursusSessiesDetailsQuery,
+  GetCursusSessiesDetailsQueryVariables
+>;
+export const GetSearchSpecialtiesDocument = gql`
+  query getSearchSpecialties($input: searchSpecialtyInput!) {
+    SearchSpecialties(input: $input) {
+      SpecialtyId
+      Code
+      Title
+      Price
+      Competence
+      Theme
+      Organizer
+      OrganizerEmail
+      OrganizerPhone
+      OrganizerWebsite
+      PromoText
+      SpecialtyWebsite
+    }
+  }
+`;
 
 /**
  * __useGetSearchSpecialtiesQuery__
@@ -2075,35 +2722,60 @@ export const GetSearchSpecialtiesDocument = gql`
  *   },
  * });
  */
-export function useGetSearchSpecialtiesQuery(baseOptions: Apollo.QueryHookOptions<GetSearchSpecialtiesQuery, GetSearchSpecialtiesQueryVariables>) {
-        return Apollo.useQuery<GetSearchSpecialtiesQuery, GetSearchSpecialtiesQueryVariables>(GetSearchSpecialtiesDocument, baseOptions);
-      }
-export function useGetSearchSpecialtiesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSearchSpecialtiesQuery, GetSearchSpecialtiesQueryVariables>) {
-          return Apollo.useLazyQuery<GetSearchSpecialtiesQuery, GetSearchSpecialtiesQueryVariables>(GetSearchSpecialtiesDocument, baseOptions);
-        }
-export type GetSearchSpecialtiesQueryHookResult = ReturnType<typeof useGetSearchSpecialtiesQuery>;
-export type GetSearchSpecialtiesLazyQueryHookResult = ReturnType<typeof useGetSearchSpecialtiesLazyQuery>;
-export type GetSearchSpecialtiesQueryResult = Apollo.QueryResult<GetSearchSpecialtiesQuery, GetSearchSpecialtiesQueryVariables>;
-export const GetSpecialtyDetailsDocument = gql`
-    query getSpecialtyDetails($input: searchSpecialtyInput!, $inputCheck: isLicenseValidForSpecialtyInput!) {
-  SearchSpecialties(input: $input) {
-    SpecialtyId
-    Code
-    Title
-    Price
-    Competence
-    Theme
-    Organizer
-    OrganizerEmail
-    OrganizerPhone
-    OrganizerWebsite
-    PromoText
-  }
-  isLicenseValidForSpecialty(input: $inputCheck) {
-    success
-  }
+export function useGetSearchSpecialtiesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetSearchSpecialtiesQuery,
+    GetSearchSpecialtiesQueryVariables
+  >,
+) {
+  return Apollo.useQuery<GetSearchSpecialtiesQuery, GetSearchSpecialtiesQueryVariables>(
+    GetSearchSpecialtiesDocument,
+    baseOptions,
+  );
 }
-    `;
+export function useGetSearchSpecialtiesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetSearchSpecialtiesQuery,
+    GetSearchSpecialtiesQueryVariables
+  >,
+) {
+  return Apollo.useLazyQuery<GetSearchSpecialtiesQuery, GetSearchSpecialtiesQueryVariables>(
+    GetSearchSpecialtiesDocument,
+    baseOptions,
+  );
+}
+export type GetSearchSpecialtiesQueryHookResult = ReturnType<typeof useGetSearchSpecialtiesQuery>;
+export type GetSearchSpecialtiesLazyQueryHookResult = ReturnType<
+  typeof useGetSearchSpecialtiesLazyQuery
+>;
+export type GetSearchSpecialtiesQueryResult = Apollo.QueryResult<
+  GetSearchSpecialtiesQuery,
+  GetSearchSpecialtiesQueryVariables
+>;
+export const GetSpecialtyDetailsDocument = gql`
+  query getSpecialtyDetails(
+    $input: searchSpecialtyInput!
+    $inputCheck: isLicenseValidForSpecialtyInput!
+  ) {
+    SearchSpecialties(input: $input) {
+      SpecialtyId
+      Code
+      Title
+      Price
+      Competence
+      Theme
+      Organizer
+      OrganizerEmail
+      OrganizerPhone
+      OrganizerWebsite
+      PromoText
+      SpecialtyWebsite
+    }
+    isLicenseValidForSpecialty(input: $inputCheck) {
+      success
+    }
+  }
+`;
 
 /**
  * __useGetSpecialtyDetailsQuery__
@@ -2122,48 +2794,66 @@ export const GetSpecialtyDetailsDocument = gql`
  *   },
  * });
  */
-export function useGetSpecialtyDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetSpecialtyDetailsQuery, GetSpecialtyDetailsQueryVariables>) {
-        return Apollo.useQuery<GetSpecialtyDetailsQuery, GetSpecialtyDetailsQueryVariables>(GetSpecialtyDetailsDocument, baseOptions);
-      }
-export function useGetSpecialtyDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSpecialtyDetailsQuery, GetSpecialtyDetailsQueryVariables>) {
-          return Apollo.useLazyQuery<GetSpecialtyDetailsQuery, GetSpecialtyDetailsQueryVariables>(GetSpecialtyDetailsDocument, baseOptions);
-        }
+export function useGetSpecialtyDetailsQuery(
+  baseOptions: Apollo.QueryHookOptions<GetSpecialtyDetailsQuery, GetSpecialtyDetailsQueryVariables>,
+) {
+  return Apollo.useQuery<GetSpecialtyDetailsQuery, GetSpecialtyDetailsQueryVariables>(
+    GetSpecialtyDetailsDocument,
+    baseOptions,
+  );
+}
+export function useGetSpecialtyDetailsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetSpecialtyDetailsQuery,
+    GetSpecialtyDetailsQueryVariables
+  >,
+) {
+  return Apollo.useLazyQuery<GetSpecialtyDetailsQuery, GetSpecialtyDetailsQueryVariables>(
+    GetSpecialtyDetailsDocument,
+    baseOptions,
+  );
+}
 export type GetSpecialtyDetailsQueryHookResult = ReturnType<typeof useGetSpecialtyDetailsQuery>;
-export type GetSpecialtyDetailsLazyQueryHookResult = ReturnType<typeof useGetSpecialtyDetailsLazyQuery>;
-export type GetSpecialtyDetailsQueryResult = Apollo.QueryResult<GetSpecialtyDetailsQuery, GetSpecialtyDetailsQueryVariables>;
+export type GetSpecialtyDetailsLazyQueryHookResult = ReturnType<
+  typeof useGetSpecialtyDetailsLazyQuery
+>;
+export type GetSpecialtyDetailsQueryResult = Apollo.QueryResult<
+  GetSpecialtyDetailsQuery,
+  GetSpecialtyDetailsQueryVariables
+>;
 export const GetCursusDeelnamesDocument = gql`
-    query getCursusDeelnames($licenseId: Int) {
-  CursusDeelnames(certificeringId: $licenseId) {
-    CursusDeelnameID
-    Status
-    Certificering {
-      CertificeringID
-      NummerWeergave
-    }
-    Cursus {
-      CursusID
-      Titel
-      Sessies {
-        Datum
-        Begintijd
-        Eindtijd
+  query getCursusDeelnames($licenseId: Int) {
+    CursusDeelnames(certificeringId: $licenseId) {
+      CursusDeelnameID
+      Status
+      Certificering {
+        CertificeringID
+        NummerWeergave
       }
-      Prijs
-      Promotietekst
-      Vak {
+      Cursus {
+        CursusID
         Titel
-        Kosten
-        Themas {
-          Naam
+        Sessies {
+          Datum
+          Begintijd
+          Eindtijd
         }
-        Competenties {
-          Naam
+        Prijs
+        Promotietekst
+        Vak {
+          Titel
+          Kosten
+          Themas {
+            Naam
+          }
+          Competenties {
+            Naam
+          }
         }
       }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useGetCursusDeelnamesQuery__
@@ -2181,90 +2871,84 @@ export const GetCursusDeelnamesDocument = gql`
  *   },
  * });
  */
-export function useGetCursusDeelnamesQuery(baseOptions?: Apollo.QueryHookOptions<GetCursusDeelnamesQuery, GetCursusDeelnamesQueryVariables>) {
-        return Apollo.useQuery<GetCursusDeelnamesQuery, GetCursusDeelnamesQueryVariables>(GetCursusDeelnamesDocument, baseOptions);
-      }
-export function useGetCursusDeelnamesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCursusDeelnamesQuery, GetCursusDeelnamesQueryVariables>) {
-          return Apollo.useLazyQuery<GetCursusDeelnamesQuery, GetCursusDeelnamesQueryVariables>(GetCursusDeelnamesDocument, baseOptions);
-        }
+export function useGetCursusDeelnamesQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetCursusDeelnamesQuery, GetCursusDeelnamesQueryVariables>,
+) {
+  return Apollo.useQuery<GetCursusDeelnamesQuery, GetCursusDeelnamesQueryVariables>(
+    GetCursusDeelnamesDocument,
+    baseOptions,
+  );
+}
+export function useGetCursusDeelnamesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCursusDeelnamesQuery,
+    GetCursusDeelnamesQueryVariables
+  >,
+) {
+  return Apollo.useLazyQuery<GetCursusDeelnamesQuery, GetCursusDeelnamesQueryVariables>(
+    GetCursusDeelnamesDocument,
+    baseOptions,
+  );
+}
 export type GetCursusDeelnamesQueryHookResult = ReturnType<typeof useGetCursusDeelnamesQuery>;
-export type GetCursusDeelnamesLazyQueryHookResult = ReturnType<typeof useGetCursusDeelnamesLazyQuery>;
-export type GetCursusDeelnamesQueryResult = Apollo.QueryResult<GetCursusDeelnamesQuery, GetCursusDeelnamesQueryVariables>;
+export type GetCursusDeelnamesLazyQueryHookResult = ReturnType<
+  typeof useGetCursusDeelnamesLazyQuery
+>;
+export type GetCursusDeelnamesQueryResult = Apollo.QueryResult<
+  GetCursusDeelnamesQuery,
+  GetCursusDeelnamesQueryVariables
+>;
 export const GetCursusDeelnameDetailsDocument = gql`
-    query getCursusDeelnameDetails($participationId: Int!) {
-  CursusDeelnameDetails(cursusDeelnameId: $participationId) {
-    CursusDeelnameID
-    Status
-    Certificering {
-      CertificeringID
-      NummerWeergave
-    }
-    Cursus {
-      CursusID
-      Titel
-      Promotietekst
-      Prijs
-      CursusCode
-      Sessies {
-        Datum
-        Begintijd
-        Eindtijd
-        Lokatie {
-          Naam
-          Contactgegevens {
-            Adresregel1
-            Huisnummer
-            HuisnummerToevoeging
-            Postcode
-            Woonplaats
-          }
-        }
+  query getCursusDeelnameDetails($participationId: Int!) {
+    CursusDeelnameDetails(cursusDeelnameId: $participationId) {
+      CursusDeelnameID
+      Status
+      Certificering {
+        CertificeringID
+        NummerWeergave
       }
-      Vak {
-        VakID
+      Cursus {
+        CursusID
         Titel
-        Kosten
         Promotietekst
-        DigitaalAanbod
-        Themas {
-          Naam
-        }
-        Competenties {
-          Naam
-        }
-        VakgroepID
-        Vakgroep {
-          Naam
-          Contactgegevens {
-            Adresregel1
-            Huisnummer
-            HuisnummerToevoeging
-            Postcode
-            Woonplaats
-            Telefoon
-            Email
-            Website
+        Prijs
+        CursusCode
+        Sessies {
+          Datum
+          Begintijd
+          Eindtijd
+          Lokatie {
+            Naam
+            Contactgegevens {
+              ...LocationContactDataFields
+            }
           }
         }
-        ExamenInstellingID
-        ExamenInstelling {
-          Naam
-          Contactgegevens {
-            Adresregel1
-            Huisnummer
-            HuisnummerToevoeging
-            Postcode
-            Woonplaats
-            Telefoon
-            Email
-            Website
+        Vak {
+          VakID
+          Titel
+          Kosten
+          Promotietekst
+          DigitaalAanbod
+          Website
+          ThemaNaam
+          CompetentieNaam
+          VakgroepID
+          Vakgroep {
+            ...VakgroepFields
+          }
+          ExamenInstellingID
+          ExamenInstelling {
+            ...ExamenInstellingFields
           }
         }
       }
     }
   }
-}
-    `;
+  ${LocationContactDataFieldsFragmentDoc}
+  ${VakgroepFieldsFragmentDoc}
+  ${ExamenInstellingFieldsFragmentDoc}
+`;
 
 /**
  * __useGetCursusDeelnameDetailsQuery__
@@ -2282,24 +2966,50 @@ export const GetCursusDeelnameDetailsDocument = gql`
  *   },
  * });
  */
-export function useGetCursusDeelnameDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetCursusDeelnameDetailsQuery, GetCursusDeelnameDetailsQueryVariables>) {
-        return Apollo.useQuery<GetCursusDeelnameDetailsQuery, GetCursusDeelnameDetailsQueryVariables>(GetCursusDeelnameDetailsDocument, baseOptions);
-      }
-export function useGetCursusDeelnameDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCursusDeelnameDetailsQuery, GetCursusDeelnameDetailsQueryVariables>) {
-          return Apollo.useLazyQuery<GetCursusDeelnameDetailsQuery, GetCursusDeelnameDetailsQueryVariables>(GetCursusDeelnameDetailsDocument, baseOptions);
-        }
-export type GetCursusDeelnameDetailsQueryHookResult = ReturnType<typeof useGetCursusDeelnameDetailsQuery>;
-export type GetCursusDeelnameDetailsLazyQueryHookResult = ReturnType<typeof useGetCursusDeelnameDetailsLazyQuery>;
-export type GetCursusDeelnameDetailsQueryResult = Apollo.QueryResult<GetCursusDeelnameDetailsQuery, GetCursusDeelnameDetailsQueryVariables>;
-export const RegisterForCourseDocument = gql`
-    mutation registerForCourse($input: registerForCourseInput!) {
-  registerForCourse(input: $input) {
-    success
-    message
-  }
+export function useGetCursusDeelnameDetailsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetCursusDeelnameDetailsQuery,
+    GetCursusDeelnameDetailsQueryVariables
+  >,
+) {
+  return Apollo.useQuery<GetCursusDeelnameDetailsQuery, GetCursusDeelnameDetailsQueryVariables>(
+    GetCursusDeelnameDetailsDocument,
+    baseOptions,
+  );
 }
-    `;
-export type RegisterForCourseMutationFn = Apollo.MutationFunction<RegisterForCourseMutation, RegisterForCourseMutationVariables>;
+export function useGetCursusDeelnameDetailsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetCursusDeelnameDetailsQuery,
+    GetCursusDeelnameDetailsQueryVariables
+  >,
+) {
+  return Apollo.useLazyQuery<GetCursusDeelnameDetailsQuery, GetCursusDeelnameDetailsQueryVariables>(
+    GetCursusDeelnameDetailsDocument,
+    baseOptions,
+  );
+}
+export type GetCursusDeelnameDetailsQueryHookResult = ReturnType<
+  typeof useGetCursusDeelnameDetailsQuery
+>;
+export type GetCursusDeelnameDetailsLazyQueryHookResult = ReturnType<
+  typeof useGetCursusDeelnameDetailsLazyQuery
+>;
+export type GetCursusDeelnameDetailsQueryResult = Apollo.QueryResult<
+  GetCursusDeelnameDetailsQuery,
+  GetCursusDeelnameDetailsQueryVariables
+>;
+export const RegisterForCourseDocument = gql`
+  mutation registerForCourse($input: registerForCourseInput!) {
+    registerForCourse(input: $input) {
+      success
+      message
+    }
+  }
+`;
+export type RegisterForCourseMutationFn = Apollo.MutationFunction<
+  RegisterForCourseMutation,
+  RegisterForCourseMutationVariables
+>;
 
 /**
  * __useRegisterForCourseMutation__
@@ -2318,21 +3028,35 @@ export type RegisterForCourseMutationFn = Apollo.MutationFunction<RegisterForCou
  *   },
  * });
  */
-export function useRegisterForCourseMutation(baseOptions?: Apollo.MutationHookOptions<RegisterForCourseMutation, RegisterForCourseMutationVariables>) {
-        return Apollo.useMutation<RegisterForCourseMutation, RegisterForCourseMutationVariables>(RegisterForCourseDocument, baseOptions);
-      }
+export function useRegisterForCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RegisterForCourseMutation,
+    RegisterForCourseMutationVariables
+  >,
+) {
+  return Apollo.useMutation<RegisterForCourseMutation, RegisterForCourseMutationVariables>(
+    RegisterForCourseDocument,
+    baseOptions,
+  );
+}
 export type RegisterForCourseMutationHookResult = ReturnType<typeof useRegisterForCourseMutation>;
 export type RegisterForCourseMutationResult = Apollo.MutationResult<RegisterForCourseMutation>;
-export type RegisterForCourseMutationOptions = Apollo.BaseMutationOptions<RegisterForCourseMutation, RegisterForCourseMutationVariables>;
+export type RegisterForCourseMutationOptions = Apollo.BaseMutationOptions<
+  RegisterForCourseMutation,
+  RegisterForCourseMutationVariables
+>;
 export const UnRegisterForCourseDocument = gql`
-    mutation unRegisterForCourse($CursusDeelnameID: Int!) {
-  unRegisterForCourse(CursusDeelnameID: $CursusDeelnameID) {
-    success
-    message
+  mutation unRegisterForCourse($CursusDeelnameID: Int!) {
+    unRegisterForCourse(CursusDeelnameID: $CursusDeelnameID) {
+      success
+      message
+    }
   }
-}
-    `;
-export type UnRegisterForCourseMutationFn = Apollo.MutationFunction<UnRegisterForCourseMutation, UnRegisterForCourseMutationVariables>;
+`;
+export type UnRegisterForCourseMutationFn = Apollo.MutationFunction<
+  UnRegisterForCourseMutation,
+  UnRegisterForCourseMutationVariables
+>;
 
 /**
  * __useUnRegisterForCourseMutation__
@@ -2351,9 +3075,22 @@ export type UnRegisterForCourseMutationFn = Apollo.MutationFunction<UnRegisterFo
  *   },
  * });
  */
-export function useUnRegisterForCourseMutation(baseOptions?: Apollo.MutationHookOptions<UnRegisterForCourseMutation, UnRegisterForCourseMutationVariables>) {
-        return Apollo.useMutation<UnRegisterForCourseMutation, UnRegisterForCourseMutationVariables>(UnRegisterForCourseDocument, baseOptions);
-      }
-export type UnRegisterForCourseMutationHookResult = ReturnType<typeof useUnRegisterForCourseMutation>;
+export function useUnRegisterForCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UnRegisterForCourseMutation,
+    UnRegisterForCourseMutationVariables
+  >,
+) {
+  return Apollo.useMutation<UnRegisterForCourseMutation, UnRegisterForCourseMutationVariables>(
+    UnRegisterForCourseDocument,
+    baseOptions,
+  );
+}
+export type UnRegisterForCourseMutationHookResult = ReturnType<
+  typeof useUnRegisterForCourseMutation
+>;
 export type UnRegisterForCourseMutationResult = Apollo.MutationResult<UnRegisterForCourseMutation>;
-export type UnRegisterForCourseMutationOptions = Apollo.BaseMutationOptions<UnRegisterForCourseMutation, UnRegisterForCourseMutationVariables>;
+export type UnRegisterForCourseMutationOptions = Apollo.BaseMutationOptions<
+  UnRegisterForCourseMutation,
+  UnRegisterForCourseMutationVariables
+>;

@@ -1,5 +1,5 @@
-import { Panel } from '@erkenningen/ui/layout/panel';
 import React, { useState } from 'react';
+import { Panel } from '@erkenningen/ui/layout/panel';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { SelectedLicenseContext } from '../../../shared/SelectedLicenseContext';
 import { NormalCourseDetailsContainer } from '../../NormalCourses/NormalCourseDetailsContainer';

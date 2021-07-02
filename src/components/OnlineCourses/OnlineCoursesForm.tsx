@@ -1,12 +1,10 @@
-import {
-  parseLocationSearch,
-} from '@erkenningen/ui/utils';
-import {Spinner} from '@erkenningen/ui/components/spinner';
-import {Button} from '@erkenningen/ui/components/button';
-import {PanelBody} from '@erkenningen/ui/layout/panel';
-import {LinkButtonContainer} from '@erkenningen/ui/components/link-button';
-import { Formik } from 'formik';
 import React, { useContext, useEffect, useState } from 'react';
+import { parseLocationSearch } from '@erkenningen/ui/utils';
+import { Spinner } from '@erkenningen/ui/components/spinner';
+import { Button } from '@erkenningen/ui/components/button';
+import { PanelBody } from '@erkenningen/ui/layout/panel';
+import { LinkButtonContainer } from '@erkenningen/ui/components/link-button';
+import { Formik } from 'formik';
 import { RouteComponentProps } from 'react-router';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { useGetListsQuery } from '../../generated/graphql';
@@ -15,14 +13,14 @@ import FormSelect from '../ui/FormSelect';
 import LinkButton from '../ui/LinkButton';
 import { OnlineCoursesTable } from './OnlineCoursesTable';
 
-interface IOnlineCourseFormProps extends RouteComponentProps {
+interface OnlineCourseFormProps extends RouteComponentProps {
   isOnline: boolean;
-  seenOverview: (seen: boolean)=> void;
+  seenOverview: (seen: boolean) => void;
 }
 
-export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
+export function OnlineCoursesForm(props: OnlineCourseFormProps) {
   useEffect(() => {
-    props.seenOverview(true); 
+    props.seenOverview(true);
   });
   const [searchData, setSearchData] = useState<any>();
   const [themeId, setThemeId] = useQueryParam('themaId', StringParam);
@@ -43,7 +41,8 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
   }
 
   const licenseId: number | null =
-    (user && user?.Certificeringen &&
+    (user &&
+      user?.Certificeringen &&
       user?.Certificeringen.length > 0 &&
       user?.Certificeringen[0].CertificeringID) ||
     null;
@@ -84,7 +83,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
   ];
   const themes = [
     { ThemaID: '0', Naam: 'Alle' },
-    ...data.Themas.slice().sort((a , b) => (a.Naam < b.Naam ? -1 : 1)),
+    ...data.Themas.slice().sort((a, b) => (a.Naam < b.Naam ? -1 : 1)),
   ];
   return (
     <>
@@ -132,7 +131,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
             setSearchData(values);
             setSubmitting(false);
           }}
-          >
+        >
           {(formProps: any) => (
             <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
               <FormSelect
@@ -187,7 +186,7 @@ export function OnlineCoursesForm(props: IOnlineCourseFormProps) {
               </div>
             </form>
           )}
-</Formik>
+        </Formik>
       </PanelBody>
       {searchData && <OnlineCoursesTable {...props} searchData={searchData} />}
     </>

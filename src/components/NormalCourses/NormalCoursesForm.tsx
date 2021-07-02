@@ -1,12 +1,11 @@
+import React, { useContext, useEffect, useState } from 'react';
 import { parseLocationSearch } from '@erkenningen/ui/utils';
 import { Spinner } from '@erkenningen/ui/components/spinner';
 import { Button } from '@erkenningen/ui/components/button';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
 import { LinkButtonContainer } from '@erkenningen/ui/components/link-button';
-
 import { addMonths } from 'date-fns';
 import { Formik } from 'formik';
-import React, { useContext, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { date, object } from 'yup';
@@ -23,7 +22,7 @@ interface IIdLabel {
   Label: string;
 }
 
-interface INormalCourseFormProps extends RouteComponentProps {
+interface NormalCourseFormProps extends RouteComponentProps {
   isOnline: boolean;
   seenOverview: (seen: boolean) => void;
 }
@@ -33,7 +32,7 @@ const NormalCoursesSchema = object().shape({
   to: date().typeError('Vul een geldige datum in (dd-mm-jjjj) of kies een datum'),
 });
 
-export function NormalCoursesForm(props: INormalCourseFormProps) {
+export function NormalCoursesForm(props: NormalCourseFormProps) {
   useEffect(() => {
     props.seenOverview(true);
   });

@@ -1,0 +1,74 @@
+{
+  "data": {
+    "CursusDeelnameDetails": {
+      "CursusDeelnameID": 1024240,
+      "Status": "Aangemeld",
+      "Certificering": {
+        "CertificeringID": 397304,
+        "NummerWeergave": "31.2021.0014298",
+        "__typename": "Certificering"
+      },
+      "Cursus": {
+        "CursusID": 71798,
+        "Titel": "Webinar: \" Veiligheid en gewasbescherming”",
+        "Promotietekst": "In deze Webinar via ZOOM, wordt de veiligheid op het gebied van gewasbescherming besproken. Op veel bedrijven sluipt gemakkelijk een nonchalante houding binnen als het gaat om veilig omgaan met gewasbescherming. Dat geldt voor de veiligheid van jezelf en je omgeving. Wat komt er in de toekomst aan op het gebied van regelgeving en hoe kunt u hierop anticiperen. Een voorwaarde voor een licentiepunt is dat u als deelnemer de camera tijdens de hele bijeenkomst aan heeft staan! Zorg er dus voor dat u apparatuur heeft met een camera alvorens u zelf voor deze bijeenkomst op te geven.",
+        "Prijs": 65,
+        "CursusCode": "2581371798",
+        "Sessies": [
+          {
+            "Datum": "2021-09-26T22:00:00.000Z",
+            "Begintijd": "1970-01-01T18:00:00.000Z",
+            "Eindtijd": "1970-01-01T20:00:00.000Z",
+            "Lokatie": {
+              "Naam": "Webinar",
+              "Contactgegevens": {
+                "Adresregel1": "",
+                "Huisnummer": "",
+                "HuisnummerToevoeging": "",
+                "Postcode": "",
+                "Woonplaats": "",
+                "Telefoon": "",
+                "Email": "",
+                "Website": "",
+                "__typename": "Contactgegevens"
+              },
+              "__typename": "Lokatie"
+            },
+            "__typename": "Sessie"
+          }
+        ],
+        "Vak": {
+          "VakID": 25813,
+          "Titel": "Webinar: \" Veiligheid en gewasbescherming”",
+          "Kosten": 65,
+          "Promotietekst": "In deze Webinar via ZOOM, wordt de veiligheid op het gebied van gewasbescherming besproken. Op veel bedrijven sluipt gemakkelijk een nonchalante houding binnen als het gaat om veilig omgaan met gewasbescherming. Dat geldt voor de veiligheid van jezelf en je omgeving. Wat komt er in de toekomst aan op het gebied van regelgeving en hoe kunt u hierop anticiperen. Een voorwaarde voor een licentiepunt is dat u als deelnemer de camera tijdens de hele bijeenkomst aan heeft staan! Zorg er dus voor dat u apparatuur heeft met een camera alvorens u zelf voor deze bijeenkomst op te geven.",
+          "DigitaalAanbod": false,
+          "Website": "[{\"text\":\"www.lentiz.nl/cursusenconsult\",\"date\":\"2016-06-23T08:49:52.887Z\",\"by\":\"Dukker, F.C.M.\"},{\"text\":\"www.lentiz.nl/ en  https://www.lentiz.nl/cursus-en-consult/cursus/gewasbescherming-verlengingsbijeenkomst/\",\"date\":\"2020-03-24T09:26:41.630Z\",\"by\":\"Dukker, F.C.M.\"}]",
+          "ThemaNaam": "Veiligheid en Techniek",
+          "CompetentieNaam": "Bedrijfsvoeren Gewasbescherming",
+          "VakgroepID": 210483,
+          "Vakgroep": {
+            "Naam": "Lentiz Onderwijsgroep",
+            "Contactgegevens": {
+              "Adresregel1": "Postbus",
+              "Huisnummer": "3041",
+              "HuisnummerToevoeging": "",
+              "Postcode": "3130 CA",
+              "Woonplaats": "Vlaardingen",
+              "Telefoon": "088-3382283",
+              "Email": "cursus-consult@lentiz.nl",
+              "Website": "",
+              "__typename": "Contactgegevens"
+            },
+            "__typename": "Vakgroep"
+          },
+          "ExamenInstellingID": null,
+          "ExamenInstelling": null,
+          "__typename": "Vak"
+        },
+        "__typename": "Cursus"
+      },
+      "__typename": "CursusDeelname"
+    }
+  }
+}

@@ -1,6 +1,6 @@
+import React, { useState } from 'react';
 import { PanelBody, Panel } from '@erkenningen/ui/layout/panel';
 import { LinkButtonContainer } from '@erkenningen/ui/components/link-button';
-import React, { useState } from 'react';
 import DoneParticipationSelectLicense from '../../DoneParticipations/DoneParticipationsSelectLicense';
 import DoneParticipationsTable from '../../DoneParticipations/DoneParticipationsTable';
 import LinkButton from '../../ui/LinkButton';

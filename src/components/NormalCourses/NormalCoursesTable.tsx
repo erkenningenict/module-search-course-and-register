@@ -1,13 +1,13 @@
-import {Alert} from '@erkenningen/ui/components/alert';
-import {Spinner} from '@erkenningen/ui/components/spinner';
-import {PanelBody} from '@erkenningen/ui/layout/panel';
-import {TableResponsive} from '@erkenningen/ui/layout/table';
 import React from 'react';
+import { Alert } from '@erkenningen/ui/components/alert';
+import { Spinner } from '@erkenningen/ui/components/spinner';
+import { PanelBody } from '@erkenningen/ui/layout/panel';
+import { TableResponsive } from '@erkenningen/ui/layout/table';
 import { RouteComponentProps } from 'react-router-dom';
 import { useGetCursusSessiesQuery } from '../../generated/graphql';
 import { NormalCoursesRow } from './NormalCoursesRow';
 
-interface INormalCoursesTable extends RouteComponentProps {
+interface NormalCoursesTableProps extends RouteComponentProps {
   searchData: {
     licenseId: string;
     knowledgeAreaId: string;
@@ -15,13 +15,13 @@ interface INormalCoursesTable extends RouteComponentProps {
     competenceId: string;
     zipcodeNumbers: string;
     distanceRadius: number;
-    from: any;
-    to: any;
+    from: Date | null;
+    to: Date | null;
     isOnlineCourse: boolean;
   };
 }
 
-export function NormalCoursesTable(props: INormalCoursesTable) {
+export function NormalCoursesTable(props: NormalCoursesTableProps) {
   const searchData = props.searchData && {
     ...props.searchData,
     licenseId: parseInt(props.searchData.licenseId, 10),
@@ -29,20 +29,12 @@ export function NormalCoursesTable(props: INormalCoursesTable) {
     competenceId: parseInt(props.searchData.competenceId, 10),
     themeId: parseInt(props.searchData.themeId, 10),
     zipcodeNumbers: parseInt(props.searchData.zipcodeNumbers, 10) || undefined,
-    to: props.searchData.to
-      ? props.searchData.to === ''
-        ? null
-        : props.searchData.to.getTime()
-      : null,
-    from: props.searchData.from
-      ? props.searchData.from === ''
-        ? null
-        : props.searchData.from.getTime()
-      : null,
+    to: props.searchData.to ? props.searchData.to.toISOString() : null,
+    from: props.searchData.from ? props.searchData.from.toISOString() : null,
     isOnlineCourse: props.searchData.isOnlineCourse,
   };
   // eslint-disable-next-line
-  const {licenseId, ...searchInput} = searchData;
+  const { licenseId, ...searchInput } = searchData;
 
   const { loading, data, error } = useGetCursusSessiesQuery({
     variables: {
