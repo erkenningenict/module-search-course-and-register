@@ -229,31 +229,35 @@ query getSpecialtyDetails(
 
 query getCursusDeelnames($licenseId: Int) {
   CursusDeelnames(certificeringId: $licenseId) {
-    CursusDeelnameID
-    Status
-    Certificering {
-      CertificeringID
-      NummerWeergave
+    ...CursusDeelnameFields
+  }
+}
+
+fragment CursusDeelnameFields on CursusDeelname {
+  CursusDeelnameID
+  Status
+  Certificering {
+    CertificeringID
+    NummerWeergave
+  }
+  Cursus {
+    CursusID
+    Titel
+    Sessies {
+      Datum
+      Begintijd
+      Eindtijd
     }
-    Cursus {
-      CursusID
+    Prijs
+    Promotietekst
+    Vak {
       Titel
-      Sessies {
-        Datum
-        Begintijd
-        Eindtijd
+      Kosten
+      Themas {
+        Naam
       }
-      Prijs
-      Promotietekst
-      Vak {
-        Titel
-        Kosten
-        Themas {
-          Naam
-        }
-        Competenties {
-          Naam
-        }
+      Competenties {
+        Naam
       }
     }
   }

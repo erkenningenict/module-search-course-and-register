@@ -1,36 +1,9 @@
 import React from 'react';
 import { toDutchDate } from '@erkenningen/ui/utils';
-import {
-  Certificering,
-  Competentie,
-  Cursus,
-  CursusDeelname,
-  Maybe,
-  Sessie,
-  Thema,
-  Vak,
-} from '../../generated/graphql';
+import { CursusDeelnameFieldsFragment } from '../../generated/graphql';
 
 interface DoneParticipationsRowProps {
-  row: Pick<CursusDeelname, 'CursusDeelnameID' | 'Status'> & {
-    Certificering?: Maybe<
-      { __typename?: 'Certificering' } & Pick<Certificering, 'CertificeringID' | 'NummerWeergave'>
-    >;
-    Cursus: { __typename?: 'Cursus' } & Pick<
-      Cursus,
-      'CursusID' | 'Titel' | 'Prijs' | 'Promotietekst'
-    > & {
-        Sessies?: Maybe<
-          Array<Maybe<{ __typename?: 'Sessie' } & Pick<Sessie, 'Datum' | 'Begintijd' | 'Eindtijd'>>>
-        >;
-        Vak: { __typename?: 'Vak' } & Pick<Vak, 'Titel' | 'Kosten'> & {
-            Themas?: Maybe<Array<Maybe<{ __typename?: 'Thema' } & Pick<Thema, 'Naam'>>>>;
-            Competenties?: Maybe<
-              Array<Maybe<{ __typename?: 'Competentie' } & Pick<Competentie, 'Naam'>>>
-            >;
-          };
-      };
-  };
+  row: CursusDeelnameFieldsFragment;
 }
 
 export default function DoneParticipationsRow(props: DoneParticipationsRowProps) {

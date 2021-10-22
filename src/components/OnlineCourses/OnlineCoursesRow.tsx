@@ -1,9 +1,10 @@
 import React from 'react';
 import { toDutchMoney } from '@erkenningen/ui/utils';
 import { Link, RouteComponentProps } from 'react-router-dom';
+import { SearchSpecialtyResult } from '../../generated/graphql';
 
 interface OnlineCourseRowProps extends RouteComponentProps {
-  row: any;
+  row: SearchSpecialtyResult;
 }
 
 export function OnlineCoursesRow(props: OnlineCourseRowProps) {

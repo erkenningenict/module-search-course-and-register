@@ -1,9 +1,10 @@
 import React from 'react';
 import { toDutchDate, toDutchMoney } from '@erkenningen/ui/utils';
 import { Link, RouteComponentProps } from 'react-router-dom';
+import { CursusSessie } from '../../generated/graphql';
 
 interface NormalCourseRowProps extends RouteComponentProps {
-  row: any;
+  row: CursusSessie;
   showDistance: boolean;
 }
 
@@ -24,8 +25,8 @@ export function NormalCoursesRow(props: NormalCourseRowProps) {
         <td>
           {row.StartTime} - {row.EndTime}
         </td>
-        <td>{`${row.Organizer} - ${row.LocationAddress.City}`}</td>
-        {showDistance && <td>{Math.round(row.Distance / 1000)}</td>}
+        <td>{`${row.Organizer} - ${row?.LocationAddress?.City}`}</td>
+        {showDistance && <td>{row?.Distance ? Math.round(row?.Distance / 1000) : 'onbekend'}</td>}
         <td className="text-right">{toDutchMoney(row.Price, { euroPrefix: true })}</td>
       </tr>
     </>
