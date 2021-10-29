@@ -3,7 +3,7 @@ import { Alert } from '@erkenningen/ui/components/alert';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
 import { toDutchDate } from '@erkenningen/ui/utils';
 import { RouteComponentProps } from 'react-router';
-import { Certificering, useGetMyQuery } from '../../generated/graphql';
+import { CertificeringFieldsFragment, useGetMyQuery } from '../../generated/graphql';
 import FormSelect from '../ui/FormSelect';
 
 interface DoneParticipationSelectLicenseProps {
@@ -14,7 +14,7 @@ interface DoneParticipationSelectLicenseProps {
 export default function DoneParticipationSelectLicense(
   props: DoneParticipationSelectLicenseProps & RouteComponentProps<any>,
 ) {
-  const [certs, setCerts] = useState<Certificering[]>();
+  const [certs, setCerts] = useState<CertificeringFieldsFragment[]>();
 
   useEffect(() => {
     if (props.licenseId === 0 && certs && certs.length > 0) {
@@ -28,7 +28,7 @@ export default function DoneParticipationSelectLicense(
     },
     fetchPolicy: 'network-only',
   });
-  let certificeringen: Certificering[] = [];
+  let certificeringen: CertificeringFieldsFragment[] = [];
   if (loading) {
     return <p>Gegevens worden geladen...</p>;
   }

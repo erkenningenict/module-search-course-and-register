@@ -22,20 +22,24 @@ query getMy($input: Boolean!) {
       }
     }
     Certificeringen(alleenGeldig: $input) {
-      CertificeringID
-      Nummer
-      NummerWeergave
-      BeginDatum
-      EindDatum
-      Opmerkingen
-      Status
-      DatumVoldaan
-      Certificaat {
-        CertificaatID
-        Code
-        Naam
-      }
+      ...CertificeringFields
     }
+  }
+}
+
+fragment CertificeringFields on Certificering {
+  CertificeringID
+  Nummer
+  NummerWeergave
+  BeginDatum
+  EindDatum
+  Opmerkingen
+  Status
+  DatumVoldaan
+  Certificaat {
+    CertificaatID
+    Code
+    Naam
   }
 }
 
