@@ -1,20 +1,21 @@
 import React from 'react';
 import { toDutchDate } from '@erkenningen/ui/utils';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { AangemeldeCursusDeelnameFieldsFragment } from '../../generated/graphql';
 
-interface SignedUpParticipationsRowProps extends RouteComponentProps<any> {
+interface SignedUpParticipationsRowProps {
   row: AangemeldeCursusDeelnameFieldsFragment;
 }
 
-export default function SignedUpParticipationsRow(props: SignedUpParticipationsRowProps) {
+const SignedUpParticipationsRow: React.FC<SignedUpParticipationsRowProps> = (props) => {
+  const location = useLocation();
   const { row } = props;
   return (
     <>
       <tr key={row.CursusDeelnameID}>
         <td>
           <Link
-            to={`/waar-ben-ik-aangemeld/${row.CursusDeelnameID}${props.location.search}`}
+            to={`/waar-ben-ik-aangemeld/${row.CursusDeelnameID}${location.search}`}
             title="Bekijk meer informatie en afmelden"
           >
             {row.Titel}
@@ -29,4 +30,6 @@ export default function SignedUpParticipationsRow(props: SignedUpParticipationsR
       </tr>
     </>
   );
-}
+};
+
+export default SignedUpParticipationsRow;

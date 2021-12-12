@@ -1,52 +1,23 @@
 import React from 'react';
 import { PanelBody, Panel } from '@erkenningen/ui/layout/panel';
-import { LinkButtonContainer } from '@erkenningen/ui/components/link-button';
-import { Route, Switch } from 'react-router';
-import { SignedUpParticipationDetails } from '../../SignedUpParticipations/SignedUpParticipationsDetails';
+import { LinkButton, LinkButtonContainer } from '@erkenningen/ui/components/link-button';
 import SignedUpParticipationsTable from '../../SignedUpParticipations/SignedUpParticipationsTable';
-import LinkButton from '../../ui/LinkButton';
+import { useLocation } from 'react-router-dom';
 
 export default function SignedUpParticipations(props) {
+  const location = useLocation();
   return (
     <Panel title="Waar ben ik aangemeld" doNotIncludeBody={true}>
-      <Switch>
-        <Route
-          exact={true}
-          path="/waar-ben-ik-aangemeld"
-          render={() => {
-            return <SignedUpParticipationsTable {...props} />;
-          }}
-        />
-        <Route
-          exact={true}
-          path="/waar-ben-ik-aangemeld/:participationId"
-          component={SignedUpParticipationDetails}
-        />
-      </Switch>
+      <SignedUpParticipationsTable {...props} />
       <PanelBody>
         <LinkButtonContainer>
-          <LinkButton
-            to={{
-              pathname: `/bijeenkomsten-zoeken/op-locatie`,
-              search: props.location.search,
-            }}
-          >
+          <LinkButton to={`/bijeenkomsten-zoeken/op-locatie${location.search}`}>
             Zoek bijeenkomst op locatie
           </LinkButton>
-          <LinkButton
-            to={{
-              pathname: `/bijeenkomsten-zoeken/online`,
-              search: props.location.search,
-            }}
-          >
+          <LinkButton to={`/bijeenkomsten-zoeken/online${location.search}`}>
             Zoek online bijeenkomst
           </LinkButton>
-          <LinkButton
-            to={{
-              pathname: `/wat-heb-ik-al-gevolgd/`,
-              search: props.location.search,
-            }}
-          >
+          <LinkButton to={`/wat-heb-ik-al-gevolgd${location.search}`}>
             Wat heb ik al gevolgd?
           </LinkButton>
         </LinkButtonContainer>

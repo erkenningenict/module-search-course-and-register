@@ -2,7 +2,7 @@ import React from 'react';
 import { toDutchDate, toDutchMoney } from '@erkenningen/ui/utils';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
 import OrganizerDetails from '../ui/OrganizerDetails';
-import '../NormalCourses/NormalCourseDetails.scss';
+import '../NormalCourses/NormalCourseDetails.css';
 import { GetCursusDeelnameDetailsQuery } from '../../generated/graphql';
 
 interface NormalCourseDetailsCursusDeelnameDetailsProps {

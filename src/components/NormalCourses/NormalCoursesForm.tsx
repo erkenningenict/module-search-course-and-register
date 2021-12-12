@@ -3,26 +3,23 @@ import { parseLocationSearch } from '@erkenningen/ui/utils';
 import { Spinner } from '@erkenningen/ui/components/spinner';
 import { Button } from '@erkenningen/ui/components/button';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
-import { LinkButtonContainer } from '@erkenningen/ui/components/link-button';
+import { FormCalendar, FormSelect, FormText } from '@erkenningen/ui/components/form';
+import { LinkButton, LinkButtonContainer } from '@erkenningen/ui/components/link-button';
 import { addMonths } from 'date-fns';
 import { Formik } from 'formik';
-import { RouteComponentProps } from 'react-router';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { date, object } from 'yup';
 import { useGetListsQuery } from '../../generated/graphql';
 import { UserContext } from '../../shared/Auth';
-import FormCalendar from '../ui/FormCalendar';
-import FormSelect from '../ui/FormSelect';
-import FormText from '../ui/FormText';
-import LinkButton from '../ui/LinkButton';
-import { NormalCoursesTable } from './NormalCoursesTable';
+import NormalCoursesTable from './NormalCoursesTable';
+import { useLocation } from 'react-router-dom';
 
 interface IIdLabel {
   Id: number;
   Label: string;
 }
 
-interface NormalCourseFormProps extends RouteComponentProps {
+interface NormalCourseFormProps {
   isOnline: boolean;
   seenOverview: (seen: boolean) => void;
 }
@@ -32,15 +29,16 @@ const NormalCoursesSchema = object().shape({
   to: date().typeError('Vul een geldige datum in (dd-mm-jjjj) of kies een datum'),
 });
 
-export function NormalCoursesForm(props: NormalCourseFormProps) {
+const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
   useEffect(() => {
     props.seenOverview(true);
   });
-
+  const location = useLocation();
   const [searchData, setSearchData] = useState<any>();
   const [themeId, setThemeId] = useQueryParam('themaId', StringParam);
   const [competenceId, setCompetenceId] = useQueryParam('competentieId', StringParam);
   const [knowledgeAreaId, setKnowledgeAreaId] = useQueryParam('sectorId', StringParam);
+
   const toDate = addMonths(new Date(), 3);
   const { loading, data, error } = useGetListsQuery();
 
@@ -81,7 +79,7 @@ export function NormalCoursesForm(props: NormalCourseFormProps) {
   let competence = '0';
   let knowledgeArea = '0';
   if (!searchData) {
-    const params = parseLocationSearch(props.location.search);
+    const params = parseLocationSearch(location.search);
     params.forEach((param: { key: string; value: string }) => {
       switch (param.key) {
         case 'sectorId':
@@ -127,157 +125,162 @@ export function NormalCoursesForm(props: NormalCourseFormProps) {
     <>
       <PanelBody>
         <LinkButtonContainer>
-          <LinkButton to={`/bijeenkomsten-zoeken/online${props.location.search}`}>
+          <LinkButton to={`/bijeenkomsten-zoeken/online${location.search}`}>
             Online bijeenkomsten
           </LinkButton>
           {user && (
             <>
-              <LinkButton to={`/waar-ben-ik-aangemeld${props.location.search}`}>
+              <LinkButton to={`/waar-ben-ik-aangemeld${location.search}`}>
                 Waar ben ik aangemeld?
               </LinkButton>
-              <LinkButton to={`/wat-heb-ik-al-gevolgd/${props.location.search}`}>
+              <LinkButton to={`/wat-heb-ik-al-gevolgd/${location.search}`}>
                 Wat heb ik al gevolgd?
               </LinkButton>
             </>
           )}
         </LinkButtonContainer>
         <h3>Zoek een bijeenkomst op locatie</h3>
-        <Formik
-          initialValues={{
-            licenseId,
-            knowledgeAreaId: (searchData && searchData.knowledgeAreaId) || '0',
-            themeId: (searchData && searchData.themeId) || '0',
-            competenceId: (searchData && searchData.competenceId) || '0',
-            zipcodeNumbers: user?.Persoon?.Contactgegevens?.Postcode || '',
-            distanceRadius: 0,
-            from: new Date(),
-            to: toDate,
-            isOnlineCourse: props.isOnline,
-          }}
-          validationSchema={NormalCoursesSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            setSearchData(values);
-            setSubmitting(false);
-          }}
-        >
-          {(formProps: any) => (
-            <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
-              <FormSelect
-                id="knowledgeArea"
-                label="Sector"
-                options={knowledgeAreas.map((item) => {
-                  return {
-                    value: item.KennisgebiedID,
-                    label: item.Naam,
-                  };
-                })}
-                name="knowledgeAreaId"
-                onChange={(e: any) => {
-                  setKnowledgeAreaId(e.value);
-                  setSearchData({
-                    licenseId,
-                    competenceId,
-                    themeId,
-                    knowledgeAreaId: e.value,
-                    distanceRadius: 0,
-                    isOnlineCourse: props.isOnline,
-                  });
-                }}
-                loading={loading}
-                form={formProps}
-              />
-              <FormSelect
-                id="themeId"
-                label="Thema"
-                options={themes.map((item) => ({
-                  value: item.ThemaID,
-                  label: item.Naam,
-                }))}
-                loading={loading}
-                onChange={(e: any) => {
-                  setThemeId(e.value);
-                  setSearchData({
-                    licenseId,
-                    knowledgeAreaId,
-                    competenceId,
-                    themeId: e.value,
-                    distanceRadius: 0,
-                    isOnlineCourse: props.isOnline,
-                  });
-                }}
-                name="themeId"
-                form={formProps}
-              />
-              <FormSelect
-                id="competenceId"
-                label="Bijeenkomsttype"
-                options={competences.map((item) => ({
-                  value: item.CompetentieID,
-                  label: item.Naam,
-                }))}
-                loading={loading}
-                onChange={(e: any) => {
-                  setCompetenceId(e.value);
-                  setSearchData({
-                    licenseId,
-                    themeId,
-                    knowledgeAreaId,
-                    competenceId: e.value,
-                    distanceRadius: 0,
-                    isOnlineCourse: props.isOnline,
-                  });
-                }}
-                name="competenceId"
-                form={formProps}
-              />
-              <FormCalendar
-                id="dateFrom"
-                label="Datum vanaf"
-                placeholder="dd-mm-jjjj"
-                name="from"
-                form={formProps}
-              />
-              <FormCalendar
-                id="dateTo"
-                label="Datum tot"
-                placeholder="dd-mm-jjjj"
-                name="to"
-                form={formProps}
-              />
-              <FormText
-                id="zipcode"
-                label="Postcode"
-                placeholder="1234"
-                name="zipcodeNumbers"
-                form={formProps}
-                onChange={(e) => handleZipcodesChange(e, formProps)}
-              />
-              <FormSelect
-                id="distanceRadius"
-                label="Afstand in km"
-                options={distances.map((item: IIdLabel) => ({
-                  value: item.Id,
-                  label: item.Label,
-                }))}
-                name="distanceRadius"
-                loading={loading}
-                form={formProps}
-              />
-              <div className="form-group row">
-                <div className="col-sm-4 col-md-3 offset-sm-4 offset-md-3 col-sm-offset-4 col-md-offset-3">
-                  <Button
-                    buttonType="submit"
-                    label="Zoeken"
-                    icon="pi pi-search"
-                    disabled={formProps.isSubmitting}
-                  />
-                </div>
-              </div>
-            </form>
-          )}
-        </Formik>
       </PanelBody>
+      <Formik
+        initialValues={{
+          licenseId,
+          knowledgeAreaId: (searchData && searchData.knowledgeAreaId) || '0',
+          themeId: (searchData && searchData.themeId) || '0',
+          competenceId: (searchData && searchData.competenceId) || '0',
+          zipcodeNumbers: user?.Persoon?.Contactgegevens?.Postcode || '',
+          distanceRadius: 0,
+          from: new Date(),
+          to: toDate,
+          isOnlineCourse: props.isOnline,
+        }}
+        validationSchema={NormalCoursesSchema}
+        onSubmit={(values, { setSubmitting }) => {
+          setSearchData(values);
+          setSubmitting(false);
+        }}
+      >
+        {(formProps: any) => (
+          <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
+            <FormSelect
+              label="Sector"
+              formControlClassName="col-sm-4"
+              options={knowledgeAreas.map((item) => {
+                return {
+                  value: item.KennisgebiedID.toString(),
+                  label: item.Naam,
+                };
+              })}
+              name="knowledgeAreaId"
+              onChange={(e: any) => {
+                setKnowledgeAreaId(e.value);
+                setSearchData({
+                  licenseId,
+                  competenceId,
+                  themeId,
+                  knowledgeAreaId: e.value,
+                  distanceRadius: 0,
+                  isOnlineCourse: props.isOnline,
+                });
+              }}
+              loading={loading}
+              form={formProps}
+            />
+            <FormSelect
+              label="Thema"
+              formControlClassName="col-sm-4"
+              options={themes.map((item) => ({
+                value: item.ThemaID.toString(),
+                label: item.Naam,
+              }))}
+              loading={loading}
+              onChange={(e: any) => {
+                setThemeId(e.value);
+                setSearchData({
+                  licenseId,
+                  knowledgeAreaId,
+                  competenceId,
+                  themeId: e.value,
+                  distanceRadius: 0,
+                  isOnlineCourse: props.isOnline,
+                });
+              }}
+              name="themeId"
+              form={formProps}
+            />
+            <FormSelect
+              label="Bijeenkomsttype"
+              formControlClassName="col-sm-4"
+              options={competences.map((item) => ({
+                value: item.CompetentieID.toString(),
+                label: item.Naam,
+              }))}
+              loading={loading}
+              onChange={(e: any) => {
+                setCompetenceId(e.value);
+                setSearchData({
+                  licenseId,
+                  themeId,
+                  knowledgeAreaId,
+                  competenceId: e.value,
+                  distanceRadius: 0,
+                  isOnlineCourse: props.isOnline,
+                });
+              }}
+              name="competenceId"
+              form={formProps}
+            />
+            <FormCalendar
+              id="dateFrom"
+              label="Datum vanaf"
+              placeholder="dd-mm-jjjj"
+              formControlClassName="col-sm-2"
+              name="from"
+              form={formProps}
+            />
+            <FormCalendar
+              id="dateTo"
+              label="Datum tot"
+              placeholder="dd-mm-jjjj"
+              formControlClassName="col-sm-2"
+              name="to"
+              form={formProps}
+            />
+            <FormText
+              label="Postcode"
+              placeholder="1234"
+              name="zipcodeNumbers"
+              formControlClassName="col-sm-2"
+              formItemProps={formProps}
+              onChange={(e) => handleZipcodesChange(e, formProps)}
+            />
+            <FormSelect
+              label="Afstand in km"
+              options={distances.map((item: IIdLabel) => ({
+                value: item.Id,
+                label: item.Label,
+              }))}
+              name="distanceRadius"
+              formControlClassName="col-sm-2"
+              loading={loading}
+              form={formProps}
+            />
+            <div className="form-group row">
+              <div className="col-sm-4 col-md-3 offset-sm-4 offset-md-3 col-sm-offset-4 col-md-offset-3">
+                <Button
+                  type="submit"
+                  label="Zoeken"
+                  icon="pi pi-search"
+                  disabled={formProps.isSubmitting}
+                />
+              </div>
+            </div>
+          </form>
+        )}
+      </Formik>
+
       {searchData && <NormalCoursesTable {...props} searchData={searchData} />}
     </>
   );
-}
+};
+
+export default NormalCoursesForm;

@@ -2,7 +2,7 @@ import React from 'react';
 import { Row } from '@erkenningen/ui/layout/row';
 import { ExamenInstellingFieldsFragment, VakgroepFieldsFragment } from '../../generated/graphql';
 
-import './OrganizerDetails.scss';
+import './OrganizerDetails.css';
 
 interface OrganizerDetailsProps {
   data?: VakgroepFieldsFragment | ExamenInstellingFieldsFragment;

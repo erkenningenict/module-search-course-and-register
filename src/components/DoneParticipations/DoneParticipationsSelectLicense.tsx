@@ -2,18 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Alert } from '@erkenningen/ui/components/alert';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
 import { toDutchDate } from '@erkenningen/ui/utils';
-import { RouteComponentProps } from 'react-router';
 import { CertificeringFieldsFragment, useGetMyQuery } from '../../generated/graphql';
-import FormSelect from '../ui/FormSelect';
+import { FormSelect } from '@erkenningen/ui/components/form';
+import { useNavigate } from 'react-router-dom';
+import { Formik } from 'formik';
 
 interface DoneParticipationSelectLicenseProps {
   licenseId: number;
   setLicenseId: (licenseId: number) => void;
 }
 
-export default function DoneParticipationSelectLicense(
-  props: DoneParticipationSelectLicenseProps & RouteComponentProps<any>,
-) {
+const DoneParticipationSelectLicense: React.FC<DoneParticipationSelectLicenseProps> = (props) => {
+  const navigate = useNavigate();
   const [certs, setCerts] = useState<CertificeringFieldsFragment[]>();
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function DoneParticipationSelectLicense(
     if (error.graphQLErrors) {
       for (const err of error.graphQLErrors) {
         if (err.extensions && err.extensions.code === 'UNAUTHENTICATED') {
-          props.history.push('/bijeenkomsten-zoeken/op-locatie');
+          navigate('/bijeenkomsten-zoeken/op-locatie');
           return null;
         }
       }
@@ -64,37 +64,54 @@ export default function DoneParticipationSelectLicense(
     }
   }
 
+  if (props.licenseId === 0) {
+    return null;
+  }
+
   return (
     <div>
       <PanelBody>
         <p>Kies een van uw licenties om de gevolgde bijeenkomsten te tonen.</p>
       </PanelBody>
-      <form className="form form-horizontal" onSubmit={(e: any) => e.preventDefault()}>
-        {certs && (
-          <FormSelect
-            id="license"
-            label="Kies licentie"
-            value={props.licenseId}
-            options={certificeringen.map((item) => ({
-              value: item.CertificeringID,
-              label: `${item.NummerWeergave} - ${item?.Certificaat?.Naam} (geldig ${toDutchDate(
-                item.BeginDatum,
-              )} - ${toDutchDate(item.EindDatum)})`,
-            }))}
-            onChange={(event: any) => props.setLicenseId(event.value)}
-            name="licenseId"
-            loading={false}
-          />
+      <Formik
+        initialValues={{
+          licenseId: props.licenseId.toString(),
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          setSubmitting(false);
+        }}
+      >
+        {(formProps: any) => (
+          <form className="form form-horizontal" onSubmit={(e: any) => e.preventDefault()}>
+            {certs && (
+              <FormSelect
+                label="Kies licentie"
+                options={certificeringen.map((item) => ({
+                  value: item.CertificeringID.toString(),
+                  label: `${item.NummerWeergave} - ${item?.Certificaat?.Naam} (geldig ${toDutchDate(
+                    item.BeginDatum,
+                  )} - ${toDutchDate(item.EindDatum)})`,
+                }))}
+                form={formProps}
+                onChange={(event: any) => props.setLicenseId(parseInt(event.value, 10))}
+                name="licenseId"
+                loading={false}
+              />
+            )}
+            {certificeringen.length === 0 && (
+              <PanelBody>
+                <Alert type="warning">
+                  U heeft geen geldige licentie, daarom kunt u zich niet voor een bijeenkomst
+                  aanmelden!
+                </Alert>
+              </PanelBody>
+            )}
+          </form>
         )}
-        {certificeringen.length === 0 && (
-          <PanelBody>
-            <Alert type="warning">
-              U heeft geen geldige licentie, daarom kunt u zich niet voor een bijeenkomst aanmelden!
-            </Alert>
-          </PanelBody>
-        )}
-      </form>
+      </Formik>
       <hr />
     </div>
   );
-}
+};
+
+export default DoneParticipationSelectLicense;

@@ -3,12 +3,11 @@ import { Alert } from '@erkenningen/ui/components/alert';
 import { Spinner } from '@erkenningen/ui/components/spinner';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
 import { TableResponsive } from '@erkenningen/ui/layout/table';
-import { RouteComponentProps } from 'react-router-dom';
 import { useGetMySignedUpParticipationsListQuery } from '../../generated/graphql';
 import { UserContext } from '../../shared/Auth';
 import SignedUpParticipationsRow from './SignedUpParticipationsRow';
 
-export default function SignedUpParticipationsTable(props: RouteComponentProps) {
+const SignedUpParticipationsTable: React.FC = (props) => {
   const user = useContext(UserContext);
   const { loading, data, error } = useGetMySignedUpParticipationsListQuery({
     fetchPolicy: 'no-cache',
@@ -88,4 +87,6 @@ export default function SignedUpParticipationsTable(props: RouteComponentProps) 
       </PanelBody>
     </>
   );
-}
+};
+
+export default SignedUpParticipationsTable;

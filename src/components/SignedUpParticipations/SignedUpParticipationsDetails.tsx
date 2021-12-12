@@ -3,7 +3,7 @@ import { Alert } from '@erkenningen/ui/components/alert';
 import { Button } from '@erkenningen/ui/components/button';
 import { Spinner } from '@erkenningen/ui/components/spinner';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import {
   useGetCursusDeelnameDetailsQuery,
   useUnRegisterForCourseMutation,
@@ -11,19 +11,20 @@ import {
 import { NormalCourseDetailsCursusDeelnameDetails } from './NormalCourseDetailsCursusDeelnameDetailsQuery';
 import { OnlineCourseDetailsCursusDeelnameDetails } from './OnlineCourseDetailsCursusDeelnameDetails';
 
-export function SignedUpParticipationDetails(props: RouteComponentProps<any>) {
-  const returnToListLink = <Link to={`/waar-ben-ik-aangemeld${props.location.search}`}>Terug</Link>;
+export function SignedUpParticipationDetails() {
+  const location = useLocation();
+  const { participationId } = useParams<'participationId'>();
+  const returnToListLink = <Link to={`/waar-ben-ik-aangemeld${location.search}`}>Terug</Link>;
   const { loading, data, error } = useGetCursusDeelnameDetailsQuery({
     variables: {
-      participationId: parseInt(props.match.params.participationId, 10),
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      participationId: parseInt(participationId!, 10),
     },
     fetchPolicy: 'network-only',
   });
 
-  const [
-    unRegisterCourse,
-    { loading: mutationLoading, error: mutationError, data: mutationData },
-  ] = useUnRegisterForCourseMutation();
+  const [unRegisterCourse, { loading: mutationLoading, error: mutationError, data: mutationData }] =
+    useUnRegisterForCourseMutation();
 
   if (mutationLoading || loading) {
     return (
@@ -48,7 +49,7 @@ export function SignedUpParticipationDetails(props: RouteComponentProps<any>) {
     return (
       <PanelBody>
         <Alert type="warning">Gegevens van de bijeenkomst zijn niet gevonden.</Alert>
-        <Link to={`/waar-ben-ik-aangemeld${props.location.search}`}>Terug naar de lijst</Link>
+        <Link to={`/waar-ben-ik-aangemeld${location.search}`}>Terug naar de lijst</Link>
       </PanelBody>
     );
   }
@@ -60,9 +61,10 @@ export function SignedUpParticipationDetails(props: RouteComponentProps<any>) {
           label="Afmelden"
           icon="pi pi-check"
           onClick={() => {
-            const participationId: number = parseInt(props.match.params.participationId, 10);
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const participationParamId: number = parseInt(participationId!, 10);
             unRegisterCourse({
-              variables: { CursusDeelnameID: participationId },
+              variables: { CursusDeelnameID: participationParamId },
             });
           }}
         />

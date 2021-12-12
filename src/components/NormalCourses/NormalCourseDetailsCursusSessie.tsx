@@ -4,7 +4,7 @@ import { PanelBody } from '@erkenningen/ui/layout/panel';
 import { GetCursusSessiesQuery } from '../../generated/graphql';
 import OrganizerDetailsCursusSessie from '../ui/OrganizerDetailsCursusSessie';
 
-import './NormalCourseDetails.scss';
+import './NormalCourseDetails.css';
 
 interface INormalCourseDetailsCursusSessieProps {
   details: GetCursusSessiesQuery;

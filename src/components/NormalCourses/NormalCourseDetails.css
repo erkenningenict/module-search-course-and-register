@@ -27,9 +27,9 @@
 .price {
   font-size: 27px;
   margin-bottom: 20px;
-  & span {
-    margin-left: 20px;
-  }
+}
+.price span {
+  margin-left: 20px;
 }
 
 .characteristics {

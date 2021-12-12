@@ -3,22 +3,22 @@ import { parseLocationSearch } from '@erkenningen/ui/utils';
 import { Spinner } from '@erkenningen/ui/components/spinner';
 import { Button } from '@erkenningen/ui/components/button';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
-import { LinkButtonContainer } from '@erkenningen/ui/components/link-button';
+import { FormSelect } from '@erkenningen/ui/components/form';
+import { LinkButton, LinkButtonContainer } from '@erkenningen/ui/components/link-button';
 import { Formik } from 'formik';
-import { RouteComponentProps } from 'react-router';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { useGetListsQuery } from '../../generated/graphql';
 import { UserContext } from '../../shared/Auth';
-import FormSelect from '../ui/FormSelect';
-import LinkButton from '../ui/LinkButton';
-import { OnlineCoursesTable } from './OnlineCoursesTable';
+import OnlineCoursesTable from './OnlineCoursesTable';
+import { useLocation } from 'react-router-dom';
 
-interface OnlineCourseFormProps extends RouteComponentProps {
+interface OnlineCourseFormProps {
   isOnline: boolean;
   seenOverview: (seen: boolean) => void;
 }
 
-export function OnlineCoursesForm(props: OnlineCourseFormProps) {
+const OnlineCoursesForm: React.FC<OnlineCourseFormProps> = (props) => {
+  const location = useLocation();
   useEffect(() => {
     props.seenOverview(true);
   });
@@ -50,7 +50,7 @@ export function OnlineCoursesForm(props: OnlineCourseFormProps) {
   if (!searchData) {
     let theme = '0';
     let knowledgeArea = '0';
-    const params = parseLocationSearch(props.location.search);
+    const params = parseLocationSearch(location.search);
     params.forEach((param: { key: string; value: string }) => {
       switch (param.key) {
         case 'themaId':
@@ -89,106 +89,93 @@ export function OnlineCoursesForm(props: OnlineCourseFormProps) {
     <>
       <PanelBody>
         <LinkButtonContainer>
-          <LinkButton
-            to={{
-              pathname: `/bijeenkomsten-zoeken/op-locatie`,
-              search: props.location.search,
-            }}
-          >
+          <LinkButton to={`/bijeenkomsten-zoeken/op-locatie${location.search}`}>
             Bijeenkomsten op locatie
           </LinkButton>
           {user && (
             <>
-              <LinkButton
-                to={{
-                  pathname: `/wat-heb-ik-al-gevolgd/`,
-                  search: props.location.search,
-                }}
-              >
+              <LinkButton to={`/wat-heb-ik-al-gevolgd${location.search}`}>
                 Wat heb ik al gevolgd?
               </LinkButton>
-              <LinkButton
-                to={{
-                  pathname: `/waar-ben-ik-aangemeld`,
-                  search: props.location.search,
-                }}
-              >
+              <LinkButton to={`/waar-ben-ik-aangemeld${location.search}`}>
                 Waar ben ik aangemeld?
               </LinkButton>
             </>
           )}
         </LinkButtonContainer>
         <h3>Zoek een online bijeenkomst</h3>
-
-        <Formik
-          initialValues={{
-            licenseId,
-            knowledgeAreaId: (searchData && searchData.knowledgeAreaId) || '0',
-            themeId: (searchData && searchData.themeId) || '0',
-            isOnlineCourse: props.isOnline,
-          }}
-          onSubmit={(values, { setSubmitting }) => {
-            setSearchData(values);
-            setSubmitting(false);
-          }}
-        >
-          {(formProps: any) => (
-            <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
-              <FormSelect
-                id="knowledgeArea"
-                label="Sector"
-                options={knowledgeAreas.map((item) => ({
-                  value: item.KennisgebiedID,
-                  label: item.Naam,
-                }))}
-                name="knowledgeAreaId"
-                onChange={(e: any) => {
-                  setKnowledgeAreaId(e.value);
-                  setSearchData({
-                    licenseId,
-                    themeId,
-                    knowledgeAreaId: e.value,
-                    isOnlineCourse: props.isOnline,
-                  });
-                }}
-                loading={loading}
-                form={formProps}
-              />
-              <FormSelect
-                id="themeId"
-                label="Thema"
-                options={themes.map((item) => ({
-                  value: item.ThemaID,
-                  label: item.Naam,
-                }))}
-                loading={loading}
-                onChange={(e: any) => {
-                  setThemeId(e.value);
-                  setSearchData({
-                    licenseId,
-                    knowledgeAreaId,
-                    themeId: e.value,
-                    isOnlineCourse: props.isOnline,
-                  });
-                }}
-                name="themeId"
-                form={formProps}
-              />
-              <div className="form-group row">
-                <div className="col-sm-4 col-md-3 offset-sm-4 offset-md-3 col-sm-offset-4 col-md-offset-3">
-                  <Button
-                    buttonType="submit"
-                    label="Zoeken"
-                    icon="pi pi-search"
-                    disabled={formProps.isSubmitting}
-                  />
-                </div>
-              </div>
-            </form>
-          )}
-        </Formik>
       </PanelBody>
+      <Formik
+        initialValues={{
+          licenseId,
+          knowledgeAreaId: (searchData && searchData.knowledgeAreaId) || '0',
+          themeId: (searchData && searchData.themeId) || '0',
+          isOnlineCourse: props.isOnline,
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          setSearchData(values);
+          setSubmitting(false);
+        }}
+      >
+        {(formProps: any) => (
+          <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
+            <FormSelect
+              label="Sector"
+              formControlClassName="col-sm-4"
+              options={knowledgeAreas.map((item) => ({
+                value: item.KennisgebiedID.toString(),
+                label: item.Naam,
+              }))}
+              name="knowledgeAreaId"
+              onChange={(e: any) => {
+                setKnowledgeAreaId(e.value);
+                setSearchData({
+                  licenseId,
+                  themeId,
+                  knowledgeAreaId: e.value,
+                  isOnlineCourse: props.isOnline,
+                });
+              }}
+              loading={loading}
+              form={formProps}
+            />
+            <FormSelect
+              label="Thema"
+              formControlClassName="col-sm-4"
+              options={themes.map((item) => ({
+                value: item.ThemaID.toString(),
+                label: item.Naam,
+              }))}
+              loading={loading}
+              onChange={(e: any) => {
+                setThemeId(e.value);
+                setSearchData({
+                  licenseId,
+                  knowledgeAreaId,
+                  themeId: e.value,
+                  isOnlineCourse: props.isOnline,
+                });
+              }}
+              name="themeId"
+              form={formProps}
+            />
+            <div className="form-group row">
+              <div className="col-sm-4 col-md-3 offset-sm-4 offset-md-3 col-sm-offset-4 col-md-offset-3">
+                <Button
+                  type="submit"
+                  label="Zoeken"
+                  icon="pi pi-search"
+                  disabled={formProps.isSubmitting}
+                />
+              </div>
+            </div>
+          </form>
+        )}
+      </Formik>
+
       {searchData && <OnlineCoursesTable {...props} searchData={searchData} />}
     </>
   );
-}
+};
+
+export default OnlineCoursesForm;

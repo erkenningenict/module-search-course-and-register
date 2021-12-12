@@ -1,22 +1,24 @@
 import React, { useContext } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
 import { OnlineCourseDetailsAnonymousContainer } from './OnlineCourseDetailsAnonymousContainer';
 import { OnlineCourseDetailsForUserContainer } from './OnlineCourseDetailsForUserContainer';
 
-interface OnlineCourseDetailsContainerProps extends RouteComponentProps<any> {
-  routerProps?: any;
-}
-
-export function OnlineCourseDetailsContainer(props: OnlineCourseDetailsContainerProps) {
+const OnlineCourseDetailsContainer: React.FC = (props) => {
+  const location = useLocation();
+  const { courseId } = useParams<'courseId'>();
   const licenseId = useContext(SelectedLicenseContext);
   const returnToListLink = (
-    <Link to={`/bijeenkomsten-zoeken/online${props && props.location && props.location.search}`}>
+    <Link
+      style={{ marginLeft: '15px' }}
+      to={`/bijeenkomsten-zoeken/online${props && location && location.search}`}
+    >
       Terug naar de lijst
     </Link>
   );
 
-  const specialtyId = parseInt(props.match.params.courseId, 10);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const specialtyId = parseInt(courseId!, 10);
 
   if (licenseId && licenseId !== 0) {
     return (
@@ -33,4 +35,6 @@ export function OnlineCourseDetailsContainer(props: OnlineCourseDetailsContainer
       ></OnlineCourseDetailsAnonymousContainer>
     );
   }
-}
+};
+
+export default OnlineCourseDetailsContainer;
