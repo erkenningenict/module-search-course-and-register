@@ -85,7 +85,7 @@ export function OnlineCourseDetailsForUserContainer({
         <Row>
           <Col>
             {user ? (
-              <>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 {data.isLicenseValidForSpecialty && data.isLicenseValidForSpecialty.success && (
                   <Button
                     label="Aanmelden via Bureau Erkenningen"
@@ -94,7 +94,7 @@ export function OnlineCourseDetailsForUserContainer({
                   />
                 )}
                 {returnToListLink}
-              </>
+              </div>
             ) : (
               <>
                 <Alert type="warning">

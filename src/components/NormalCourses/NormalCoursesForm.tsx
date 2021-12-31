@@ -267,7 +267,7 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
               loading={loading}
               form={formProps}
             />
-            <div className="form-group row">
+            <div className="form-group">
               <div className="col-sm-4 col-md-3 offset-sm-4 offset-md-3 col-sm-offset-4 col-md-offset-3">
                 <Button
                   type="submit"
