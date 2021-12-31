@@ -3,7 +3,7 @@ import { toDutchMoney } from '@erkenningen/ui/utils';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
 import { GetCursusDeelnameDetailsQuery } from '../../generated/graphql';
 
-import '../OnlineCourses/OnlineCourseDetails.scss';
+import '../OnlineCourses/OnlineCourseDetails.css';
 import OrganizerDetails from '../ui/OrganizerDetails';
 
 interface OnlineCourseDetailsCursusDeelnameDetailsProps {

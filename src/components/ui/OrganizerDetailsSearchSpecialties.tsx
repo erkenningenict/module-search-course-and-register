@@ -2,7 +2,7 @@ import React from 'react';
 import { Row } from '@erkenningen/ui/layout/row';
 import { GetSearchSpecialtiesQuery } from '../../generated/graphql';
 
-import './OrganizerDetails.scss';
+import './OrganizerDetails.css';
 
 interface OrganizerDetailsSearchSpecialtiesProps {
   data?: GetSearchSpecialtiesQuery;

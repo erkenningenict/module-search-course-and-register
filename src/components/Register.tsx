@@ -14,8 +14,7 @@ import {
 } from '../generated/graphql';
 import { UserContext } from '../shared/Auth';
 import { SelectedLicenseContext } from '../shared/SelectedLicenseContext';
-import FormSelect from './ui/FormSelect';
-import FormText from './ui/FormText';
+import { FormSelect, FormText } from '@erkenningen/ui/components/form';
 
 export interface IRegisterCourseDetails {
   specialtyId: number;
@@ -64,10 +63,8 @@ export function Register(properties: IRegister) {
   const registerCourseDetails = properties.registerCourseDetails;
 
   const { loading, data, error } = useGetListsQuery();
-  const [
-    registerCourse,
-    { loading: mutationLoading, error: mutationError, data: mutationData },
-  ] = useRegisterForCourseMutation();
+  const [registerCourse, { loading: mutationLoading, error: mutationError, data: mutationData }] =
+    useRegisterForCourseMutation();
   if (loading || mutationLoading) {
     return (
       <div>
@@ -162,47 +159,41 @@ export function Register(properties: IRegister) {
             <form onSubmit={props.handleSubmit} className="form form-horizontal">
               <div className="form-group">
                 <label className="control-label col-md-3">Mijn naam</label>
-                <div className="col-md-6">
-                  <p className="form-control-static">
-                    {userData.Voorletters} {userData.Tussenvoegsel}
-                    {userData.Tussenvoegsel ? ' ' : ''}
-                    {userData.Achternaam}
-                  </p>
+                <div className="col-md-6 form-control-static">
+                  {userData.Voorletters} {userData.Tussenvoegsel}
+                  {userData.Tussenvoegsel ? ' ' : ''}
+                  {userData.Achternaam}
                 </div>
               </div>
               <div className="form-group">
                 <label className="control-label col-md-3">Mijn geboortedatum</label>
-                <div className="col-md-6">
-                  <p className="form-control-static">{toDutchDate(userData.Geboortedatum)}</p>
+                <div className="col-md-6 form-control-static">
+                  {toDutchDate(userData.Geboortedatum)}
                 </div>
               </div>
               <FormText
-                id="street"
                 label="Straat"
                 placeholder="Straat"
                 name="Street"
                 readonly={!!userData.IsGbaGeregistreerd}
-                form={props}
+                formItemProps={props}
               />
               <FormText
-                id="houseNr"
                 label="Huisnummer "
                 placeholder="Huisnummer (getal)"
                 name="HouseNr"
                 readonly={!!userData.IsGbaGeregistreerd}
-                form={props}
+                formItemProps={props}
               />
               <FormText
-                id="houseNrAddition"
                 label="Huisnummer toev."
                 placeholder="Huisnummer toevoeging"
                 name="HouseNrAddition"
                 readonly={!!userData.IsGbaGeregistreerd}
-                form={props}
+                formItemProps={props}
               />
 
               <FormSelect
-                id="country"
                 label="Land"
                 options={data.Landen.map((item: Landen) => ({
                   value: item.Value,
@@ -215,44 +206,38 @@ export function Register(properties: IRegister) {
                 form={props}
               />
               <FormText
-                id="zipcode"
                 label="Postcode"
                 placeholder="Postcode (1234 AA)"
                 name="Zipcode"
                 readonly={!!userData.IsGbaGeregistreerd}
-                form={props}
+                formItemProps={props}
               />
               <FormText
-                id="city"
                 label="Plaats"
                 placeholder="Plaats"
                 name="City"
                 readonly={!!userData.IsGbaGeregistreerd}
-                form={props}
+                formItemProps={props}
               />
               <FormText
-                id="birthPlace"
                 label="Geboorteplaats"
                 placeholder="Geboorteplaats"
                 name="BirthPlace"
-                form={props}
+                formItemProps={props}
               />
               <FormText
-                id="phoneNr"
                 label="Telefoonnummer"
                 placeholder="Telefoon nr (0612345678)"
                 name="PhoneNr"
-                form={props}
+                formItemProps={props}
               />
               <FormText
-                id="email"
                 label="Emailadres"
                 placeholder="Emailadres (mijn.adres@domein.nl)"
                 name="EmailAddress"
-                form={props}
+                formItemProps={props}
               />
               <FormSelect
-                id="knowledgeArea"
                 label="Sector"
                 options={data.Kennisgebieden.map((item) => ({
                   value: item.Naam,
@@ -264,11 +249,10 @@ export function Register(properties: IRegister) {
                 form={props}
               />
               <FormText
-                id="accountAddress"
                 label="De rekening moet naar"
                 placeholder="Alleen invullen als de rekening niet naar uw eigen adres gestuurd moet worden"
                 name="AccountAddress"
-                form={props}
+                formItemProps={props}
                 isTextArea={true}
                 helpText="Alleen invullen als de rekening niet naar uw eigen adres gestuurd moet worden. Vul in dat geval de naam en het VOLLEDIGE adres in van de organisatie waar de rekening naar toe moet."
               />
@@ -278,7 +262,7 @@ export function Register(properties: IRegister) {
                   style={{ display: 'flex', alignItems: 'center', paddingBottom: '10px' }}
                 >
                   <Button
-                    buttonType="submit"
+                    type="submit"
                     label="Aanmelden"
                     icon="pi pi-check"
                     disabled={props.isSubmitting}

@@ -1,26 +1,16 @@
-import { Alert } from '@erkenningen/ui/components/alert';
-import 'primeicons/primeicons.css';
-import 'primereact/resources/primereact.min.css';
 import React from 'react';
-import './App.scss';
+import { Alert } from '@erkenningen/ui/components/alert';
 import DoneParticipations from './components/containers/Participations/DoneParticipations';
 import SignedUpParticipations from './components/containers/Participations/SignedUpParticipations';
 import { SearchCourse } from './components/containers/SearchCourseAndRegister/SearchCourse';
 import { useAuth, UserContext } from './shared/Auth';
-import UserRoute from './shared/UserRoute';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { SignedUpParticipationDetails } from './components/SignedUpParticipations/SignedUpParticipationsDetails';
 
 export default function App() {
   const auth = useAuth();
   if (auth.loading) {
     return <p>Gegevens worden geladen...</p>;
-  }
-
-  if (!auth.authenticated) {
-    return (
-      <UserContext.Provider value={undefined}>
-        <SearchCourse />
-      </UserContext.Provider>
-    );
   }
 
   if (auth.error) {
@@ -46,19 +36,20 @@ export default function App() {
       </Alert>
     );
   }
-  if (!auth.my || !auth.my.Roles === null) {
-    return null;
-  }
-  if (auth.my.Roles && auth.my.Roles.indexOf('Student') === -1) {
+  if (auth.authenticated && auth.my?.Roles && auth.my.Roles.indexOf('Student') === -1) {
     auth.my.Certificeringen = undefined;
   }
   return (
-    <>
-      <UserContext.Provider value={auth.my}>
-        <UserRoute path="/bijeenkomsten-zoeken" component={SearchCourse} />
-        <UserRoute path="/wat-heb-ik-al-gevolgd" component={DoneParticipations} />
-        <UserRoute path="/waar-ben-ik-aangemeld" component={SignedUpParticipations} />
-      </UserContext.Provider>
-    </>
+    <UserContext.Provider value={auth.authenticated ? auth.my : undefined}>
+      <Routes>
+        <Route path="bijeenkomsten-zoeken/*" element={<SearchCourse />}></Route>
+        <Route path="/" element={<Navigate to="/bijeenkomsten-zoeken/op-locatie" />} />
+        <Route path="wat-heb-ik-al-gevolgd" element={<DoneParticipations />} />
+        <Route path="waar-ben-ik-aangemeld" element={<SignedUpParticipations />}>
+          <Route path=":participationId" element={<SignedUpParticipationDetails />} />
+        </Route>
+        <Route path="*" element={<div>URL niet gevonden.</div>} />
+      </Routes>
+    </UserContext.Provider>
   );
 }

@@ -2,12 +2,13 @@ import React from 'react';
 import { Alert } from '@erkenningen/ui/components/alert';
 import { Spinner } from '@erkenningen/ui/components/spinner';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
-import { TableResponsive } from '@erkenningen/ui/layout/table';
-import { RouteComponentProps } from 'react-router-dom';
 import { useGetSearchSpecialtiesQuery } from '../../generated/graphql';
-import { OnlineCoursesRow } from './OnlineCoursesRow';
+import { toDutchMoney } from '@erkenningen/ui';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { Link } from 'react-router-dom';
 
-interface OnlineCoursesTableProps extends RouteComponentProps {
+interface OnlineCoursesTableProps {
   searchData: {
     licenseId: string;
     knowledgeAreaId: string;
@@ -16,7 +17,7 @@ interface OnlineCoursesTableProps extends RouteComponentProps {
   };
 }
 
-export function OnlineCoursesTable(props: OnlineCoursesTableProps) {
+const OnlineCoursesTable: React.FC<OnlineCoursesTableProps> = (props) => {
   const searchData = props.searchData && {
     ...props.searchData,
     licenseId: parseInt(props.searchData.licenseId, 10),
@@ -51,35 +52,51 @@ export function OnlineCoursesTable(props: OnlineCoursesTableProps) {
     );
   }
 
-  if (!data) {
-    return null;
-  }
-
   return (
-    <TableResponsive>
-      <table className="table table-striped" key="table">
-        <thead>
-          <tr key="headerRow">
-            <th>Titel</th>
-            <th>Organisator</th>
-            <th className="text-right">Prijs (excl. btw)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data &&
-            data.SearchSpecialties &&
-            data?.SearchSpecialties?.map((item) => {
-              return <OnlineCoursesRow {...props} key={item.Code} row={item} />;
-            })}
-          {!data || data?.SearchSpecialties?.length === 0 ? (
-            <tr>
-              <td colSpan={3}>
-                <Alert type="info">Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan.</Alert>
-              </td>
-            </tr>
-          ) : null}
-        </tbody>
-      </table>
-    </TableResponsive>
+    <DataTable
+      value={data?.SearchSpecialties}
+      dataKey="SpecialtyId"
+      emptyMessage="Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan."
+      autoLayout={true}
+      loading={loading}
+      paginator
+      responsiveLayout={'stack'}
+      stripedRows
+      rows={10}
+      rowsPerPageOptions={[10, 25, 50, 100]}
+      totalRecords={data?.SearchSpecialties?.length}
+      currentPageReportTemplate="{first} tot {last} van {totalRecords}"
+      paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+    >
+      <Column
+        field="Title"
+        header={'Title'}
+        body={(row) => (
+          <Link
+            to={`/bijeenkomsten-zoeken/online/informatie-en-aanmelden/${row.SpecialtyId}${location.search}`}
+            title="Bekijk meer informatie en aanmelden"
+          >
+            {row.Title}
+          </Link>
+        )}
+        sortable={true}
+      />
+      <Column
+        field="Organizer"
+        header="Organisator"
+        sortable={true}
+        body={(row) => <span>{row.Organizer}</span>}
+      />
+
+      <Column
+        field="Price"
+        header="Prijs (excl. btw)"
+        bodyStyle={{ textAlign: 'right' }}
+        sortable={true}
+        body={(row) => toDutchMoney(row.Price, { euroPrefix: true })}
+      />
+    </DataTable>
   );
-}
+};
+
+export default OnlineCoursesTable;

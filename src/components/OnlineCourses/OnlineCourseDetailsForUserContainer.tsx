@@ -103,18 +103,20 @@ export function OnlineCourseDetailsForUserContainer({
                     melden om eerst in te loggen, keer dan hier terug om u aan te melden.
                   </div>
                 </Alert>
-                <Button
-                  label="Inloggen om aan te melden"
-                  onClick={() => {
-                    const { origin, href } = window.location;
-                    const redirectUrl = `${ERKENNINGEN_LOGIN_URL}&returnurl=${encodeURIComponent(
-                      href.replace(origin, ''),
-                    )}`;
-                    window.location.href = redirectUrl;
-                  }}
-                  icon="pi pi-check"
-                />
-                {returnToListLink}
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Button
+                    label="Inloggen om aan te melden"
+                    onClick={() => {
+                      const { origin, href } = window.location;
+                      const redirectUrl = `${ERKENNINGEN_LOGIN_URL}&returnurl=${encodeURIComponent(
+                        href.replace(origin, ''),
+                      )}`;
+                      window.location.href = redirectUrl;
+                    }}
+                    icon="pi pi-check"
+                  />
+                  {returnToListLink}
+                </div>
               </>
             )}
           </Col>

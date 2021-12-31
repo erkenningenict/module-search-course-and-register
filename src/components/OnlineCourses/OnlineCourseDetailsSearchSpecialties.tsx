@@ -4,7 +4,7 @@ import { PanelBody } from '@erkenningen/ui/layout/panel';
 import { GetSearchSpecialtiesQuery } from '../../generated/graphql';
 import OrganizerDetailsSearchSpecialties from '../ui/OrganizerDetailsSearchSpecialties';
 
-import './OnlineCourseDetails.scss';
+import './OnlineCourseDetails.css';
 
 interface OnlineCourseDetailsSearchSpecialtiesProps {
   details: GetSearchSpecialtiesQuery;
