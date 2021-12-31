@@ -121,7 +121,7 @@ const OnlineCoursesForm: React.FC<OnlineCourseFormProps> = (props) => {
           <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
             <FormSelect
               label="Sector"
-              formControlClassName="col-sm-4"
+              formControlClassName="col-sm-6"
               options={knowledgeAreas.map((item) => ({
                 value: item.KennisgebiedID.toString(),
                 label: item.Naam,
@@ -141,7 +141,7 @@ const OnlineCoursesForm: React.FC<OnlineCourseFormProps> = (props) => {
             />
             <FormSelect
               label="Thema"
-              formControlClassName="col-sm-4"
+              formControlClassName="col-sm-6"
               options={themes.map((item) => ({
                 value: item.ThemaID.toString(),
                 label: item.Naam,

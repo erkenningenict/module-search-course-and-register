@@ -163,7 +163,7 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
           <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
             <FormSelect
               label="Sector"
-              formControlClassName="col-sm-4"
+              formControlClassName="col-sm-6"
               options={knowledgeAreas.map((item) => {
                 return {
                   value: item.KennisgebiedID.toString(),
@@ -183,11 +183,12 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
                 });
               }}
               loading={loading}
+              filter
               form={formProps}
             />
             <FormSelect
               label="Thema"
-              formControlClassName="col-sm-4"
+              formControlClassName="col-sm-6"
               options={themes.map((item) => ({
                 value: item.ThemaID.toString(),
                 label: item.Naam,
@@ -209,7 +210,7 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
             />
             <FormSelect
               label="Bijeenkomsttype"
-              formControlClassName="col-sm-4"
+              formControlClassName="col-sm-6"
               options={competences.map((item) => ({
                 value: item.CompetentieID.toString(),
                 label: item.Naam,
@@ -233,23 +234,25 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
               id="dateFrom"
               label="Datum vanaf"
               placeholder="dd-mm-jjjj"
-              formControlClassName="col-sm-2"
+              formControlClassName="col-sm-3"
               name="from"
               form={formProps}
+              style={{ width: '100%' }}
             />
             <FormCalendar
               id="dateTo"
               label="Datum tot"
               placeholder="dd-mm-jjjj"
-              formControlClassName="col-sm-2"
+              formControlClassName="col-sm-3"
               name="to"
               form={formProps}
+              style={{ width: '100%' }}
             />
             <FormText
               label="Postcode"
               placeholder="1234"
               name="zipcodeNumbers"
-              formControlClassName="col-sm-2"
+              formControlClassName="col-sm-3"
               formItemProps={formProps}
               onChange={(e) => handleZipcodesChange(e, formProps)}
             />
@@ -260,7 +263,7 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
                 label: item.Label,
               }))}
               name="distanceRadius"
-              formControlClassName="col-sm-2"
+              formControlClassName="col-sm-3"
               loading={loading}
               form={formProps}
             />
