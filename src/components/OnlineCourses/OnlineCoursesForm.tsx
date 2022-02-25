@@ -92,6 +92,7 @@ const OnlineCoursesForm: React.FC<OnlineCourseFormProps> = (props) => {
           <LinkButton to={`/bijeenkomsten-zoeken/op-locatie${location.search}`}>
             Bijeenkomsten op locatie
           </LinkButton>
+          <LinkButton to={`/bijeenkomsten-zoeken/webinars${location.search}`}>Webinars</LinkButton>
           {user && (
             <>
               <LinkButton to={`/wat-heb-ik-al-gevolgd${location.search}`}>

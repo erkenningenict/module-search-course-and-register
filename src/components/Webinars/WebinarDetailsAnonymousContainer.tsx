@@ -6,24 +6,24 @@ import { Spinner } from '@erkenningen/ui/components/spinner';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
 import { Row } from '@erkenningen/ui/layout/row';
 import { Col } from '@erkenningen/ui/layout/col';
-import { NormalCourseDetailsCursusSessie } from './NormalCourseDetailsCursusSessie';
+import { WebinarDetailsCursusSessie } from './WebinarDetailsCursusSessie';
 import { useGetCursusSessiesQuery } from '../../generated/graphql';
 
-interface NormalCourseDetailsAnonymousContainerProps {
+interface WebinarDetailsAnonymousContainerProps {
   courseId: number;
   returnToListLink: JSX.Element;
 }
 
-export const NormalCourseDetailsAnonymousContainer = ({
+export const WebinarDetailsAnonymousContainer = ({
   courseId,
   returnToListLink,
-}: NormalCourseDetailsAnonymousContainerProps) => {
+}: WebinarDetailsAnonymousContainerProps) => {
   const { loading, data, error } = useGetCursusSessiesQuery({
     variables: {
       input: {
         currentCourseId: courseId,
         isOnlineCourse: false,
-        isWebinar: false,
+        isWebinar: true,
       },
     },
     fetchPolicy: 'network-only',
@@ -51,7 +51,7 @@ export const NormalCourseDetailsAnonymousContainer = ({
   if (data && data.CursusSessies?.length !== 1) {
     return (
       <PanelBody>
-        <Alert>Bijeenkomst is niet gevonden.</Alert>
+        <Alert>Webinar is niet gevonden.</Alert>
         {returnToListLink}
       </PanelBody>
     );
@@ -64,7 +64,7 @@ export const NormalCourseDetailsAnonymousContainer = ({
 
   return (
     <>
-      <NormalCourseDetailsCursusSessie details={course} />
+      <WebinarDetailsCursusSessie details={course} />
       <PanelBody>
         <Row>
           <Col>

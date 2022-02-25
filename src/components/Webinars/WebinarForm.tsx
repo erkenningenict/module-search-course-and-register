@@ -3,7 +3,7 @@ import { parseLocationSearch } from '@erkenningen/ui/utils';
 import { Spinner } from '@erkenningen/ui/components/spinner';
 import { Button } from '@erkenningen/ui/components/button';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
-import { FormCalendar, FormSelect, FormText } from '@erkenningen/ui/components/form';
+import { FormCalendar, FormSelect } from '@erkenningen/ui/components/form';
 import { LinkButton, LinkButtonContainer } from '@erkenningen/ui/components/link-button';
 import { addMonths } from 'date-fns';
 import { Formik } from 'formik';
@@ -11,25 +11,20 @@ import { StringParam, useQueryParam } from 'use-query-params';
 import { date, object } from 'yup';
 import { useGetListsQuery } from '../../generated/graphql';
 import { UserContext } from '../../shared/Auth';
-import NormalCoursesTable from './NormalCoursesTable';
 import { useLocation } from 'react-router-dom';
+import WebinarTable from './WebinarTable';
 
-interface IIdLabel {
-  Id: number;
-  Label: string;
-}
-
-interface NormalCourseFormProps {
+interface WebinarFormProps {
   isOnline: boolean;
   seenOverview: (seen: boolean) => void;
 }
 
-const NormalCoursesSchema = object().shape({
+const WebinarSchema = object().shape({
   from: date().typeError('Vul een geldige datum in (dd-mm-jjjj) of kies een datum'),
   to: date().typeError('Vul een geldige datum in (dd-mm-jjjj) of kies een datum'),
 });
 
-const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
+const WebinarForm: React.FC<WebinarFormProps> = (props) => {
   useEffect(() => {
     props.seenOverview(true);
   });
@@ -42,23 +37,6 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
   const toDate = addMonths(new Date(), 3);
   const { loading, data, error } = useGetListsQuery();
 
-  const distances: IIdLabel[] = [
-    { Id: 0, Label: 'Alle' },
-    { Id: 5, Label: '5' },
-    { Id: 10, Label: '10' },
-    { Id: 25, Label: '25' },
-    { Id: 50, Label: '50' },
-    { Id: 100, Label: '100' },
-  ];
-  const handleZipcodesChange = (event: any, form: any) => {
-    if (event.target.value !== '') {
-      if (form.values.distanceRadius === 0) {
-        form.setFieldValue('distanceRadius', 25);
-      }
-    } else {
-      form.setFieldValue('distanceRadius', 0);
-    }
-  };
   const user = useContext(UserContext);
 
   if (loading) {
@@ -99,7 +77,6 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
       competenceId: competence,
       themeId: theme,
       knowledgeAreaId: knowledgeArea,
-      distanceRadius: 0,
       isOnlineCourse: props.isOnline,
     });
 
@@ -125,7 +102,9 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
     <>
       <PanelBody>
         <LinkButtonContainer>
-          <LinkButton to={`/bijeenkomsten-zoeken/webinars${location.search}`}>Webinars</LinkButton>
+          <LinkButton to={`/bijeenkomsten-zoeken/op-locatie${location.search}`}>
+            Op locatie
+          </LinkButton>
           <LinkButton to={`/bijeenkomsten-zoeken/online${location.search}`}>
             Online bijeenkomsten
           </LinkButton>
@@ -140,7 +119,7 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
             </>
           )}
         </LinkButtonContainer>
-        <h3>Zoek een bijeenkomst op locatie</h3>
+        <h3>Zoek een webinar</h3>
       </PanelBody>
       <Formik
         initialValues={{
@@ -148,13 +127,11 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
           knowledgeAreaId: (searchData && searchData.knowledgeAreaId) || '0',
           themeId: (searchData && searchData.themeId) || '0',
           competenceId: (searchData && searchData.competenceId) || '0',
-          zipcodeNumbers: user?.Persoon?.Contactgegevens?.Postcode || '',
-          distanceRadius: 0,
           from: new Date(),
           to: toDate,
           isOnlineCourse: props.isOnline,
         }}
-        validationSchema={NormalCoursesSchema}
+        validationSchema={WebinarSchema}
         onSubmit={(values, { setSubmitting }) => {
           setSearchData(values);
           setSubmitting(false);
@@ -164,7 +141,7 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
           <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
             <FormSelect
               label="Sector"
-              formControlClassName="col-sm-4"
+              formControlClassName="col-sm-6"
               options={knowledgeAreas.map((item) => {
                 return {
                   value: item.KennisgebiedID.toString(),
@@ -184,11 +161,12 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
                 });
               }}
               loading={loading}
+              filter
               form={formProps}
             />
             <FormSelect
               label="Thema"
-              formControlClassName="col-sm-4"
+              formControlClassName="col-sm-6"
               options={themes.map((item) => ({
                 value: item.ThemaID.toString(),
                 label: item.Naam,
@@ -210,7 +188,7 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
             />
             <FormSelect
               label="Bijeenkomsttype"
-              formControlClassName="col-sm-4"
+              formControlClassName="col-sm-6"
               options={competences.map((item) => ({
                 value: item.CompetentieID.toString(),
                 label: item.Naam,
@@ -234,38 +212,22 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
               id="dateFrom"
               label="Datum vanaf"
               placeholder="dd-mm-jjjj"
-              formControlClassName="col-sm-2"
+              formControlClassName="col-sm-3"
               name="from"
               form={formProps}
+              style={{ width: '100%' }}
             />
             <FormCalendar
               id="dateTo"
               label="Datum tot"
               placeholder="dd-mm-jjjj"
-              formControlClassName="col-sm-2"
+              formControlClassName="col-sm-3"
               name="to"
               form={formProps}
+              style={{ width: '100%' }}
             />
-            <FormText
-              label="Postcode"
-              placeholder="1234"
-              name="zipcodeNumbers"
-              formControlClassName="col-sm-2"
-              formItemProps={formProps}
-              onChange={(e) => handleZipcodesChange(e, formProps)}
-            />
-            <FormSelect
-              label="Afstand in km"
-              options={distances.map((item: IIdLabel) => ({
-                value: item.Id,
-                label: item.Label,
-              }))}
-              name="distanceRadius"
-              formControlClassName="col-sm-2"
-              loading={loading}
-              form={formProps}
-            />
-            <div className="form-group row">
+
+            <div className="form-group">
               <div className="col-sm-4 col-md-3 offset-sm-4 offset-md-3 col-sm-offset-4 col-md-offset-3">
                 <Button
                   type="submit"
@@ -279,9 +241,9 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
         )}
       </Formik>
 
-      {searchData && <NormalCoursesTable {...props} searchData={searchData} />}
+      {searchData && <WebinarTable {...props} searchData={searchData} />}
     </>
   );
 };
 
-export default NormalCoursesForm;
+export default WebinarForm;

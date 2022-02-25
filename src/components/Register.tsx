@@ -124,7 +124,6 @@ export function Register(properties: IRegister) {
           Zipcode: contactData.Postcode || '',
           City: contactData.Woonplaats || '',
           PhoneNr: contactData.Telefoon || '',
-          BirthPlace: '',
           EmailAddress: contactData.Email || '',
           KnowledgeArea: '',
           AccountAddress: '',
@@ -136,7 +135,6 @@ export function Register(properties: IRegister) {
             code: registerCourseDetails.code,
             courseDateTime: registerCourseDetails.courseDateTime,
             title: registerCourseDetails.title,
-            birthPlace: values.BirthPlace,
             courseId: parseInt(registerCourseDetails.courseId, 10),
             isDigitalSpecialty: registerCourseDetails.isDigitalSpecialty,
             specialtyId: registerCourseDetails.specialtyId,
@@ -219,12 +217,7 @@ export function Register(properties: IRegister) {
                 readonly={!!userData.IsGbaGeregistreerd}
                 formItemProps={props}
               />
-              <FormText
-                label="Geboorteplaats"
-                placeholder="Geboorteplaats"
-                name="BirthPlace"
-                formItemProps={props}
-              />
+
               <FormText
                 label="Telefoonnummer"
                 placeholder="Telefoon nr (0612345678)"
@@ -232,8 +225,8 @@ export function Register(properties: IRegister) {
                 formItemProps={props}
               />
               <FormText
-                label="Emailadres"
-                placeholder="Emailadres (mijn.adres@domein.nl)"
+                label="E-mailadres"
+                placeholder="E-mailadres (mijn.adres@domein.nl)"
                 name="EmailAddress"
                 formItemProps={props}
               />

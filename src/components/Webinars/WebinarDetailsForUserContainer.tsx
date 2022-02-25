@@ -9,18 +9,18 @@ import { Col } from '@erkenningen/ui/layout/col';
 import { UserContext } from '../../shared/Auth';
 import { SelectedLicenseContext } from '../../shared/SelectedLicenseContext';
 import { Register } from '../Register';
-import { NormalCourseDetailsCursusSessie } from './NormalCourseDetailsCursusSessie';
+import { WebinarDetailsCursusSessie } from './WebinarDetailsCursusSessie';
 import { useGetCursusSessiesDetailsQuery } from '../../generated/graphql';
 
-interface NormalCourseDetailsForUserContainerProps {
+interface WebinarDetailsForUserContainerProps {
   courseId: number;
   returnToListLink: JSX.Element;
 }
 
-export function NormalCourseDetailsForUserContainer({
+export function WebinarDetailsForUserContainer({
   courseId,
   returnToListLink,
-}: NormalCourseDetailsForUserContainerProps) {
+}: WebinarDetailsForUserContainerProps) {
   const [showRegister, setShowRegister] = useState(false);
   const user = useContext(UserContext);
   const licenseId = useContext(SelectedLicenseContext);
@@ -30,7 +30,7 @@ export function NormalCourseDetailsForUserContainer({
       input: {
         currentCourseId: courseId,
         isOnlineCourse: false,
-        isWebinar: false,
+        isWebinar: true,
       },
       inputCheck: {
         courseId: courseId,
@@ -62,7 +62,7 @@ export function NormalCourseDetailsForUserContainer({
   if (data && data.CursusSessies?.length !== 1) {
     return (
       <PanelBody>
-        <Alert>Bijeenkomst is niet gevonden.</Alert>
+        <Alert>Webinar is niet gevonden.</Alert>
         {returnToListLink}
       </PanelBody>
     );
@@ -88,15 +88,14 @@ export function NormalCourseDetailsForUserContainer({
         <PanelBody>
           <Alert type="danger">
             <h4>
-              Door het volgen van deze bijeenkomst kunt u uw (geselecteerde) licentie NIET
-              verlengen.
+              Door het volgen van deze webinar kunt u uw (geselecteerde) licentie NIET verlengen.
             </h4>
-            Zoek een bijeenkomst van een ander bijeenkomsttype waarmee u uw licentie wel kunt
-            verlengen of kies een andere licentie (indien u meerdere licenties bezit).
+            Zoek een bijeenkomst of webinar van een ander bijeenkomsttype waarmee u uw licentie wel
+            kunt verlengen of kies een andere licentie (indien u meerdere licenties bezit).
           </Alert>
         </PanelBody>
       )}
-      <NormalCourseDetailsCursusSessie details={data} />
+      <WebinarDetailsCursusSessie details={data} />
       <PanelBody>
         <Row>
           <Col>

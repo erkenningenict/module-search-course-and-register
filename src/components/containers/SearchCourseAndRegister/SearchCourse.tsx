@@ -7,6 +7,8 @@ import NormalCoursesForm from '../../NormalCourses/NormalCoursesForm';
 import OnlineCourseDetailsContainer from '../../OnlineCourses/OnlineCourseDetailsContainer';
 import OnlineCoursesForm from '../../OnlineCourses/OnlineCoursesForm';
 import LicenseChooser from '../LicenseChooser';
+import { WebinarDetailsContainer } from '../../Webinars/WebinarDetailsContainer';
+import WebinarForm from '../../Webinars/WebinarForm';
 
 export function SearchCourse() {
   const [licenseId, setLicenseId] = useState(0);
@@ -36,6 +38,12 @@ export function SearchCourse() {
               }
             ></Route>
             <Route
+              path="webinars"
+              element={
+                <WebinarForm isOnline={false} seenOverview={(seen) => setSeenOverview(seen)} />
+              }
+            ></Route>
+            <Route
               path="online"
               element={
                 <OnlineCoursesForm isOnline={true} seenOverview={(seen) => setSeenOverview(seen)} />
@@ -46,6 +54,10 @@ export function SearchCourse() {
           <Route
             path="op-locatie/informatie-en-aanmelden/:courseId"
             element={<NormalCourseDetailsContainer />}
+          />
+          <Route
+            path="webinar/informatie-en-aanmelden/:courseId"
+            element={<WebinarDetailsContainer />}
           />
           <Route
             path="online/informatie-en-aanmelden/:courseId"
