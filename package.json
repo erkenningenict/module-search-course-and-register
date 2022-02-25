@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@apollo/client": "3.4.16",
-    "@erkenningen/config": "1.0.7",
+    "@erkenningen/config": "^1.0.7",
     "@erkenningen/ui": "7.0.2",
     "@graphql-codegen/cli": "^2.2.1",
     "@graphql-codegen/introspection": "^2.1.0",
@@ -51,7 +51,6 @@
     "yup": "0.32.8"
   },
   "devDependencies": {
-    "@erkenningen/build": "1.0.7",
     "@types/classnames": "2.3.1",
     "@types/jest": "24.0.18",
     "@types/node": "16.11.12",
