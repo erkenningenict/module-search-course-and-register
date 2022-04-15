@@ -125,6 +125,7 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
     <>
       <PanelBody>
         <LinkButtonContainer>
+          <LinkButton to={`/bijeenkomsten-zoeken/webinars${location.search}`}>Webinars</LinkButton>
           <LinkButton to={`/bijeenkomsten-zoeken/online${location.search}`}>
             Online bijeenkomsten
           </LinkButton>

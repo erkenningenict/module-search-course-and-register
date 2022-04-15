@@ -8,7 +8,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Link, useLocation } from 'react-router-dom';
 
-interface NormalCoursesTableProps {
+interface WebinarTableProps {
   searchData: {
     licenseId: string;
     knowledgeAreaId: string;
@@ -23,7 +23,7 @@ interface NormalCoursesTableProps {
   };
 }
 
-const NormalCoursesTable: React.FC<NormalCoursesTableProps> = (props) => {
+const WebinarTable: React.FC<WebinarTableProps> = (props) => {
   const location = useLocation();
   const searchData = props.searchData && {
     ...props.searchData,
@@ -35,7 +35,7 @@ const NormalCoursesTable: React.FC<NormalCoursesTableProps> = (props) => {
     to: props.searchData.to ? props.searchData.to.toISOString() : null,
     from: props.searchData.from ? props.searchData.from.toISOString() : null,
     isOnlineCourse: props.searchData.isOnlineCourse,
-    isWebinar: false,
+    isWebinar: true,
   };
   // eslint-disable-next-line
   const { licenseId, ...searchInput } = searchData;
@@ -69,7 +69,7 @@ const NormalCoursesTable: React.FC<NormalCoursesTableProps> = (props) => {
     <DataTable
       value={data?.CursusSessies}
       dataKey="CursusCode"
-      emptyMessage="Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan."
+      emptyMessage="Geen webinars gevonden. Pas uw zoekcriteria aan."
       autoLayout={true}
       loading={loading}
       paginator
@@ -86,7 +86,7 @@ const NormalCoursesTable: React.FC<NormalCoursesTableProps> = (props) => {
         header={'Title'}
         body={(row) => (
           <Link
-            to={`/bijeenkomsten-zoeken/op-locatie/informatie-en-aanmelden/${row.CourseId}${location.search}`}
+            to={`/bijeenkomsten-zoeken/webinar/informatie-en-aanmelden/${row.CourseId}${location.search}`}
             title="Bekijk meer informatie en aanmelden"
           >
             {row.Title}
@@ -110,22 +110,7 @@ const NormalCoursesTable: React.FC<NormalCoursesTableProps> = (props) => {
           </span>
         )}
       />
-      <Column
-        field="LocationAddress.City"
-        header="Locatie"
-        sortable={true}
-        body={(row) => <span>{`${row.Organizer} - ${row?.LocationAddress?.City}`}</span>}
-      />
 
-      {searchData.distanceRadius !== 0 && (
-        <Column
-          field="Distance"
-          header="Afstand (~ in km)"
-          body={(row) => (
-            <span>{row?.Distance ? Math.round(row?.Distance / 1000) : 'onbekend'}</span>
-          )}
-        ></Column>
-      )}
       <Column
         field="Price"
         header="Prijs (excl. btw)"
@@ -137,4 +122,4 @@ const NormalCoursesTable: React.FC<NormalCoursesTableProps> = (props) => {
   );
 };
 
-export default NormalCoursesTable;
+export default WebinarTable;

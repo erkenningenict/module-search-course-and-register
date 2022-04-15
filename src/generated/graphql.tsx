@@ -47,6 +47,17 @@ export type AssignMonitorInput = {
   SessieID?: InputMaybe<Scalars['Int']>;
 };
 
+export type AuthenticateInput = {
+  password: Scalars['String'];
+  username: Scalars['String'];
+};
+
+export type AuthenticateResult = {
+  __typename?: 'AuthenticateResult';
+  Persoon: Persoon;
+  roles: Array<Scalars['String']>;
+};
+
 export type BasicPersonData = {
   Email?: InputMaybe<Scalars['Email']>;
   PersoonID: Scalars['Int'];
@@ -71,6 +82,27 @@ export enum BeoordelingStatusEnum {
   Goedgekeurd = 'Goedgekeurd',
   TerBeoordeling = 'TerBeoordeling'
 }
+
+export type Bijeenkomst = {
+  __typename?: 'Bijeenkomst';
+  Cursus?: Maybe<Cursus>;
+  Vaknorm?: Maybe<Vaknorm>;
+};
+
+export type BijeenkomstenListInput = {
+  code?: InputMaybe<Scalars['SafeString']>;
+  from?: InputMaybe<Scalars['Date']>;
+  locationId?: InputMaybe<Scalars['Int']>;
+  orderBy: OrderByArgs;
+  pageNumber: Scalars['Int'];
+  pageSize: Scalars['Int'];
+  status?: InputMaybe<CursusStatusEnum>;
+  title?: InputMaybe<Scalars['SafeString']>;
+  to?: InputMaybe<Scalars['Date']>;
+  vakgroepId?: InputMaybe<Scalars['Int']>;
+  vakId?: InputMaybe<Scalars['Int']>;
+  withoutParticipants?: InputMaybe<Scalars['Boolean']>;
+};
 
 export type Certificaat = {
   __typename?: 'Certificaat';
@@ -174,6 +206,8 @@ export type Contactgegevens = {
   Adresregel2?: Maybe<Scalars['String']>;
   ContactgegevensID: Scalars['Int'];
   DisplayAddress?: Maybe<Scalars['String']>;
+  DisplayPostalCodeCity?: Maybe<Scalars['String']>;
+  DisplayStreetHouseNr?: Maybe<Scalars['String']>;
   Email?: Maybe<Scalars['String']>;
   EmailWerkgever?: Maybe<Scalars['String']>;
   Fax?: Maybe<Scalars['String']>;
@@ -318,6 +352,7 @@ export type Cursus = {
   /**  Only available when sub query is available  */
   AantalCursusDeelnames?: Maybe<Scalars['Int']>;
   AantalDeelnamesAangemeld?: Maybe<Scalars['Int']>;
+  AantalDeelnamesVerwerkt?: Maybe<Scalars['Int']>;
   /**  Only available when associated entity CursusDeelname is available  */
   AantalDeelnamesVoorlopig?: Maybe<Scalars['Int']>;
   AocKenmerk?: Maybe<Scalars['String']>;
@@ -433,6 +468,15 @@ export type DecoupleLicenseResult = {
   __typename?: 'decoupleLicenseResult';
   kbaLicense?: Maybe<Certificering>;
   updatedLicense?: Maybe<Certificering>;
+};
+
+export type DeleteBijeenkomstInput = {
+  CursusID?: InputMaybe<Scalars['Int']>;
+};
+
+export type DeleteBijeenkomstResult = {
+  __typename?: 'DeleteBijeenkomstResult';
+  success: Scalars['Boolean'];
 };
 
 export type DeleteExamInput = {
@@ -739,6 +783,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addVisitationComment?: Maybe<DiscussieVisitatie>;
   assignMonitor?: Maybe<Scalars['Boolean']>;
+  authenticate?: Maybe<AuthenticateResult>;
   /**
    * Checks if person exists in the database by bsn and birth date and if not,
    * checks the person in the GBA
@@ -755,7 +800,9 @@ export type Mutation = {
   createPas?: Maybe<CreatePasResult>;
   /** The `decoupleLicense` can be used to decouple an XX + KBA license */
   decoupleLicense: DecoupleLicenseResult;
+  deleteBijeenkomst?: Maybe<DeleteBijeenkomstResult>;
   deleteExam?: Maybe<DeleteExamResult>;
+  logout: Scalars['Boolean'];
   /** Manually start processing of graduates */
   manuallyProcessGraduates: ManuallyProcessGraduatesResult;
   multipleUpload: Array<File>;
@@ -763,24 +810,31 @@ export type Mutation = {
   registerCardReturn: Scalars['Boolean'];
   /** Register for course */
   registerForCourse: RegisterResult;
+  removeBijeenkomstParticipant?: Maybe<RemoveBijeenkomstParticipantResult>;
   removeParticipant?: Maybe<RemoveParticipantResult>;
   /** The `requestDuplicate` can be used to request a license card duplicate */
   requestDuplicate: RequestDuplicateResult;
   /** The `requestLicense` can be used to request a certificate */
   requestLicense: RequestLicenseResult;
+  saveBijeenkomst?: Maybe<SaveBijeenkomstResult>;
   saveExam?: Maybe<SaveExamResult>;
   /** Create or update a location */
   saveLocation: Lokatie;
   /** Create or update a monitor */
   saveMonitor: Monitor;
   singleUpload: File;
+  submitBijeenkomstParticipants?: Maybe<SubmitBijeenkomstParticipantsResult>;
   submitParticipants?: Maybe<SubmitParticipantsResult>;
+  submitToRemindo?: Maybe<SubmitToRemindoResult>;
   unassignMonitor?: Maybe<Scalars['Boolean']>;
   /** Un-register for course. Input is CursusDeelnameID */
   unRegisterForCourse: UnRegisterResult;
+  unRegisterForCourseByCourseId: UnRegisterResult;
+  updateContactgegevens?: Maybe<Contactgegevens>;
   updateInvoiceStatus: UpdateInvoiceStatusResult;
   updatePlanning: UpdatePlanningResult;
   updateVisitationReport: Visitatie;
+  uploadBijeenkomstParticipantsExcel?: Maybe<UploadBijeenkomstParticipantsExcelResult>;
   uploadParticipantsExcel?: Maybe<UploadParticipantsExcelResult>;
 };
 
@@ -792,6 +846,11 @@ export type MutationAddVisitationCommentArgs = {
 
 export type MutationAssignMonitorArgs = {
   input: AssignMonitorInput;
+};
+
+
+export type MutationAuthenticateArgs = {
+  input: AuthenticateInput;
 };
 
 
@@ -843,6 +902,11 @@ export type MutationDecoupleLicenseArgs = {
 };
 
 
+export type MutationDeleteBijeenkomstArgs = {
+  input: DeleteBijeenkomstInput;
+};
+
+
 export type MutationDeleteExamArgs = {
   input: DeleteExamInput;
 };
@@ -869,6 +933,11 @@ export type MutationRegisterForCourseArgs = {
 };
 
 
+export type MutationRemoveBijeenkomstParticipantArgs = {
+  input: RemoveBijeenkomstParticipantInput;
+};
+
+
 export type MutationRemoveParticipantArgs = {
   input: RemoveParticipantInput;
 };
@@ -884,6 +953,11 @@ export type MutationRequestLicenseArgs = {
   createPersonByPersonDataInput?: InputMaybe<CreatePersonByPersonData>;
   input: RequestLicenseInput;
   personDataInput?: InputMaybe<BasicPersonData>;
+};
+
+
+export type MutationSaveBijeenkomstArgs = {
+  input: SaveBijeenkomstInput;
 };
 
 
@@ -907,8 +981,18 @@ export type MutationSingleUploadArgs = {
 };
 
 
+export type MutationSubmitBijeenkomstParticipantsArgs = {
+  input: SubmitBijeenkomstParticipantsInput;
+};
+
+
 export type MutationSubmitParticipantsArgs = {
   input: SubmitParticipantsInput;
+};
+
+
+export type MutationSubmitToRemindoArgs = {
+  input: SubmitToRemindoInput;
 };
 
 
@@ -919,6 +1003,16 @@ export type MutationUnassignMonitorArgs = {
 
 export type MutationUnRegisterForCourseArgs = {
   CursusDeelnameID: Scalars['Int'];
+};
+
+
+export type MutationUnRegisterForCourseByCourseIdArgs = {
+  input: UnRegisterForCourseByCourseIdInput;
+};
+
+
+export type MutationUpdateContactgegevensArgs = {
+  input: UpdateContactgegevensInput;
 };
 
 
@@ -939,6 +1033,11 @@ export type MutationUpdateVisitationReportArgs = {
 };
 
 
+export type MutationUploadBijeenkomstParticipantsExcelArgs = {
+  input: UploadBijeenkomstParticipantsExcelInput;
+};
+
+
 export type MutationUploadParticipantsExcelArgs = {
   input: UploadParticipantsExcelInput;
 };
@@ -946,6 +1045,7 @@ export type MutationUploadParticipantsExcelArgs = {
 export type My = {
   __typename?: 'My';
   AangemeldeCursusDeelnames?: Maybe<Array<Maybe<AangemeldeCursusDeelname>>>;
+  AangemeldeCursusDeelnamesPerCertificeringId?: Maybe<Array<Maybe<CursusDeelname>>>;
   /**
    * Fetches only current licenses when 'alleenGeldig' is true.
    * When false (default), fetches all licenses.
@@ -955,12 +1055,18 @@ export type My = {
   CursusDeelnames?: Maybe<Array<Maybe<CursusDeelname>>>;
   /** Link to exameninstelling(en), via Examinator table */
   ExamenInstellingLinks?: Maybe<Array<Maybe<ExamenInstellingLink>>>;
+  personId: Scalars['Int'];
   Persoon: Persoon;
   Roles?: Maybe<Array<Maybe<Scalars['String']>>>;
   Studieresultaten?: Maybe<Array<Maybe<Studieresultaat>>>;
   StudyProgress: Array<StudyProgress>;
   /** Link to vakgroep(en), via Hoogleraar table */
   VakgroepLinks?: Maybe<Array<Maybe<VakgroepLink>>>;
+};
+
+
+export type MyAangemeldeCursusDeelnamesPerCertificeringIdArgs = {
+  certificeringId: Scalars['Int'];
 };
 
 
@@ -983,6 +1089,7 @@ export type MyExamenInstellingLinksArgs = {
 
 export type MyStudieresultatenArgs = {
   certificeringId?: InputMaybe<Scalars['Int']>;
+  fullDetails?: InputMaybe<Scalars['Boolean']>;
   isExamen?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -1162,6 +1269,8 @@ export enum ProductEnum {
 
 export type Query = {
   __typename?: 'Query';
+  BijeenkomstDetails?: Maybe<Bijeenkomst>;
+  BijeenkomstenList?: Maybe<CursusNodes>;
   Certificaten?: Maybe<Array<Maybe<Certificaat>>>;
   /** Gets an array of Certificate's by the code of the pre-education (vooropleiding) */
   certificatesByPreEducation: Array<Maybe<Certificaat>>;
@@ -1215,6 +1324,16 @@ export type Query = {
    * Optionally pass a array of codes (similar in vooropleiding.code) to filter the list (i.e. ["30.00", "30.01"])
    */
   Vooropleidingen: Array<Maybe<Vooropleiding>>;
+};
+
+
+export type QueryBijeenkomstDetailsArgs = {
+  input: SearchBijeenkomstInput;
+};
+
+
+export type QueryBijeenkomstenListArgs = {
+  input: BijeenkomstenListInput;
 };
 
 
@@ -1399,7 +1518,6 @@ export type RegisterCardReturnInput = {
 };
 
 export type RegisterForCourseInput = {
-  birthPlace?: InputMaybe<Scalars['SafeString']>;
   city?: InputMaybe<Scalars['SafeString']>;
   code?: InputMaybe<Scalars['SafeString']>;
   country?: InputMaybe<Scalars['SafeString']>;
@@ -1422,6 +1540,16 @@ export type RegisterForCourseInput = {
 export type RegisterResult = {
   __typename?: 'RegisterResult';
   message: Scalars['String'];
+  success: Scalars['Boolean'];
+};
+
+export type RemoveBijeenkomstParticipantInput = {
+  CursusDeelnameID?: InputMaybe<Scalars['Int']>;
+  CursusID?: InputMaybe<Scalars['Int']>;
+};
+
+export type RemoveBijeenkomstParticipantResult = {
+  __typename?: 'RemoveBijeenkomstParticipantResult';
   success: Scalars['Boolean'];
 };
 
@@ -1494,6 +1622,33 @@ export type RequestLicenseResult = {
   VrijstellingsVerzoekID: Scalars['Int'];
 };
 
+export type SaveBijeenkomstInput = {
+  CursusID?: InputMaybe<Scalars['Int']>;
+  IsBesloten?: InputMaybe<Scalars['Boolean']>;
+  MaximumCursisten: Scalars['Int'];
+  Opmerkingen?: InputMaybe<Scalars['SafeString']>;
+  Prijs: Scalars['Float'];
+  Promotietekst: Scalars['SafeString'];
+  Sessies: Array<SaveBijeenkomstSessieInput>;
+  Titel: Scalars['SafeString'];
+  VakID: Scalars['Int'];
+};
+
+export type SaveBijeenkomstResult = {
+  __typename?: 'SaveBijeenkomstResult';
+  Cursus: Cursus;
+};
+
+export type SaveBijeenkomstSessieInput = {
+  Begintijd: Scalars['Date'];
+  CursusID: Scalars['Int'];
+  Datum: Scalars['Date'];
+  Docent?: InputMaybe<Scalars['SafeString']>;
+  Eindtijd: Scalars['Date'];
+  LokatieID: Scalars['Int'];
+  SessieID?: InputMaybe<Scalars['Int']>;
+};
+
 export type SaveExamInput = {
   Begintijd: Scalars['Date'];
   CursusID?: InputMaybe<Scalars['Int']>;
@@ -1537,12 +1692,17 @@ export type SaveMonitorInput = {
   Voornaam: Scalars['SafeString'];
 };
 
+export type SearchBijeenkomstInput = {
+  cursusId: Scalars['Int'];
+};
+
 export type SearchCourseSessionsInput = {
   competenceId?: InputMaybe<Scalars['Int']>;
   currentCourseId?: InputMaybe<Scalars['Int']>;
   distanceRadius?: InputMaybe<Scalars['Int']>;
   from?: InputMaybe<Scalars['Date']>;
   isOnlineCourse: Scalars['Boolean'];
+  isWebinar: Scalars['Boolean'];
   knowledgeAreaId?: InputMaybe<Scalars['Int']>;
   themeId?: InputMaybe<Scalars['Int']>;
   to?: InputMaybe<Scalars['Date']>;
@@ -1681,12 +1841,30 @@ export type StudyProgress = {
   Studieresultaten?: Maybe<Array<Maybe<Studieresultaat>>>;
 };
 
+export type SubmitBijeenkomstParticipantsInput = {
+  CursusID?: InputMaybe<Scalars['Int']>;
+};
+
+export type SubmitBijeenkomstParticipantsResult = {
+  __typename?: 'SubmitBijeenkomstParticipantsResult';
+  success: Scalars['Boolean'];
+};
+
 export type SubmitParticipantsInput = {
   CursusID?: InputMaybe<Scalars['Int']>;
 };
 
 export type SubmitParticipantsResult = {
   __typename?: 'SubmitParticipantsResult';
+  success: Scalars['Boolean'];
+};
+
+export type SubmitToRemindoInput = {
+  CursusID?: InputMaybe<Scalars['Int']>;
+};
+
+export type SubmitToRemindoResult = {
+  __typename?: 'SubmitToRemindoResult';
   success: Scalars['Boolean'];
 };
 
@@ -1717,10 +1895,21 @@ export type UnassignMonitorInput = {
   SessieID?: InputMaybe<Scalars['Int']>;
 };
 
+export type UnRegisterForCourseByCourseIdInput = {
+  cursusId: Scalars['Int'];
+  dateTime: Scalars['Date'];
+};
+
 export type UnRegisterResult = {
   __typename?: 'UnRegisterResult';
   message: Scalars['String'];
   success: Scalars['Boolean'];
+};
+
+export type UpdateContactgegevensInput = {
+  Email?: InputMaybe<Scalars['SafeString']>;
+  EmailWerkgever?: InputMaybe<Scalars['SafeString']>;
+  Telefoon?: InputMaybe<Scalars['SafeString']>;
 };
 
 export type UpdateInvoiceStatusInput = {
@@ -1751,6 +1940,17 @@ export type UpdateVisitationReportInput = {
   VisitatieID: Scalars['Int'];
   VolgensIntentieAanbod: Scalars['Boolean'];
   VragenJson: Scalars['SafeString'];
+};
+
+export type UploadBijeenkomstParticipantsExcelInput = {
+  CursusID?: InputMaybe<Scalars['Int']>;
+  file: Scalars['Upload'];
+};
+
+export type UploadBijeenkomstParticipantsExcelResult = {
+  __typename?: 'UploadBijeenkomstParticipantsExcelResult';
+  success: Scalars['Boolean'];
+  validationErrors?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type UploadParticipantsExcelInput = {
