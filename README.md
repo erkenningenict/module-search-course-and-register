@@ -6,7 +6,7 @@ Run `npm install`
 
 ## Configuration
 
-Use `@erkenningen/config` to get the global configuration.
+Use `@erkenningen/config` to get the global configuration and `@erkenningen.nl/ui` for the UI.
 
 ## Run locally
 
