@@ -10,7 +10,8 @@ import { StringParam, useQueryParam } from 'use-query-params';
 import { useGetListsQuery } from '../../generated/graphql';
 import { UserContext } from '../../shared/Auth';
 import OnlineCoursesTable from './OnlineCoursesTable';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { courseTypesSelect } from '../../shared/utils';
 
 interface OnlineCourseFormProps {
   isOnline: boolean;
@@ -19,6 +20,7 @@ interface OnlineCourseFormProps {
 
 const OnlineCoursesForm: React.FC<OnlineCourseFormProps> = (props) => {
   const location = useLocation();
+  const navigate = useNavigate();
   useEffect(() => {
     props.seenOverview(true);
   });
@@ -89,10 +91,6 @@ const OnlineCoursesForm: React.FC<OnlineCourseFormProps> = (props) => {
     <>
       <PanelBody>
         <LinkButtonContainer>
-          <LinkButton to={`/bijeenkomsten-zoeken/op-locatie${location.search}`}>
-            Bijeenkomsten op locatie
-          </LinkButton>
-          <LinkButton to={`/bijeenkomsten-zoeken/webinars${location.search}`}>Webinars</LinkButton>
           {user && (
             <>
               <LinkButton to={`/wat-heb-ik-al-gevolgd${location.search}`}>
@@ -108,6 +106,7 @@ const OnlineCoursesForm: React.FC<OnlineCourseFormProps> = (props) => {
       </PanelBody>
       <Formik
         initialValues={{
+          courseType: courseTypesSelect[2].value,
           licenseId,
           knowledgeAreaId: (searchData && searchData.knowledgeAreaId) || '0',
           themeId: (searchData && searchData.themeId) || '0',
@@ -120,6 +119,19 @@ const OnlineCoursesForm: React.FC<OnlineCourseFormProps> = (props) => {
       >
         {(formProps: any) => (
           <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
+            <FormSelect
+              label="Soort bijeenkomst"
+              formControlClassName="col-sm-6"
+              options={courseTypesSelect}
+              name="courseType"
+              onChange={(e: typeof courseTypesSelect[0]) => {
+                if (e.label === courseTypesSelect[2].label) {
+                  return;
+                }
+                navigate(`${e.value}${location.search}`);
+              }}
+              form={formProps}
+            />
             <FormSelect
               label="Sector"
               formControlClassName="col-sm-6"
