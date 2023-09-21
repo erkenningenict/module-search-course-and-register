@@ -130,7 +130,9 @@ const WebinarForm: React.FC<WebinarFormProps> = (props) => {
         }}
         validationSchema={WebinarSchema}
         onSubmit={(values, { setSubmitting }) => {
-          setSearchData(values);
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { courseType, ...searchDataValues } = values;
+          setSearchData(searchDataValues);
           setSubmitting(false);
         }}
       >
