@@ -57,12 +57,11 @@ const OnlineCoursesTable: React.FC<OnlineCoursesTableProps> = (props) => {
       value={data?.SearchSpecialties}
       dataKey="SpecialtyId"
       emptyMessage="Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan."
-      autoLayout={true}
       loading={loading}
       paginator
       responsiveLayout={'stack'}
       stripedRows
-      rows={10}
+      rows={25}
       rowsPerPageOptions={[10, 25, 50, 100]}
       totalRecords={data?.SearchSpecialties?.length}
       currentPageReportTemplate="{first} tot {last} van {totalRecords}"
@@ -70,7 +69,7 @@ const OnlineCoursesTable: React.FC<OnlineCoursesTableProps> = (props) => {
     >
       <Column
         field="Title"
-        header={'Title'}
+        header="Titel"
         body={(row) => (
           <Link
             to={`/bijeenkomsten-zoeken/online/informatie-en-aanmelden/${row.SpecialtyId}${location.search}`}

@@ -70,7 +70,6 @@ const NormalCoursesTable: React.FC<NormalCoursesTableProps> = (props) => {
       value={data?.CursusSessies}
       dataKey="CursusCode"
       emptyMessage="Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan."
-      autoLayout={true}
       loading={loading}
       paginator
       stripedRows
@@ -83,7 +82,7 @@ const NormalCoursesTable: React.FC<NormalCoursesTableProps> = (props) => {
     >
       <Column
         field="Title"
-        header={'Title'}
+        header="Titel"
         body={(row) => (
           <Link
             to={`/bijeenkomsten-zoeken/op-locatie/informatie-en-aanmelden/${row.CourseId}${location.search}`}

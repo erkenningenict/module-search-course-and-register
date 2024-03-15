@@ -1,8 +1,10 @@
 {
-  "expression": "/graphql",
-  "body": "(.*)getMySignedUpParticipationsList(.*)",
-  "method": "POST",
   "name": "getMySignedUpParticipationsList",
+  "request": {
+    "url": "/graphql",
+    "body": "(.*)getMySignedUpParticipationsList(.*)",
+    "method": "POST"
+  },
   "responses": {
     "getSignedUpListEmpty": {
       "status": 200,

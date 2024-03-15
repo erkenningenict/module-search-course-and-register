@@ -1,20 +1,22 @@
 {
-  "expression": "/graphql",
-  "body": "(.*)getLists(.*)",
-  "method": "POST",
-  "name": "filterLists",
+  "name": "postFindCourses",
+  "request": {
+    "url": "/graphql",
+    "body": "(.*)getCursusSessies(.*)",
+    "method": "POST"
+  },
   "responses": {
-    "getFilterLists": {
+    "postFindAllCourses": {
       "status": 200,
       "delay": 200,
-      "file": "mocks/filterLists/data/filterLists.json"
+      "file": "mocks/findCourses/data/findAllCourses.json"
     },
     "500-error": {
       "headers": {
         "Content-Type": "application/json"
       },
       "status": 500,
-      "file": "mocks/filterLists/data/500-error.json",
+      "file": "mocks/findCourses/data/500-error.json",
       "delay": 200
     },
     "emptyList": {
