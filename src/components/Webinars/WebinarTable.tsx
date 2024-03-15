@@ -83,7 +83,7 @@ const WebinarTable: React.FC<WebinarTableProps> = (props) => {
     >
       <Column
         field="Title"
-        header={'Title'}
+        header="Titel"
         body={(row) => (
           <Link
             to={`/bijeenkomsten-zoeken/webinar/informatie-en-aanmelden/${row.CourseId}${location.search}`}
