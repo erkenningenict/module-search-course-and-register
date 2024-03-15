@@ -11,8 +11,9 @@ import { StringParam, useQueryParam } from 'use-query-params';
 import { date, object } from 'yup';
 import { useGetListsQuery } from '../../generated/graphql';
 import { UserContext } from '../../shared/Auth';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import WebinarTable from './WebinarTable';
+import { courseTypesSelect } from '../../shared/utils';
 
 interface WebinarFormProps {
   isOnline: boolean;
@@ -29,6 +30,7 @@ const WebinarForm: React.FC<WebinarFormProps> = (props) => {
     props.seenOverview(true);
   });
   const location = useLocation();
+  const navigate = useNavigate();
   const [searchData, setSearchData] = useState<any>();
   const [themeId, setThemeId] = useQueryParam('themaId', StringParam);
   const [competenceId, setCompetenceId] = useQueryParam('competentieId', StringParam);
@@ -44,14 +46,15 @@ const WebinarForm: React.FC<WebinarFormProps> = (props) => {
   }
 
   if (error) {
-    return <p>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</p>;
+    console.error(error);
+    return <p>Er is een fout opgetreden, probeer het later opnieuw.</p>;
   }
 
   const licenseId: number | null =
     (user &&
       user.Certificeringen &&
       user.Certificeringen.length > 0 &&
-      user.Certificeringen[0].CertificeringID) ||
+      user.Certificeringen[0]!.CertificeringID) ||
     null;
   let theme = '0';
   let competence = '0';
@@ -102,12 +105,6 @@ const WebinarForm: React.FC<WebinarFormProps> = (props) => {
     <>
       <PanelBody>
         <LinkButtonContainer>
-          <LinkButton to={`/bijeenkomsten-zoeken/op-locatie${location.search}`}>
-            Op locatie
-          </LinkButton>
-          <LinkButton to={`/bijeenkomsten-zoeken/online${location.search}`}>
-            Online bijeenkomsten
-          </LinkButton>
           {user && (
             <>
               <LinkButton to={`/waar-ben-ik-aangemeld${location.search}`}>
@@ -123,6 +120,7 @@ const WebinarForm: React.FC<WebinarFormProps> = (props) => {
       </PanelBody>
       <Formik
         initialValues={{
+          courseType: courseTypesSelect[1].value,
           licenseId,
           knowledgeAreaId: (searchData && searchData.knowledgeAreaId) || '0',
           themeId: (searchData && searchData.themeId) || '0',
@@ -133,12 +131,27 @@ const WebinarForm: React.FC<WebinarFormProps> = (props) => {
         }}
         validationSchema={WebinarSchema}
         onSubmit={(values, { setSubmitting }) => {
-          setSearchData(values);
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { courseType, ...searchDataValues } = values;
+          setSearchData(searchDataValues);
           setSubmitting(false);
         }}
       >
         {(formProps: any) => (
           <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
+            <FormSelect
+              label="Soort bijeenkomst"
+              formControlClassName="col-sm-6"
+              options={courseTypesSelect}
+              name="courseType"
+              onChange={(e: typeof courseTypesSelect[0]) => {
+                if (e.label === courseTypesSelect[1].label) {
+                  return;
+                }
+                navigate(`${e.value}${location.search}`);
+              }}
+              form={formProps}
+            />
             <FormSelect
               label="Sector"
               formControlClassName="col-sm-6"

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Alert } from '@erkenningen/ui/components/alert';
 import DoneParticipations from './components/containers/Participations/DoneParticipations';
 import SignedUpParticipations from './components/containers/Participations/SignedUpParticipations';
@@ -6,6 +5,7 @@ import { SearchCourse } from './components/containers/SearchCourseAndRegister/Se
 import { useAuth, UserContext } from './shared/Auth';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { SignedUpParticipationDetails } from './components/SignedUpParticipations/SignedUpParticipationsDetails';
+import './App.css'
 
 export default function App() {
   const auth = useAuth();

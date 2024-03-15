@@ -12,7 +12,8 @@ import { date, object } from 'yup';
 import { useGetListsQuery } from '../../generated/graphql';
 import { UserContext } from '../../shared/Auth';
 import NormalCoursesTable from './NormalCoursesTable';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { courseTypesSelect } from '../../shared/utils';
 
 interface IIdLabel {
   Id: number;
@@ -34,6 +35,7 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
     props.seenOverview(true);
   });
   const location = useLocation();
+  const navigate = useNavigate();
   const [searchData, setSearchData] = useState<any>();
   const [themeId, setThemeId] = useQueryParam('themaId', StringParam);
   const [competenceId, setCompetenceId] = useQueryParam('competentieId', StringParam);
@@ -66,14 +68,15 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
   }
 
   if (error) {
-    return <p>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</p>;
+    console.error(error);
+    return <p>Er is een fout opgetreden, probeer het later opnieuw.</p>;
   }
 
   const licenseId: number | null =
     (user &&
       user.Certificeringen &&
       user.Certificeringen.length > 0 &&
-      user.Certificeringen[0].CertificeringID) ||
+      user.Certificeringen[0]!.CertificeringID) ||
     null;
   let theme = '0';
   let competence = '0';
@@ -125,10 +128,6 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
     <>
       <PanelBody>
         <LinkButtonContainer>
-          <LinkButton to={`/bijeenkomsten-zoeken/webinars${location.search}`}>Webinars</LinkButton>
-          <LinkButton to={`/bijeenkomsten-zoeken/online${location.search}`}>
-            Online bijeenkomsten
-          </LinkButton>
           {user && (
             <>
               <LinkButton to={`/waar-ben-ik-aangemeld${location.search}`}>
@@ -144,6 +143,7 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
       </PanelBody>
       <Formik
         initialValues={{
+          courseType: courseTypesSelect[0].value,
           licenseId,
           knowledgeAreaId: (searchData && searchData.knowledgeAreaId) || '0',
           themeId: (searchData && searchData.themeId) || '0',
@@ -156,15 +156,30 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
         }}
         validationSchema={NormalCoursesSchema}
         onSubmit={(values, { setSubmitting }) => {
-          setSearchData(values);
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { courseType, ...searchDataValues } = values;
+          setSearchData(searchDataValues);
           setSubmitting(false);
         }}
       >
         {(formProps: any) => (
           <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
             <FormSelect
+              label="Soort bijeenkomst"
+              formControlClassName="col-sm-6"
+              options={courseTypesSelect}
+              name="courseType"
+              onChange={(e: typeof courseTypesSelect[0]) => {
+                if (e.label === courseTypesSelect[0].label) {
+                  return;
+                }
+                navigate(`${e.value}${location.search}`);
+              }}
+              form={formProps}
+            />
+            <FormSelect
               label="Sector"
-              formControlClassName="col-sm-4"
+              formControlClassName="col-sm-6"
               options={knowledgeAreas.map((item) => {
                 return {
                   value: item.KennisgebiedID.toString(),
@@ -184,11 +199,12 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
                 });
               }}
               loading={loading}
+              filter
               form={formProps}
             />
             <FormSelect
               label="Thema"
-              formControlClassName="col-sm-4"
+              formControlClassName="col-sm-6"
               options={themes.map((item) => ({
                 value: item.ThemaID.toString(),
                 label: item.Naam,
@@ -210,7 +226,7 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
             />
             <FormSelect
               label="Bijeenkomsttype"
-              formControlClassName="col-sm-4"
+              formControlClassName="col-sm-6"
               options={competences.map((item) => ({
                 value: item.CompetentieID.toString(),
                 label: item.Naam,
@@ -234,23 +250,25 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
               id="dateFrom"
               label="Datum vanaf"
               placeholder="dd-mm-jjjj"
-              formControlClassName="col-sm-2"
+              formControlClassName="col-sm-3"
               name="from"
               form={formProps}
+              style={{ width: '100%' }}
             />
             <FormCalendar
               id="dateTo"
               label="Datum tot"
               placeholder="dd-mm-jjjj"
-              formControlClassName="col-sm-2"
+              formControlClassName="col-sm-3"
               name="to"
               form={formProps}
+              style={{ width: '100%' }}
             />
             <FormText
               label="Postcode"
               placeholder="1234"
               name="zipcodeNumbers"
-              formControlClassName="col-sm-2"
+              formControlClassName="col-sm-3"
               formItemProps={formProps}
               onChange={(e) => handleZipcodesChange(e, formProps)}
             />
@@ -261,11 +279,11 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
                 label: item.Label,
               }))}
               name="distanceRadius"
-              formControlClassName="col-sm-2"
+              formControlClassName="col-sm-3"
               loading={loading}
               form={formProps}
             />
-            <div className="form-group row">
+            <div className="form-group">
               <div className="col-sm-4 col-md-3 offset-sm-4 offset-md-3 col-sm-offset-4 col-md-offset-3">
                 <Button
                   type="submit"

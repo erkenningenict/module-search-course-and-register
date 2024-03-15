@@ -9,8 +9,6 @@
 # production
 /build
 
-# ide
-.vscode/
 
 # misc
 .DS_Store
@@ -25,4 +23,6 @@ yarn-error.log*
 
 .env*.local
 
-/dnn/build
+/dnn
+/build
+/dist

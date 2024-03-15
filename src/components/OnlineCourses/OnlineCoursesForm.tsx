@@ -10,7 +10,8 @@ import { StringParam, useQueryParam } from 'use-query-params';
 import { useGetListsQuery } from '../../generated/graphql';
 import { UserContext } from '../../shared/Auth';
 import OnlineCoursesTable from './OnlineCoursesTable';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { courseTypesSelect } from '../../shared/utils';
 
 interface OnlineCourseFormProps {
   isOnline: boolean;
@@ -19,6 +20,7 @@ interface OnlineCourseFormProps {
 
 const OnlineCoursesForm: React.FC<OnlineCourseFormProps> = (props) => {
   const location = useLocation();
+  const navigate = useNavigate();
   useEffect(() => {
     props.seenOverview(true);
   });
@@ -37,14 +39,15 @@ const OnlineCoursesForm: React.FC<OnlineCourseFormProps> = (props) => {
   }
 
   if (error) {
-    return <p>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</p>;
+    console.error(error);
+    return <p>Er is een fout opgetreden, probeer het later opnieuw.</p>;
   }
 
   const licenseId: number | null =
     (user &&
       user?.Certificeringen &&
       user?.Certificeringen.length > 0 &&
-      user?.Certificeringen[0].CertificeringID) ||
+      user?.Certificeringen[0]!.CertificeringID) ||
     null;
 
   if (!searchData) {
@@ -89,10 +92,6 @@ const OnlineCoursesForm: React.FC<OnlineCourseFormProps> = (props) => {
     <>
       <PanelBody>
         <LinkButtonContainer>
-          <LinkButton to={`/bijeenkomsten-zoeken/op-locatie${location.search}`}>
-            Bijeenkomsten op locatie
-          </LinkButton>
-          <LinkButton to={`/bijeenkomsten-zoeken/webinars${location.search}`}>Webinars</LinkButton>
           {user && (
             <>
               <LinkButton to={`/wat-heb-ik-al-gevolgd${location.search}`}>
@@ -108,21 +107,37 @@ const OnlineCoursesForm: React.FC<OnlineCourseFormProps> = (props) => {
       </PanelBody>
       <Formik
         initialValues={{
+          courseType: courseTypesSelect[2].value,
           licenseId,
           knowledgeAreaId: (searchData && searchData.knowledgeAreaId) || '0',
           themeId: (searchData && searchData.themeId) || '0',
           isOnlineCourse: props.isOnline,
         }}
         onSubmit={(values, { setSubmitting }) => {
-          setSearchData(values);
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { courseType, ...searchDataValues } = values;
+          setSearchData(searchDataValues);
           setSubmitting(false);
         }}
       >
         {(formProps: any) => (
           <form onSubmit={formProps.handleSubmit} className="form form-horizontal">
             <FormSelect
+              label="Soort bijeenkomst"
+              formControlClassName="col-sm-6"
+              options={courseTypesSelect}
+              name="courseType"
+              onChange={(e: typeof courseTypesSelect[0]) => {
+                if (e.label === courseTypesSelect[2].label) {
+                  return;
+                }
+                navigate(`${e.value}${location.search}`);
+              }}
+              form={formProps}
+            />
+            <FormSelect
               label="Sector"
-              formControlClassName="col-sm-4"
+              formControlClassName="col-sm-6"
               options={knowledgeAreas.map((item) => ({
                 value: item.KennisgebiedID.toString(),
                 label: item.Naam,
@@ -142,7 +157,7 @@ const OnlineCoursesForm: React.FC<OnlineCourseFormProps> = (props) => {
             />
             <FormSelect
               label="Thema"
-              formControlClassName="col-sm-4"
+              formControlClassName="col-sm-6"
               options={themes.map((item) => ({
                 value: item.ThemaID.toString(),
                 label: item.Naam,
@@ -160,7 +175,7 @@ const OnlineCoursesForm: React.FC<OnlineCourseFormProps> = (props) => {
               name="themeId"
               form={formProps}
             />
-            <div className="form-group row">
+            <div className="form-group">
               <div className="col-sm-4 col-md-3 offset-sm-4 offset-md-3 col-sm-offset-4 col-md-offset-3">
                 <Button
                   type="submit"

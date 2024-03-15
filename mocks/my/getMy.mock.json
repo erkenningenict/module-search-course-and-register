@@ -1,8 +1,10 @@
 {
-  "expression": "/graphql",
-  "body": "(.*)getMy\\(\\$input(.*)",
-  "method": "POST",
   "name": "my",
+  "request": {
+    "url": "/graphql",
+    "method": "POST",
+    "body": "(.*)getMy\\(\\$input(.*)"
+  },
   "responses": {
     "getUserNonGba": {
       "status": 200,

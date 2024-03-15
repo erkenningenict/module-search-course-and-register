@@ -1,15 +1,13 @@
-import 'react-app-polyfill/ie11';
-
-import { ERKENNINGEN_GRAPHQL_API_URL, ERKENNINGEN_SITE_TYPE } from '@erkenningen/config';
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { ERKENNINGEN_GRAPHQL_API_URL, ERKENNINGEN_SITE_TYPE } from '@erkenningen/config/dist/index';
 
 import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client';
-import { ThemeContext, ThemeBureauErkenningen } from '@erkenningen/ui/layout/theme';
-import { HashRouter, useLocation, useNavigate } from 'react-router-dom';
 import { GrowlProvider } from '@erkenningen/ui/components/growl';
-import App from './App';
+import { ThemeBureauErkenningen, ThemeContext } from '@erkenningen/ui/layout/theme';
+import { createRoot } from 'react-dom/client';
+import { HashRouter as Router } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
+import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
+import App from './App';
 
 const cache = new InMemoryCache();
 
@@ -21,43 +19,22 @@ const client = new ApolloClient({
   cache,
 });
 
-/**
- * This is the main thing you need to use to adapt the react-router v6
- * API to what use-query-params expects.
- *
- * Pass this as the `ReactRouterRoute` prop to QueryParamProvider.
- */
-const RouteAdapter = ({ children }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const adaptedHistory = React.useMemo(
-    () => ({
-      replace(location) {
-        navigate(location, { replace: true, state: location.state });
-      },
-      push(location) {
-        navigate(location, { replace: false, state: location.state });
-      },
-    }),
-    [navigate],
-  );
-  return children({ history: adaptedHistory, location });
-};
-
-ReactDOM.render(
+const container = document.getElementById('erkenningen-module-search-course-and-register');
+const root = createRoot(container!); // createRoot(container!) if you use TypeScript
+root.render(
   <ApolloProvider client={client}>
     <ThemeBureauErkenningen>
-      <ThemeContext.Provider value={{ mode: ERKENNINGEN_SITE_TYPE }}>
+      <ThemeContext.Provider
+        value={{ mode: (ERKENNINGEN_SITE_TYPE as 'admin' | 'content') || 'admin' }}
+      >
         <GrowlProvider>
-          <HashRouter>
-            <QueryParamProvider ReactRouterRoute={RouteAdapter as any}>
+          <Router>
+            <QueryParamProvider adapter={ReactRouter6Adapter}>
               <App />
             </QueryParamProvider>
-          </HashRouter>
+          </Router>
         </GrowlProvider>
       </ThemeContext.Provider>
     </ThemeBureauErkenningen>
   </ApolloProvider>,
-  document.getElementById('erkenningen-module-search-course-and-register'),
 );
