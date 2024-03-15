@@ -42,11 +42,13 @@ const RegisterSchema = object().shape({
   Zipcode: string()
     .required(MessageRequired)
     .when('Country', {
-      is: 'Nederland',
-      then: string().matches(
-        /^[1-9][0-9]{3}[\s][A-Z]{2}$/,
-        'Nederlandse postcode moet geformatteerd zijn als "1234 AB". Buitenlandse postcode? Wijzig eerst het land.',
-      ),
+      is: (val: string) => val === 'Nederland',
+      then: () =>
+        string().matches(/^[1-9][0-9]{3}[\s][A-Z]{2}$/, {
+          message:
+            'Nederlandse postcode moet geformatteerd zijn als "1234 AB". Buitenlandse postcode? Wijzig eerst het land.',
+        }),
+      otherwise: (schema) => schema.min(1),
     }),
   Country: string().min(2, 'Te weinig tekens').max(100, 'Max 100 tekens').required(MessageRequired),
   City: string().min(2, 'Te weinig tekens').max(100, 'Max 100 tekens').required(MessageRequired),

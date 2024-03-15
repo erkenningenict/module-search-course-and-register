@@ -70,7 +70,6 @@ const WebinarTable: React.FC<WebinarTableProps> = (props) => {
       value={data?.CursusSessies}
       dataKey="CursusCode"
       emptyMessage="Geen webinars gevonden. Pas uw zoekcriteria aan."
-      autoLayout={true}
       loading={loading}
       paginator
       stripedRows

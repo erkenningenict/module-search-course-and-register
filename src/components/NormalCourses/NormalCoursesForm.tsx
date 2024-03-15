@@ -68,14 +68,15 @@ const NormalCoursesForm: React.FC<NormalCourseFormProps> = (props) => {
   }
 
   if (error) {
-    return <p>Er is een fout opgetreden, probeer het later opnieuw. Details: {{ error }}</p>;
+    console.error(error);
+    return <p>Er is een fout opgetreden, probeer het later opnieuw.</p>;
   }
 
   const licenseId: number | null =
     (user &&
       user.Certificeringen &&
       user.Certificeringen.length > 0 &&
-      user.Certificeringen[0].CertificeringID) ||
+      user.Certificeringen[0]!.CertificeringID) ||
     null;
   let theme = '0';
   let competence = '0';

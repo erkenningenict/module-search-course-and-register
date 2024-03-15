@@ -70,7 +70,6 @@ const NormalCoursesTable: React.FC<NormalCoursesTableProps> = (props) => {
       value={data?.CursusSessies}
       dataKey="CursusCode"
       emptyMessage="Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan."
-      autoLayout={true}
       loading={loading}
       paginator
       stripedRows

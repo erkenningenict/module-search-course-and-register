@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { ERKENNINGEN_LOGIN_URL } from '@erkenningen/config';
+import { ERKENNINGEN_LOGIN_URL } from '@erkenningen/config/dist/index';
 import { Alert } from '@erkenningen/ui/components/alert';
 import { Button } from '@erkenningen/ui/components/button';
 import { Spinner } from '@erkenningen/ui/components/spinner';

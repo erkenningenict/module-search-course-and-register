@@ -57,7 +57,6 @@ const OnlineCoursesTable: React.FC<OnlineCoursesTableProps> = (props) => {
       value={data?.SearchSpecialties}
       dataKey="SpecialtyId"
       emptyMessage="Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan."
-      autoLayout={true}
       loading={loading}
       paginator
       responsiveLayout={'stack'}
