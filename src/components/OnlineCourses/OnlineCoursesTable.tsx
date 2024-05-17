@@ -2,7 +2,10 @@ import React from 'react';
 import { Alert } from '@erkenningen/ui/components/alert';
 import { Spinner } from '@erkenningen/ui/components/spinner';
 import { PanelBody } from '@erkenningen/ui/layout/panel';
-import { useGetSearchSpecialtiesQuery } from '../../generated/graphql';
+import {
+  useGetSearchSpecialtiesQuery,
+  type GetSearchSpecialtiesQuery,
+} from '../../generated/graphql';
 import { toDutchMoney } from '@erkenningen/ui';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -52,9 +55,18 @@ const OnlineCoursesTable: React.FC<OnlineCoursesTableProps> = (props) => {
     );
   }
 
+  const shuffle = (array: GetSearchSpecialtiesQuery['SearchSpecialties']) => {
+    return array
+      ?.map((value) => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value);
+  };
+
+  const shuffledData = shuffle(data?.SearchSpecialties ?? []);
+
   return (
     <DataTable
-      value={data?.SearchSpecialties}
+      value={shuffledData}
       dataKey="SpecialtyId"
       emptyMessage="Geen bijeenkomsten gevonden. Pas uw zoekcriteria aan."
       loading={loading}
